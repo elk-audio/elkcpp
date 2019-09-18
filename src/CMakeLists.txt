@@ -58,7 +58,7 @@ endfunction(add_grpc_static_library)
 ################
 
 set(CLIENT_LIB_SOURCES
-    client/SushiGRPCClient.cpp
+    client/sushi_grpc_client.cpp
 )
 
 add_grpc_static_library(NAME sushi-grpc-controller SRCS ${CLIENT_LIB_SOURCES})
