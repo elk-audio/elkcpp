@@ -57,6 +57,7 @@ endfunction(add_grpc_static_library)
 #  Client lib  #
 ################
 
+include_directories(${PROJECT_SOURCE_DIR}/src/client)
 set(CLIENT_LIB_SOURCES
     client/sushi_grpc_client.cpp
 )
