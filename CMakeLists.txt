@@ -18,6 +18,8 @@ include(CMakeParseArguments)
 ##########################
 
 set(GRPC_WRAPPER_BUILD_EXAMPLES true CACHE BOOL "Build included examples")
+set(GRPC_WRAPPER_RUN_TESTS true CACHE BOOL "Build and run unit tests")
+
 
 ############################
 #  Compiler configuration  #
@@ -42,4 +44,8 @@ include_directories(${GRPC_WRAPPER_PUBLIC_HEADER_DIR})
 add_subdirectory(src)
 if(${GRPC_WRAPPER_BUILD_EXAMPLES})
     add_subdirectory(examples)
+endif()
+
+if(${GRPC_WRAPPER_RUN_TESTS})
+    add_subdirectory(test)
 endif()
