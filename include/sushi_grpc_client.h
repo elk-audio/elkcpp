@@ -7,6 +7,8 @@
 #ifndef SUSHI_GRPC_CLIENT_H
 #define SUSHI_GRPC_CLIENT_H
 
+#include <grpc++/grpc++.h>
+
 #include "sushi_info_types.h"
 #include "sushi_rpc.grpc.pb.h"
 

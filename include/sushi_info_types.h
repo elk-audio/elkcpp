@@ -7,6 +7,8 @@
 #ifndef SUSHI_INFO_TYPES_H
 #define SUSHI_INFO_TYPES_H
 
+#include<string>
+
 namespace sushi_controller
 {
     
