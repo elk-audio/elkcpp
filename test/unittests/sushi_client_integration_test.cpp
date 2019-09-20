@@ -61,3 +61,8 @@ TEST_F(SushiClientTest, SetSyncMode)
     controller.set_sync_mode(sushi_controller::SyncMode::LINK);
     ASSERT_EQ(controller.get_sync_mode(),sushi_controller::SyncMode::LINK);
 }
+
+TEST_F(SushiClientTest, GetTempo)
+{
+    ASSERT_EQ(controller.get_tempo(),sushi_controller::expected_results::TEMPO);
+}

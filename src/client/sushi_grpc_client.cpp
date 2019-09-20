@@ -152,4 +152,23 @@ void SushiControllerClient::set_sync_mode(SyncMode mode)
     }
 }
 
+float SushiControllerClient::get_tempo() const
+{
+    sushi_rpc::GenericVoidValue request;
+    sushi_rpc::GenericFloatValue response;
+    grpc::ClientContext context;
+
+    grpc::Status status = _stub.get()->GetTempo(&context, request, &response);
+
+    if (status.ok())
+    {
+        return response.value();
+    }
+    else
+    {
+        print_status(status);
+        return -1.0f;
+    }
+}
+
 } //sushi_controller
