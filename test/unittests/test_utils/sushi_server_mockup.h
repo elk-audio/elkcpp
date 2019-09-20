@@ -82,6 +82,14 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         return grpc::Status::OK;
     }
 
+    grpc::Status SetSyncMode(grpc::ServerContext* /* context */,
+                             const sushi_rpc::SyncMode* request,
+                             sushi_rpc::GenericVoidValue* /* response */)
+    {
+        _sync_mode = request->mode();
+        return grpc::Status::OK;
+    }
+
     sushi_rpc::PlayingMode::Mode _playing_mode{startup_values::PLAYING_MODE};
     sushi_rpc::SyncMode::Mode _sync_mode{startup_values::SYNC_MODE};
 };

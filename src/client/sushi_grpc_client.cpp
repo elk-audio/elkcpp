@@ -39,6 +39,17 @@ inline sushi_controller::SyncMode to_ext(const sushi_rpc::SyncMode::Mode mode)
     }
 }
 
+inline sushi_rpc::SyncMode::Mode to_grpc(const sushi_controller::SyncMode mode)
+{
+    switch(mode)
+    {
+        case sushi_controller::SyncMode::INTERNAL:   return sushi_rpc::SyncMode::INTERNAL;
+        case sushi_controller::SyncMode::MIDI:       return sushi_rpc::SyncMode::MIDI;
+        case sushi_controller::SyncMode::LINK:       return sushi_rpc::SyncMode::LINK;
+        default:                              return sushi_rpc::SyncMode::INTERNAL;
+    }
+}
+
 namespace sushi_controller
 {
 
@@ -122,6 +133,22 @@ SyncMode SushiControllerClient::get_sync_mode() const
     {
         print_status(status);
         return SyncMode::INTERNAL;
+    }
+}
+
+void SushiControllerClient::set_sync_mode(SyncMode mode)
+{
+    sushi_rpc::SyncMode request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_mode(to_grpc(mode));
+
+    grpc::Status status = _stub.get()->SetSyncMode(&context, request, &response);
+
+    if (!status.ok())
+    {
+        print_status(status);
     }
 }
 

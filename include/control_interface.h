@@ -108,7 +108,7 @@ public:
     virtual PlayingMode                         get_playing_mode() const = 0;
     virtual void                                set_playing_mode(PlayingMode playing_mode) = 0;
     virtual SyncMode                            get_sync_mode() const = 0;
-    // virtual void                                set_sync_mode(SyncMode sync_mode) = 0;
+    virtual void                                set_sync_mode(SyncMode sync_mode) = 0;
     // virtual float                               get_tempo() const = 0;
     // virtual ControlStatus                       set_tempo(float tempo) = 0;
     // virtual TimeSignature                       get_time_signature() const = 0;

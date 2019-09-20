@@ -51,3 +51,13 @@ TEST_F(SushiClientTest, GetSyncMode)
 {
     ASSERT_EQ(controller.get_sync_mode(), sushi_controller::expected_results::SYNC_MODE);
 }
+
+TEST_F(SushiClientTest, SetSyncMode)
+{
+    controller.set_sync_mode(sushi_controller::SyncMode::INTERNAL);
+    ASSERT_EQ(controller.get_sync_mode(),sushi_controller::SyncMode::INTERNAL);
+    controller.set_sync_mode(sushi_controller::SyncMode::MIDI);
+    ASSERT_EQ(controller.get_sync_mode(),sushi_controller::SyncMode::MIDI);
+    controller.set_sync_mode(sushi_controller::SyncMode::LINK);
+    ASSERT_EQ(controller.get_sync_mode(),sushi_controller::SyncMode::LINK);
+}
