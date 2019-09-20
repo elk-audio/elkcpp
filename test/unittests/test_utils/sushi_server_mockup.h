@@ -8,6 +8,8 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <thread>
+#include <unistd.h>
 
 #include <grpc++/grpc++.h>
 
@@ -34,10 +36,15 @@ namespace expected_results
     constexpr SyncMode SYNC_MODE = SyncMode::INTERNAL; 
 } //expected_results
 
+std::thread server_thread;
 std::unique_ptr<grpc::Server> server;
 
-class SushiServerMockup final : public sushi_rpc::SushiController::Service
+void RunServerMockup();
+void KillServerMockup();
+
+class SushiServiceMockup final : public sushi_rpc::SushiController::Service
 {
+
     grpc::Status GetSamplerate(grpc::ServerContext* /* context */, 
                                const sushi_rpc::GenericVoidValue* /* request */,
                                sushi_rpc::GenericFloatValue* response) override
@@ -54,13 +61,49 @@ class SushiServerMockup final : public sushi_rpc::SushiController::Service
         return grpc::Status::OK;
     }
 
-    sushi_rpc::PlayingMode::Mode _playing_mode{expected_results::PLAYING_MODE};
+    grpc::Status SetPlayingMode(grpc::ServerContext* /* context */,
+                                const sushi_rpc::PlayingMode* request,
+                                sushi_rpc::GenericVoidValue* /* response */)
+    {
+        _playing_mode = request->mode();
+        return grpc::Status::OK;
+    }
+
+    grpc::Status GetSyncMode(grpc::ServerContext* /* context */,
+                             const sushi_rpc::GenericVoidValue* /* request */,
+                             sushi_rpc::SyncMode* response)
+    {
+        response->set_mode(_sync_mode);
+        return grpc::Status::OK;
+    }
+
+    sushi_rpc::PlayingMode::Mode _playing_mode{startup_values::PLAYING_MODE};
+    sushi_rpc::SyncMode::Mode _sync_mode{startup_values::SYNC_MODE};
+};
+
+class SushiServerMockup
+{
+public:
+    SushiServerMockup()
+    {
+        server_thread = std::thread(RunServerMockup);
+        usleep(1000); //Wait for server to start
+    }
+
+    ~SushiServerMockup()
+    {
+        KillServerMockup();
+        server_thread.join();
+    }
+
+private:
+    std::thread server_thread;
 };
 
 void RunServerMockup()
 {
     std::string server_address("localhost:51051");
-    SushiServerMockup service;
+    SushiServiceMockup service;
 
     grpc::ServerBuilder builder;
 
@@ -68,7 +111,7 @@ void RunServerMockup()
     builder.RegisterService(&service);
 
     server = builder.BuildAndStart();
-    std::cout << "Mockup server listening on " << server_address << std::endl;
+    // std::cout << "Mockup server listening on " << server_address << std::endl;
 
     server->Wait();
 }
@@ -79,5 +122,6 @@ void KillServerMockup()
 }
 
 }
+
 
 #endif // SUSHI_SERVER_MOCKUP_H
