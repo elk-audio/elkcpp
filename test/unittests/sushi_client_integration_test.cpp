@@ -1,4 +1,5 @@
 #include <thread>
+#include <unistd.h>
 
 #include "gtest/gtest.h"
 
@@ -20,6 +21,7 @@ class SushiClientTest : public ::testing::Test
     {
         //sushi_controller::RunServerMockup();
         server_thread = std::thread(sushi_controller::RunServerMockup);
+        usleep(500);
         controller.reset(new sushi_controller::SushiControllerClient("localhost:51051"));
     }
 
@@ -29,7 +31,7 @@ class SushiClientTest : public ::testing::Test
         server_thread.join();
     }
 
-    std::unique_ptr<sushi_controller::SushiControllerClient> controller;
+    std::unique_ptr<sushi_controller::SushiControllerClient> controller{};
     std::thread server_thread;
 };
 
