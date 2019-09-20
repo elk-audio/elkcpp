@@ -37,9 +37,9 @@ class SushiClientTest : public ::testing::Test
 
 TEST_F(SushiClientTest, GetSampleRate)
 {
-    ASSERT_FLOAT_EQ(controller.get()->get_samplerate(),48000.0f);
+    ASSERT_FLOAT_EQ(controller.get()->get_samplerate(),sushi_controller::expected_results::SAMPLERATE);
 }
 TEST_F(SushiClientTest, GetPlayingMode)
 {
-    ASSERT_EQ(controller.get()->get_playing_mode(), sushi_controller::PlayingMode::STOPPED);
+    ASSERT_EQ(controller.get()->get_playing_mode(), sushi_controller::expected_results::PLAYING_MODE);
 }

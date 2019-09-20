@@ -21,11 +21,17 @@
 namespace sushi_controller
 {
 
+namespace startup_values
+{
+    constexpr sushi_rpc::PlayingMode::Mode PLAYING_MODE = sushi_rpc::PlayingMode::STOPPED;
+    constexpr sushi_rpc::SyncMode::Mode SYNC_MODE = sushi_rpc::SyncMode::INTERNAL;
+}
+
 namespace expected_results
 {
     constexpr float SAMPLERATE = 48000.0f;
-    constexpr sushi_rpc::PlayingMode::Mode PLAYING_MODE = sushi_rpc::PlayingMode::STOPPED;
-    constexpr sushi_rpc::SyncMode::Mode SYNC_MODE = sushi_rpc::SyncMode::INTERNAL; 
+    constexpr PlayingMode PLAYING_MODE = PlayingMode::STOPPED;
+    constexpr SyncMode SYNC_MODE = SyncMode::INTERNAL; 
 } //expected_results
 
 std::unique_ptr<grpc::Server> server;
