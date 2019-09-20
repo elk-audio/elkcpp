@@ -12,6 +12,7 @@ inline sushi_controller::PlayingMode to_ext(sushi_rpc::PlayingMode::Mode playing
         case sushi_rpc::PlayingMode::STOPPED:   return sushi_controller::PlayingMode::STOPPED;
         case sushi_rpc::PlayingMode::PLAYING:   return sushi_controller::PlayingMode::PLAYING;
         case sushi_rpc::PlayingMode::RECORDING: return sushi_controller::PlayingMode::RECORDING;
+        default: return sushi_controller::PlayingMode::STOPPED;
     }
 }
 
