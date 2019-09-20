@@ -5,14 +5,25 @@ inline void print_status(grpc::Status status)
     std::cout << status.error_code() << ": " << status.error_message() << std::endl;
 }
 
-inline sushi_controller::PlayingMode to_ext(sushi_rpc::PlayingMode::Mode playing_mode)
+inline sushi_controller::PlayingMode to_ext(const sushi_rpc::PlayingMode::Mode mode)
 {
-    switch(playing_mode)
+    switch(mode)
     {
         case sushi_rpc::PlayingMode::STOPPED:   return sushi_controller::PlayingMode::STOPPED;
         case sushi_rpc::PlayingMode::PLAYING:   return sushi_controller::PlayingMode::PLAYING;
         case sushi_rpc::PlayingMode::RECORDING: return sushi_controller::PlayingMode::RECORDING;
-        default: return sushi_controller::PlayingMode::STOPPED;
+        default:                                return sushi_controller::PlayingMode::PLAYING;
+    }
+}
+
+inline sushi_rpc::PlayingMode::Mode to_grpc(const sushi_controller::PlayingMode mode)
+{
+    switch(mode)
+    {
+        case sushi_controller::PlayingMode::STOPPED:   return sushi_rpc::PlayingMode::STOPPED;
+        case sushi_controller::PlayingMode::PLAYING:   return sushi_rpc::PlayingMode::PLAYING;
+        case sushi_controller::PlayingMode::RECORDING: return sushi_rpc::PlayingMode::RECORDING;
+        default:                                       return sushi_rpc::PlayingMode::PLAYING;
     }
 }
 
@@ -63,10 +74,33 @@ PlayingMode SushiControllerClient::get_playing_mode() const
     else
     {
         print_status(status);
-        return sushi_controller::PlayingMode::STOPPED;
+        return PlayingMode::STOPPED;
     }
-    
-    return PlayingMode::RECORDING;
+}
+
+void SushiControllerClient::set_playing_mode(PlayingMode playing_mode)
+{
+    sushi_rpc::PlayingMode request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_mode(to_grpc(playing_mode));
+
+    grpc::Status status = _stub.get()->SetPlayingMode(&context, request, &response);
+
+    if (!status.ok())
+    {
+        print_status(status);
+    }
+}
+
+SyncMode SushiControllerClient::get_sync_mode() const
+{
+    sushi_rpc::GenericVoidValue request;
+    sushi_rpc::SyncMode response;
+    grpc::ClientContext context;
+
+    return SyncMode::MIDI;
 }
 
 } //sushi_controller

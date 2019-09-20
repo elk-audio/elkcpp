@@ -35,8 +35,8 @@ public:
     // Main engine controls
     float                               get_samplerate() const override;
     PlayingMode                         get_playing_mode() const override;
-    // void                                set_playing_mode(PlayingMode playing_mode) override;
-    // SyncMode                            get_sync_mode() const override;
+    void                                set_playing_mode(PlayingMode playing_mode) override;
+    SyncMode                            get_sync_mode() const override;
     // void                                set_sync_mode(SyncMode sync_mode) override;
     // float                               get_tempo() const override;
     // ControlStatus                       set_tempo(float tempo) override;

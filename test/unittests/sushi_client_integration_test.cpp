@@ -19,27 +19,35 @@ class SushiClientTest : public ::testing::Test
     }
     void SetUp()
     {
-        //sushi_controller::RunServerMockup();
-        server_thread = std::thread(sushi_controller::RunServerMockup);
-        usleep(500);
-        controller.reset(new sushi_controller::SushiControllerClient("localhost:51051"));
     }
 
     void TearDown()
     {
-        sushi_controller::KillServerMockup();
-        server_thread.join();
     }
-
-    std::unique_ptr<sushi_controller::SushiControllerClient> controller{};
-    std::thread server_thread;
+    sushi_controller::SushiServerMockup server;
+    sushi_controller::SushiControllerClient controller{"localhost:51051"};
 };
 
 TEST_F(SushiClientTest, GetSampleRate)
 {
-    ASSERT_FLOAT_EQ(controller.get()->get_samplerate(),sushi_controller::expected_results::SAMPLERATE);
+    ASSERT_FLOAT_EQ(controller.get_samplerate(),sushi_controller::expected_results::SAMPLERATE);
 }
 TEST_F(SushiClientTest, GetPlayingMode)
 {
-    ASSERT_EQ(controller.get()->get_playing_mode(), sushi_controller::expected_results::PLAYING_MODE);
+    ASSERT_EQ(controller.get_playing_mode(), sushi_controller::expected_results::PLAYING_MODE);
+}
+
+TEST_F(SushiClientTest, SetPlayingMode)
+{
+    controller.set_playing_mode(sushi_controller::PlayingMode::STOPPED);
+    ASSERT_EQ(controller.get_playing_mode(),sushi_controller::PlayingMode::STOPPED);
+    controller.set_playing_mode(sushi_controller::PlayingMode::PLAYING);
+    ASSERT_EQ(controller.get_playing_mode(),sushi_controller::PlayingMode::PLAYING);
+    controller.set_playing_mode(sushi_controller::PlayingMode::RECORDING);
+    ASSERT_EQ(controller.get_playing_mode(),sushi_controller::PlayingMode::RECORDING);
+}
+
+TEST_F(SushiClientTest, GetSyncMode)
+{
+    ASSERT_EQ(controller.get_sync_mode(), sushi_controller::expected_results::SYNC_MODE);
 }
