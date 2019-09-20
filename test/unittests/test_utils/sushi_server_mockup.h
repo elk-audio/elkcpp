@@ -33,7 +33,12 @@ namespace expected_results
 {
     constexpr float SAMPLERATE = 48000.0f;
     constexpr PlayingMode PLAYING_MODE = PlayingMode::STOPPED;
-    constexpr SyncMode SYNC_MODE = SyncMode::INTERNAL; 
+    constexpr SyncMode SYNC_MODE = SyncMode::INTERNAL;
+    constexpr float TEMPO = 120.0f;
+    constexpr TimeSignature TIME_SIGNATURE{4,4};
+    const TrackInfo TRACK_WITH_ID_1 = TrackInfo{ 1, "synth", "synth", 2, 2, 2, 2, 10};
+    const TrackInfo TRACK_WITH_ID_2 = TrackInfo{ 1, "guitar", "guitar", 2, 2, 2, 2, 10};
+    const std::vector<TrackInfo> TRACK_INFO_LIST = {TRACK_WITH_ID_1, TRACK_WITH_ID_2};
 } //expected_results
 
 std::thread server_thread;
