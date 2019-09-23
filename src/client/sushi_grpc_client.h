@@ -40,8 +40,8 @@ public:
     void                                set_sync_mode(SyncMode sync_mode) override;
     float                               get_tempo() const override;
     ControlStatus                       set_tempo(float tempo) override;
-    // TimeSignature                       get_time_signature() const override;
-    // ControlStatus                       set_time_signature(TimeSignature signature) override;
+    TimeSignature                       get_time_signature() const override;
+    ControlStatus                       set_time_signature(TimeSignature signature) override;
     // bool                                get_timing_statistics_enabled() override;
     // void                                set_timing_statistics_enabled(bool enabled) const override;
     // std::vector<TrackInfo>              get_tracks() const override;

@@ -206,4 +206,45 @@ ControlStatus SushiControllerClient::set_tempo(float tempo)
     }
 }
 
+TimeSignature SushiControllerClient::get_time_signature() const
+{
+    sushi_rpc::GenericVoidValue request;
+    sushi_rpc::TimeSignature response;
+    grpc::ClientContext context;
+
+    grpc::Status status = _stub.get()->GetTimeSignature(&context, request, &response);
+
+    if (status.ok())
+    {
+        return TimeSignature{response.numerator(), response.denominator()};
+    }
+    else
+    {
+        print_status(status);
+        return TimeSignature{-1,-1};
+    }
+}
+
+ControlStatus SushiControllerClient::set_time_signature(TimeSignature time_signature)
+{
+    sushi_rpc::TimeSignature request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_numerator(time_signature.numerator);
+    request.set_denominator(time_signature.denominator);
+
+    grpc::Status status = _stub.get()->SetTimeSignature(&context, request, &response);
+
+    if (status.ok())
+    {
+        return ControlStatus::OK;
+    }
+    else
+    {
+        print_status(status);
+        return to_ext(status);
+    }
+}
+
 } //sushi_controller

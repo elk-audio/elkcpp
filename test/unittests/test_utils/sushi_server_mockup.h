@@ -68,7 +68,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
 
     grpc::Status SetPlayingMode(grpc::ServerContext* /* context */,
                                 const sushi_rpc::PlayingMode* request,
-                                sushi_rpc::GenericVoidValue* /* response */)
+                                sushi_rpc::GenericVoidValue* /* response */) override
     {
         _playing_mode = request->mode();
         return grpc::Status::OK;
@@ -76,7 +76,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
 
     grpc::Status GetSyncMode(grpc::ServerContext* /* context */,
                              const sushi_rpc::GenericVoidValue* /* request */,
-                             sushi_rpc::SyncMode* response)
+                             sushi_rpc::SyncMode* response) override
     {
         response->set_mode(_sync_mode);
         return grpc::Status::OK;
@@ -84,7 +84,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
 
     grpc::Status SetSyncMode(grpc::ServerContext* /* context */,
                              const sushi_rpc::SyncMode* request,
-                             sushi_rpc::GenericVoidValue* /* response */)
+                             sushi_rpc::GenericVoidValue* /* response */) override
     {
         _sync_mode = request->mode();
         return grpc::Status::OK;
@@ -92,7 +92,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
 
     grpc::Status GetTempo(grpc::ServerContext* /* context */,
                           const sushi_rpc::GenericVoidValue* /* request */,
-                          sushi_rpc::GenericFloatValue* response)
+                          sushi_rpc::GenericFloatValue* response) override
     {
         response->set_value(_tempo);
         return grpc::Status::OK;
@@ -100,15 +100,42 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
 
     grpc::Status SetTempo(grpc::ServerContext* /* context */,
                          const sushi_rpc::GenericFloatValue* request,
-                         sushi_rpc::GenericVoidValue* /* response */)
+                         sushi_rpc::GenericVoidValue* /* response */) override
     {
         _tempo = request->value();
+        return grpc::Status::OK;
+    }
+
+    grpc::Status GetTimeSignature(grpc::ServerContext* /* context */,
+                                  const sushi_rpc::GenericVoidValue* /* request */,
+                                  sushi_rpc::TimeSignature* response) override
+    {
+        response->set_numerator(_time_signature.numerator);
+        response->set_denominator(_time_signature.denominator);
+        return grpc::Status::OK;
+    }
+
+    grpc::Status SetTimeSignature(grpc::ServerContext* /* context */,
+                                  const sushi_rpc::TimeSignature* request, 
+                                  sushi_rpc::GenericVoidValue* /* response */) override
+    {
+        _time_signature.numerator = request->numerator();
+        _time_signature.denominator = request->denominator();
         return grpc::Status::OK;
     }
 
     sushi_rpc::PlayingMode::Mode _playing_mode{startup_values::PLAYING_MODE};
     sushi_rpc::SyncMode::Mode _sync_mode{startup_values::SYNC_MODE};
     float _tempo{expected_results::TEMPO};
+    sushi_controller::TimeSignature _time_signature{expected_results::TIME_SIGNATURE};
+
+public:
+    void setUp()
+    {
+        // Set up time signature
+        // _time_signature.set_numerator(expeceted_results::TIME_SIGNATURE.numerator);
+        // _time_signature.set_denominator(expected_results::TIME_SIGNATURE.denominator);
+    }
 };
 
 class SushiServerMockup
@@ -117,7 +144,7 @@ public:
     SushiServerMockup()
     {
         server_thread = std::thread(RunServerMockup);
-        usleep(1000); //Wait for server to start
+        usleep(5000); //Wait for server to start
     }
 
     ~SushiServerMockup()
@@ -136,6 +163,8 @@ void RunServerMockup()
     SushiServiceMockup service;
 
     grpc::ServerBuilder builder;
+
+    service.setUp();
 
     builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);

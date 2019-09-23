@@ -74,3 +74,19 @@ TEST_F(SushiClientTest, SetTempoPositive)
     ASSERT_EQ(controller.get_tempo(),200.0f);
 }
 
+TEST_F(SushiClientTest, GetTimeSignature)
+{
+    sushi_controller::TimeSignature result = controller.get_time_signature();
+    ASSERT_EQ(result.numerator,sushi_controller::expected_results::TIME_SIGNATURE.numerator);
+    ASSERT_EQ(result.denominator,sushi_controller::expected_results::TIME_SIGNATURE.denominator);
+}
+
+TEST_F(SushiClientTest, SetTimeSignature)
+{
+    sushi_controller::TimeSignature modified_time_signature{6,8};
+    sushi_controller::ControlStatus status = controller.set_time_signature(modified_time_signature);
+    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
+    sushi_controller::TimeSignature result = controller.get_time_signature();
+    ASSERT_EQ(result.numerator, modified_time_signature.numerator);
+    ASSERT_EQ(result.denominator, modified_time_signature.denominator);
+}
