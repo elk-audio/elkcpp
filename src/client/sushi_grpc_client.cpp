@@ -247,4 +247,39 @@ ControlStatus SushiControllerClient::set_time_signature(TimeSignature time_signa
     }
 }
 
+std::vector<TrackInfo> SushiControllerClient::get_tracks() const
+{
+    sushi_rpc::GenericVoidValue request;
+    sushi_rpc::TrackInfoList response;
+    grpc::ClientContext context;
+
+    grpc::Status status = _stub.get()->GetTracks(&context, request, &response);
+
+    if(status.ok())
+    {
+        std::vector<TrackInfo> output;
+        for(int i = 0; i < response.tracks_size(); ++i)
+        {
+            output.push_back(
+                TrackInfo{
+                    response.tracks(i).id(),
+                    response.tracks(i).label(),
+                    response.tracks(i).name(),
+                    response.tracks(i).input_channels(),
+                    response.tracks(i).input_busses(),
+                    response.tracks(i).output_channels(),
+                    response.tracks(i).output_busses(),
+                    response.tracks(i).processor_count()
+                }
+            );
+        }
+        return output;
+    }
+    else
+    {
+        print_status(status);
+        return std::vector<TrackInfo>();
+    }    
+}
+
 } //sushi_controller

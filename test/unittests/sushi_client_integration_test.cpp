@@ -90,3 +90,19 @@ TEST_F(SushiClientTest, SetTimeSignature)
     ASSERT_EQ(result.numerator, modified_time_signature.numerator);
     ASSERT_EQ(result.denominator, modified_time_signature.denominator);
 }
+
+TEST_F(SushiClientTest, GetTracks)
+{
+    std::vector<sushi_controller::TrackInfo> track_info_list = controller.get_tracks();
+    for(uint i = 0; i < track_info_list.size(); ++i)
+    {
+        ASSERT_EQ(track_info_list.at(i).id,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).id);
+        ASSERT_EQ(track_info_list.at(i).label,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).label);
+        ASSERT_EQ(track_info_list.at(i).name,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).name);
+        ASSERT_EQ(track_info_list.at(i).input_channels,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).input_channels);
+        ASSERT_EQ(track_info_list.at(i).input_busses,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).input_busses);
+        ASSERT_EQ(track_info_list.at(i).output_channels,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).output_channels);
+        ASSERT_EQ(track_info_list.at(i).output_busses,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).output_busses);
+        ASSERT_EQ(track_info_list.at(i).processor_count,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).processor_count);
+    }
+}

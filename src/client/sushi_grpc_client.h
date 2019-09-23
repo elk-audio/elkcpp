@@ -44,7 +44,7 @@ public:
     ControlStatus                       set_time_signature(TimeSignature signature) override;
     // bool                                get_timing_statistics_enabled() override;
     // void                                set_timing_statistics_enabled(bool enabled) const override;
-    // std::vector<TrackInfo>              get_tracks() const override;
+    std::vector<TrackInfo>              get_tracks() const override;
 
     // // Keyboard control
     // ControlStatus                       send_note_on(int track_id, int note, int channel, float velocity) override;

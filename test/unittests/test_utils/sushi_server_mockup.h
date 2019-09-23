@@ -37,7 +37,7 @@ namespace expected_results
     constexpr float TEMPO = 120.0f;
     constexpr TimeSignature TIME_SIGNATURE{4,4};
     const TrackInfo TRACK_WITH_ID_1 = TrackInfo{ 1, "synth", "synth", 2, 2, 2, 2, 10};
-    const TrackInfo TRACK_WITH_ID_2 = TrackInfo{ 1, "guitar", "guitar", 2, 2, 2, 2, 10};
+    const TrackInfo TRACK_WITH_ID_2 = TrackInfo{ 2, "guitar", "guitar", 2, 2, 2, 2, 10};
     const std::vector<TrackInfo> TRACK_INFO_LIST = {TRACK_WITH_ID_1, TRACK_WITH_ID_2};
 } //expected_results
 
@@ -121,6 +121,33 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
     {
         _time_signature.numerator = request->numerator();
         _time_signature.denominator = request->denominator();
+        return grpc::Status::OK;
+    }
+
+    grpc::Status GetTracks(grpc::ServerContext* /* context */,
+                           const sushi_rpc::GenericVoidValue* /* request */,
+                           sushi_rpc::TrackInfoList* response) override
+    {
+        sushi_rpc::TrackInfo* track1 = response->add_tracks();
+        track1->set_id(expected_results::TRACK_WITH_ID_1.id);
+        track1->set_label(expected_results::TRACK_WITH_ID_1.label);
+        track1->set_name(expected_results::TRACK_WITH_ID_1.name);
+        track1->set_input_channels(expected_results::TRACK_WITH_ID_1.input_channels);
+        track1->set_input_busses(expected_results::TRACK_WITH_ID_1.input_busses);
+        track1->set_output_channels(expected_results::TRACK_WITH_ID_1.output_channels);
+        track1->set_output_busses(expected_results::TRACK_WITH_ID_1.output_busses);
+        track1->set_processor_count(expected_results::TRACK_WITH_ID_1.processor_count);
+
+        sushi_rpc::TrackInfo* track2 = response->add_tracks();
+        track2->set_id(expected_results::TRACK_WITH_ID_2.id);
+        track2->set_label(expected_results::TRACK_WITH_ID_2.label);
+        track2->set_name(expected_results::TRACK_WITH_ID_2.name);
+        track2->set_input_channels(expected_results::TRACK_WITH_ID_2.input_channels);
+        track2->set_input_busses(expected_results::TRACK_WITH_ID_2.input_busses);
+        track2->set_output_channels(expected_results::TRACK_WITH_ID_2.output_channels);
+        track2->set_output_busses(expected_results::TRACK_WITH_ID_2.output_busses);
+        track2->set_processor_count(expected_results::TRACK_WITH_ID_2.processor_count);
+
         return grpc::Status::OK;
     }
 
