@@ -31,14 +31,26 @@ namespace startup_values
 
 namespace expected_results
 {
+    // Engine test values
     constexpr float SAMPLERATE = 48000.0f;
     constexpr PlayingMode PLAYING_MODE = PlayingMode::STOPPED;
     constexpr SyncMode SYNC_MODE = SyncMode::INTERNAL;
     constexpr float TEMPO = 120.0f;
     constexpr TimeSignature TIME_SIGNATURE{4,4};
+    
+    // MIDI test values
+    constexpr int MIDI_TRACK_ID = 1;
+    constexpr int MIDI_CHANNEL = 3;
+    constexpr int MIDI_NOTE = 63;
+    constexpr float MIDI_VELOCITY = 0.89f;
+    constexpr float MIDI_AFTERTOUCH = 0.46f;
+    constexpr float MIDI_MODULATION = 0.78f;
+    constexpr float MIDI_PITCH_BEND = 0.5f;
+
+    // Track test values
     const TrackInfo TRACK_WITH_ID_1 = TrackInfo{ 1, "synth", "synth", 2, 2, 2, 2, 10};
     const TrackInfo TRACK_WITH_ID_2 = TrackInfo{ 2, "guitar", "guitar", 2, 2, 2, 2, 10};
-    const std::vector<TrackInfo> TRACK_INFO_LIST = {TRACK_WITH_ID_1, TRACK_WITH_ID_2};
+    const std::vector<TrackInfo> TRACK_INFO_LIST = {TRACK_WITH_ID_1, TRACK_WITH_ID_2}; 
 } //expected_results
 
 std::thread server_thread;
