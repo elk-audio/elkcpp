@@ -110,7 +110,7 @@ public:
     virtual SyncMode                            get_sync_mode() const = 0;
     virtual void                                set_sync_mode(SyncMode sync_mode) = 0;
     virtual float                               get_tempo() const = 0;
-    // virtual ControlStatus                       set_tempo(float tempo) = 0;
+    virtual ControlStatus                       set_tempo(float tempo) = 0;
     // virtual TimeSignature                       get_time_signature() const = 0;
     // virtual ControlStatus                       set_time_signature(TimeSignature signature) = 0;
     // virtual bool                                get_timing_statistics_enabled() = 0;

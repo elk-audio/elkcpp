@@ -50,6 +50,20 @@ inline sushi_rpc::SyncMode::Mode to_grpc(const sushi_controller::SyncMode mode)
     }
 }
 
+inline sushi_controller::ControlStatus to_ext(const grpc::Status status)
+{
+    switch(status.error_code())
+    {
+        case grpc::StatusCode::OK:                  return sushi_controller::ControlStatus::OK;
+        case grpc::StatusCode::UNKNOWN:             return sushi_controller::ControlStatus::ERROR;
+        case grpc::StatusCode::FAILED_PRECONDITION: return sushi_controller::ControlStatus::UNSUPPORTED_OPERATION;
+        case grpc::StatusCode::NOT_FOUND:           return sushi_controller::ControlStatus::NOT_FOUND;
+        case grpc::StatusCode::OUT_OF_RANGE:        return sushi_controller::ControlStatus::OUT_OF_RANGE;
+        case grpc::StatusCode::INVALID_ARGUMENT:    return sushi_controller::ControlStatus::INVALID_ARGUMENTS;
+        default:                                    return sushi_controller::ControlStatus::ERROR;
+    }
+}
+
 namespace sushi_controller
 {
 
@@ -168,6 +182,27 @@ float SushiControllerClient::get_tempo() const
     {
         print_status(status);
         return -1.0f;
+    }
+}
+
+ControlStatus SushiControllerClient::set_tempo(float tempo)
+{
+    sushi_rpc::GenericFloatValue request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_value(tempo);
+
+    grpc::Status status = _stub.get()->SetTempo(&context, request, &response);
+
+    if (status.ok())
+    {
+        return ControlStatus::OK;
+    }
+    else
+    {
+        print_status(status);
+        return to_ext(status);
     }
 }
 

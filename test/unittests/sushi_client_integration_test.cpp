@@ -66,3 +66,11 @@ TEST_F(SushiClientTest, GetTempo)
 {
     ASSERT_EQ(controller.get_tempo(),sushi_controller::expected_results::TEMPO);
 }
+
+TEST_F(SushiClientTest, SetTempoPositive)
+{
+    sushi_controller::ControlStatus status = controller.set_tempo(200.0f);
+    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(controller.get_tempo(),200.0f);
+}
+

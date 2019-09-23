@@ -91,15 +91,24 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
     }
 
     grpc::Status GetTempo(grpc::ServerContext* /* context */,
-                          const sushi_rpc::GenericVoidValue* /* response */,
+                          const sushi_rpc::GenericVoidValue* /* request */,
                           sushi_rpc::GenericFloatValue* response)
     {
-        response->set_value(expected_results::TEMPO);
+        response->set_value(_tempo);
+        return grpc::Status::OK;
+    }
+
+    grpc::Status SetTempo(grpc::ServerContext* /* context */,
+                         const sushi_rpc::GenericFloatValue* request,
+                         sushi_rpc::GenericVoidValue* /* response */)
+    {
+        _tempo = request->value();
         return grpc::Status::OK;
     }
 
     sushi_rpc::PlayingMode::Mode _playing_mode{startup_values::PLAYING_MODE};
     sushi_rpc::SyncMode::Mode _sync_mode{startup_values::SYNC_MODE};
+    float _tempo{expected_results::TEMPO};
 };
 
 class SushiServerMockup
