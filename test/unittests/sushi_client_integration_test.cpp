@@ -9,8 +9,6 @@
 #define private public
 
 
-// A more complex test case where tests can be grouped
-// And setup and teardown functions added.
 class SushiClientTest : public ::testing::Test
 {
     protected:
@@ -174,4 +172,63 @@ TEST_F(SushiClientKeyboardControlTest, SendModulation)
                                                                         sushi_controller::expected_results::MIDI_CHANNEL,
                                                                         sushi_controller::expected_results::MIDI_MODULATION);
     ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
+}
+
+class SushiClientCpuTimingsTest : public ::testing::Test
+{
+    protected:
+    SushiClientCpuTimingsTest()
+    {
+    }
+    void SetUp()
+    {
+    }
+
+    void TearDown()
+    {
+    }
+    sushi_controller::SushiServerMockup server;
+    sushi_controller::SushiControllerClient controller{"localhost:51051"};
+};
+
+TEST_F(SushiClientCpuTimingsTest, GetEngineTimings)
+{
+    std::pair<sushi_controller::ControlStatus, sushi_controller::CpuTimings> result = controller.get_engine_timings();
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second.min, sushi_controller::expected_results::ENGINE_TIMINGS.min);
+    ASSERT_EQ(result.second.max, sushi_controller::expected_results::ENGINE_TIMINGS.max);
+    ASSERT_EQ(result.second.avg, sushi_controller::expected_results::ENGINE_TIMINGS.avg);
+}
+
+TEST_F(SushiClientCpuTimingsTest, GetTrackTimings)
+{
+    std::pair<sushi_controller::ControlStatus, sushi_controller::CpuTimings> result = controller.get_track_timings(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second.min, sushi_controller::expected_results::TRACK_TIMINGS.min);
+    ASSERT_EQ(result.second.max, sushi_controller::expected_results::TRACK_TIMINGS.max);
+    ASSERT_EQ(result.second.avg, sushi_controller::expected_results::TRACK_TIMINGS.avg);
+}
+
+TEST_F(SushiClientCpuTimingsTest, GetProcessorTimings)
+{
+    std::pair<sushi_controller::ControlStatus, sushi_controller::CpuTimings> result = controller.get_processor_timings(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second.min, sushi_controller::expected_results::PROCESSOR_TIMINGS.min);
+    ASSERT_EQ(result.second.max, sushi_controller::expected_results::PROCESSOR_TIMINGS.max);
+    ASSERT_EQ(result.second.avg, sushi_controller::expected_results::PROCESSOR_TIMINGS.avg);
+}
+
+TEST_F(SushiClientCpuTimingsTest, ResetAllTimings)
+{
+    ASSERT_EQ(controller.reset_all_timings(),sushi_controller::ControlStatus::OK);
+}
+
+TEST_F(SushiClientCpuTimingsTest, ResetTrackTimings)
+{
+    ASSERT_EQ(controller.reset_track_timings(sushi_controller::expected_results::TRACK_WITH_ID_1.id),sushi_controller::ControlStatus::OK);
+}
+
+TEST_F(SushiClientCpuTimingsTest, ResetProcessorTimings)
+{
+    ASSERT_EQ(controller.reset_processor_timings(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id),sushi_controller::ControlStatus::OK);
 }

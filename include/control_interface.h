@@ -125,13 +125,13 @@ public:
     virtual ControlStatus                       send_pitch_bend(int track_id, int channel, float value) = 0;
     virtual ControlStatus                       send_modulation(int track_id, int channel, float value) = 0;
 
-    // // Cpu Timings
-    // virtual std::pair<ControlStatus, CpuTimings>    get_engine_timings() const = 0;
-    // virtual std::pair<ControlStatus, CpuTimings>    get_track_timings(int track_id) const = 0;
-    // virtual std::pair<ControlStatus, CpuTimings>    get_processor_timings(int processor_id) const = 0;
-    // virtual ControlStatus                           reset_all_timings() = 0;
-    // virtual ControlStatus                           reset_track_timings(int track_id) = 0;
-    // virtual ControlStatus                           reset_processor_timings(int processor_id) = 0;
+    // Cpu Timings
+    virtual std::pair<ControlStatus, CpuTimings>    get_engine_timings() const = 0;
+    virtual std::pair<ControlStatus, CpuTimings>    get_track_timings(int track_id) const = 0;
+    virtual std::pair<ControlStatus, CpuTimings>    get_processor_timings(int processor_id) const = 0;
+    virtual ControlStatus                           reset_all_timings() = 0;
+    virtual ControlStatus                           reset_track_timings(int track_id) = 0;
+    virtual ControlStatus                           reset_processor_timings(int processor_id) = 0;
 
     // // Track control
     // virtual std::pair<ControlStatus, int>           get_track_id(const std::string& track_name) const = 0;

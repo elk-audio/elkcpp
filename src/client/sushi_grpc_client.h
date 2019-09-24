@@ -54,13 +54,13 @@ public:
     ControlStatus                       send_pitch_bend(int track_id, int channel, float value) override;
     ControlStatus                       send_modulation(int track_id, int channel, float value) override;
 
-    // // Cpu Timings
-    // std::pair<ControlStatus, CpuTimings>    get_engine_timings() const override;
-    // std::pair<ControlStatus, CpuTimings>    get_track_timings(int track_id) const override;
-    // std::pair<ControlStatus, CpuTimings>    get_processor_timings(int processor_id) const override;
-    // ControlStatus                           reset_all_timings() override;
-    // ControlStatus                           reset_track_timings(int track_id) override;
-    // ControlStatus                           reset_processor_timings(int processor_id) override;
+    // Cpu Timings
+    std::pair<ControlStatus, CpuTimings>    get_engine_timings() const override;
+    std::pair<ControlStatus, CpuTimings>    get_track_timings(int track_id) const override;
+    std::pair<ControlStatus, CpuTimings>    get_processor_timings(int processor_id) const override;
+    ControlStatus                           reset_all_timings() override;
+    ControlStatus                           reset_track_timings(int track_id) override;
+    ControlStatus                           reset_processor_timings(int processor_id) override;
 
     // // Track control
     // std::pair<ControlStatus, int>           get_track_id(const std::string& track_name) const override;

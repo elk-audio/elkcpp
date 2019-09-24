@@ -427,4 +427,133 @@ ControlStatus SushiControllerClient::send_modulation(int track_id, int channel, 
     }
 }
 
+//===============//
+//  CPU Timings  //
+//===============//
+
+std::pair<ControlStatus, CpuTimings> SushiControllerClient::get_engine_timings() const
+{
+    sushi_rpc::GenericVoidValue request;
+    sushi_rpc::CpuTimings response;
+    grpc::ClientContext context;
+
+    grpc::Status status = _stub.get()->GetEngineTimings(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
+    }
+    else
+    {
+        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{-1.0f,-1.0f,-1.0f});
+    }  
+}
+
+std::pair<ControlStatus, CpuTimings> SushiControllerClient::get_track_timings(int track_id) const
+{
+    sushi_rpc::TrackIdentifier request;
+    sushi_rpc::CpuTimings response;
+    grpc::ClientContext context;
+
+    request.set_id(track_id);
+
+    grpc::Status status = _stub.get()->GetTrackTimings(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{-1.0f,-1.0f,-1.0f});
+    }  
+}
+
+std::pair<ControlStatus, CpuTimings> SushiControllerClient::get_processor_timings(int processor_id) const
+{
+    sushi_rpc::ProcessorIdentifier request;
+    sushi_rpc::CpuTimings response;
+    grpc::ClientContext context;
+
+    request.set_id(processor_id);
+
+    grpc::Status status = _stub.get()->GetProcessorTimings(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{-1.0f,-1.0f,-1.0f});
+    }  
+}
+
+ControlStatus SushiControllerClient::reset_all_timings()
+{
+    sushi_rpc::GenericVoidValue request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    grpc::Status status = _stub.get()->ResetAllTimings(&context, request, &response);
+
+    if(status.ok())
+    {
+        return to_ext(status);
+    }
+    else
+    {
+        print_status(status);
+        return to_ext(status);
+    }
+    
+}
+
+ControlStatus SushiControllerClient::reset_track_timings(int track_id)
+{
+    sushi_rpc::TrackIdentifier request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_id(track_id);
+
+    grpc::Status status = _stub.get()->ResetTrackTimings(&context, request, &response);
+
+    if(status.ok())
+    {
+        return to_ext(status);
+    }
+    else
+    {
+        print_status(status);
+        return to_ext(status);
+    }
+    
+}
+
+ControlStatus SushiControllerClient::reset_processor_timings(int processor_id)
+{
+    sushi_rpc::ProcessorIdentifier request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_id(processor_id);
+
+    grpc::Status status = _stub.get()->ResetProcessorTimings(&context, request, &response);
+
+    if(status.ok())
+    {
+        return to_ext(status);
+    }
+    else
+    {
+        print_status(status);
+        return to_ext(status);
+    }
+    
+}
+
+
 } //sushi_controller

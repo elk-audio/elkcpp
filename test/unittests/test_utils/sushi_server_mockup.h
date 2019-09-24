@@ -47,10 +47,20 @@ namespace expected_results
     constexpr float MIDI_MODULATION = 0.78f;
     constexpr float MIDI_PITCH_BEND = 0.5f;
 
+    // Cpu Timings test values
+    constexpr CpuTimings ENGINE_TIMINGS{0.02f, 0.15f, 0.04f};
+    constexpr CpuTimings TRACK_TIMINGS{0.015f, 0.10f, 0.035f};
+    constexpr CpuTimings PROCESSOR_TIMINGS{0.009f, 0.01f, 0.005f};
+
     // Track test values
     const TrackInfo TRACK_WITH_ID_1 = TrackInfo{ 1, "synth", "synth", 2, 2, 2, 2, 10};
     const TrackInfo TRACK_WITH_ID_2 = TrackInfo{ 2, "guitar", "guitar", 2, 2, 2, 2, 10};
-    const std::vector<TrackInfo> TRACK_INFO_LIST = {TRACK_WITH_ID_1, TRACK_WITH_ID_2}; 
+    const std::vector<TrackInfo> TRACK_INFO_LIST = {TRACK_WITH_ID_1, TRACK_WITH_ID_2};
+
+    // Processor test values
+    const ProcessorInfo PROCESSOR_WITH_ID_1 = ProcessorInfo{1, "synth1", "synth1", 2, 2};
+    const ProcessorInfo PROCESSOR_WITH_ID_2 = ProcessorInfo{2, "delay1", "delay1", 2, 2};
+    const std::vector<ProcessorInfo> PROCESSOR_INFO_LIST = {PROCESSOR_WITH_ID_1, PROCESSOR_WITH_ID_2}; 
 } //expected_results
 
 std::thread server_thread;
@@ -219,8 +229,8 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
     }
 
     grpc::Status SendAftertouch(grpc::ServerContext* /* context */,
-                                    const sushi_rpc::NoteModulationRequest* request,
-                                    sushi_rpc::GenericVoidValue* /* response */)
+                                const sushi_rpc::NoteModulationRequest* request,
+                                sushi_rpc::GenericVoidValue* /* response */)
     {
         if (request->track().id() == expected_results::MIDI_TRACK_ID &&
             request->channel() == expected_results::MIDI_CHANNEL &&
@@ -235,8 +245,8 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
     }
 
     grpc::Status SendPitchBend(grpc::ServerContext* /* context */,
-                                    const sushi_rpc::NoteModulationRequest* request,
-                                    sushi_rpc::GenericVoidValue* /* response */)
+                               const sushi_rpc::NoteModulationRequest* request,
+                               sushi_rpc::GenericVoidValue* /* response */)
     {
         if (request->track().id() == expected_results::MIDI_TRACK_ID &&
             request->channel() == expected_results::MIDI_CHANNEL &&
@@ -251,8 +261,8 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
     }
 
     grpc::Status SendModulation(grpc::ServerContext* /* context */,
-                                    const sushi_rpc::NoteModulationRequest* request,
-                                    sushi_rpc::GenericVoidValue* /* response */)
+                                const sushi_rpc::NoteModulationRequest* request,
+                                sushi_rpc::GenericVoidValue* /* response */)
     {
         if (request->track().id() == expected_results::MIDI_TRACK_ID &&
             request->channel() == expected_results::MIDI_CHANNEL &&
@@ -263,6 +273,91 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         else
         {
             return grpc::Status(grpc::StatusCode::UNKNOWN, "Midi message did not match expected message");
+        }
+    }
+
+    //==============//
+    //  Cpu Timings //
+    //==============//
+
+    grpc::Status GetEngineTimings(grpc::ServerContext* /* context */,
+                                  const sushi_rpc::GenericVoidValue* /* request */,
+                                  sushi_rpc::CpuTimings* response)
+    {
+        response->set_min(expected_results::ENGINE_TIMINGS.min);
+        response->set_max(expected_results::ENGINE_TIMINGS.max);
+        response->set_average(expected_results::ENGINE_TIMINGS.avg);
+        return grpc::Status::OK;
+    }
+
+    grpc::Status GetTrackTimings(grpc::ServerContext* /* context */,
+                                 const sushi_rpc::TrackIdentifier* request,
+                                 sushi_rpc::CpuTimings* response)
+    {
+        if (request->id() == expected_results::TRACK_WITH_ID_1.id)
+        {
+            response->set_min(expected_results::TRACK_TIMINGS.min);
+            response->set_max(expected_results::TRACK_TIMINGS.max);
+            response->set_average(expected_results::TRACK_TIMINGS.avg);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "Track id not found");
+        }
+
+    }
+
+    grpc::Status GetProcessorTimings(grpc::ServerContext* /* context */,
+                                     const sushi_rpc::ProcessorIdentifier* request,
+                                     sushi_rpc::CpuTimings* response)
+    {
+        if (request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            response->set_min(expected_results::PROCESSOR_TIMINGS.min);
+            response->set_max(expected_results::PROCESSOR_TIMINGS.max);
+            response->set_average(expected_results::PROCESSOR_TIMINGS.avg);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "Processor id not found");
+        }
+
+    }
+
+    grpc::Status ResetAllTimings(grpc::ServerContext* /* context */,
+                                 const sushi_rpc::GenericVoidValue* /* request */,
+                                 sushi_rpc::GenericVoidValue* /* response */)
+    {
+        return grpc::Status::OK;
+    }
+
+    grpc::Status ResetTrackTimings(grpc::ServerContext* /* context */,
+                                   const sushi_rpc::TrackIdentifier* request,
+                                   sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->id() == expected_results::TRACK_WITH_ID_1.id)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "Track id not found");
+        }
+    }
+
+     grpc::Status ResetProcessorTimings(grpc::ServerContext* /* context */,
+                                        const sushi_rpc::ProcessorIdentifier* request,
+                                        sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "Processor id not found");
         }
     }
 
