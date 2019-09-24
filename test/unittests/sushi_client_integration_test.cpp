@@ -8,6 +8,7 @@
 #include "test_utils/sushi_server_mockup.h"
 #define private public
 
+sushi_controller::SushiServerMockup server;
 
 class SushiClientTest : public ::testing::Test
 {
@@ -22,7 +23,6 @@ class SushiClientTest : public ::testing::Test
     void TearDown()
     {
     }
-    sushi_controller::SushiServerMockup server;
     sushi_controller::SushiControllerClient controller{"localhost:51051"};
 };
 
@@ -118,7 +118,6 @@ class SushiClientKeyboardControlTest : public ::testing::Test
     void TearDown()
     {
     }
-    sushi_controller::SushiServerMockup server;
     sushi_controller::SushiControllerClient controller{"localhost:51051"};
 };
 
@@ -187,7 +186,6 @@ class SushiClientCpuTimingsTest : public ::testing::Test
     void TearDown()
     {
     }
-    sushi_controller::SushiServerMockup server;
     sushi_controller::SushiControllerClient controller{"localhost:51051"};
 };
 
