@@ -60,7 +60,13 @@ namespace expected_results
     // Processor test values
     const ProcessorInfo PROCESSOR_WITH_ID_1 = ProcessorInfo{1, "synth1", "synth1", 2, 2};
     const ProcessorInfo PROCESSOR_WITH_ID_2 = ProcessorInfo{2, "delay1", "delay1", 2, 2};
-    const std::vector<ProcessorInfo> PROCESSOR_INFO_LIST = {PROCESSOR_WITH_ID_1, PROCESSOR_WITH_ID_2}; 
+    const std::vector<ProcessorInfo> PROCESSOR_INFO_LIST = {PROCESSOR_WITH_ID_1, PROCESSOR_WITH_ID_2};
+
+    // Parameter test values
+    constexpr ParameterType PARAMETER_TYPE{ParameterType::FLOAT};
+    const ParameterInfo PARAMETER_WITH_ID_1 = ParameterInfo{1, PARAMETER_TYPE, "param1", "param1", "Hz", true, 0.0f, 1.0f};
+    const ParameterInfo PARAMETER_WITH_ID_2 = ParameterInfo{2, PARAMETER_TYPE, "param2", "param2", "Hz", true, 0.0f, 1.0f};
+    const std::vector<ParameterInfo> PARAMETER_INFO_LIST = {PARAMETER_WITH_ID_1, PARAMETER_WITH_ID_2}; 
 } //expected_results
 
 std::thread server_thread;
@@ -358,6 +364,97 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         else
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "Processor id not found");
+        }
+    }
+
+    //=================//
+    //  Track control  //
+    //=================//
+
+    grpc::Status GetTrackId(grpc::ServerContext* /* context */,
+                            const sushi_rpc::GenericStringValue* request,
+                            sushi_rpc::TrackIdentifier* response)
+    {
+        if (request->value() == expected_results::TRACK_WITH_ID_1.name)
+        {
+            response->set_id(expected_results::TRACK_WITH_ID_1.id);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No track with that name");
+        }
+        
+    }
+
+    grpc::Status GetTrackInfo(grpc::ServerContext* /* context */,
+                              const sushi_rpc::TrackIdentifier* request,
+                              sushi_rpc::TrackInfo* response)
+    {
+        if (request->id() == expected_results::TRACK_WITH_ID_1.id)
+        {
+            response->set_id(expected_results::TRACK_WITH_ID_1.id);
+            response->set_label(expected_results::TRACK_WITH_ID_1.label);
+            response->set_name(expected_results::TRACK_WITH_ID_1.name);
+            response->set_input_channels(expected_results::TRACK_WITH_ID_1.input_channels);
+            response->set_input_busses(expected_results::TRACK_WITH_ID_1.input_busses);
+            response->set_output_channels(expected_results::TRACK_WITH_ID_1.output_channels);
+            response->set_output_busses(expected_results::TRACK_WITH_ID_1.output_busses);
+            response->set_processor_count(expected_results::TRACK_WITH_ID_1.processor_count);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No track with that id");
+        }
+    }
+
+    grpc::Status GetTrackProcessors(grpc::ServerContext* /* context */,
+                                    const sushi_rpc::TrackIdentifier* request,
+                                    sushi_rpc::ProcessorInfoList* response)
+    {
+        if (request->id() == expected_results::TRACK_WITH_ID_1.id)
+        {
+            for(uint i = 0; i < expected_results::PROCESSOR_INFO_LIST.size(); ++i)
+            {
+                sushi_rpc::ProcessorInfo* processor = response->add_processors();
+                processor->set_id(expected_results::PROCESSOR_INFO_LIST.at(i).id);
+                processor->set_label(expected_results::PROCESSOR_INFO_LIST.at(i).label);
+                processor->set_name(expected_results::PROCESSOR_INFO_LIST.at(i).name);
+                processor->set_parameter_count(expected_results::PROCESSOR_INFO_LIST.at(i).parameter_count);
+                processor->set_program_count(expected_results::PROCESSOR_INFO_LIST.at(i).program_count);
+            }
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No track with that id");
+        }
+    }
+
+    grpc::Status GetTrackParameters(grpc::ServerContext* /* context */,
+                                    const sushi_rpc::TrackIdentifier* request,
+                                    sushi_rpc::ParameterInfoList* response)
+    {
+        if (request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            for(uint i = 0; i < expected_results::PARAMETER_INFO_LIST.size(); ++i)
+            {
+                sushi_rpc::ParameterInfo* parameter = response->add_parameters();
+                parameter->set_id(expected_results::PARAMETER_INFO_LIST.at(i).id);
+                parameter->mutable_type()->set_type(sushi_rpc::ParameterType::FLOAT);
+                parameter->set_label(expected_results::PARAMETER_INFO_LIST.at(i).label);
+                parameter->set_name(expected_results::PARAMETER_INFO_LIST.at(i).name);
+                parameter->set_unit(expected_results::PARAMETER_INFO_LIST.at(i).unit);
+                parameter->set_automatable(expected_results::PARAMETER_INFO_LIST.at(i).automatable);
+                parameter->set_min_range(expected_results::PARAMETER_INFO_LIST.at(i).min_range);
+                parameter->set_max_range(expected_results::PARAMETER_INFO_LIST.at(i).max_range);
+            }
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
         }
     }
 

@@ -5,6 +5,19 @@ inline void print_status(grpc::Status status)
     std::cout << status.error_code() << ": " << status.error_message() << std::endl;
 }
 
+inline sushi_controller::ParameterType to_ext(const sushi_rpc::ParameterType::Type type)
+{
+    switch (type)
+    {
+        case sushi_rpc::ParameterType::INT:             return sushi_controller::ParameterType::INT;
+        case sushi_rpc::ParameterType::FLOAT:           return sushi_controller::ParameterType::FLOAT;
+        case sushi_rpc::ParameterType::BOOL:            return sushi_controller::ParameterType::BOOL;
+        case sushi_rpc::ParameterType::STRING_PROPERTY: return sushi_controller::ParameterType::STRING_PROPERTY;
+        case sushi_rpc::ParameterType::DATA_PROPERTY:   return sushi_controller::ParameterType::DATA_PROPERTY;
+        default:                                        return sushi_controller::ParameterType::INT;
+    }
+}
+
 inline sushi_controller::PlayingMode to_ext(const sushi_rpc::PlayingMode::Mode mode)
 {
     switch(mode)
@@ -555,5 +568,126 @@ ControlStatus SushiControllerClient::reset_processor_timings(int processor_id)
     
 }
 
+//=================//
+//  Track control  //
+//=================//
+
+std::pair<ControlStatus, int> SushiControllerClient::get_track_id(const std::string& track_name) const
+{
+    sushi_rpc::GenericStringValue request;
+    sushi_rpc::TrackIdentifier response;
+    grpc::ClientContext context;
+
+    request.set_value(track_name);
+
+    grpc::Status status = _stub.get()->GetTrackId(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, int>(to_ext(status), response.id());
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, int>(to_ext(status), -1);
+    }
+}
+
+std::pair<ControlStatus, TrackInfo> SushiControllerClient::get_track_info(int track_id) const
+{
+    sushi_rpc::TrackIdentifier request;
+    sushi_rpc::TrackInfo response;
+    grpc::ClientContext context;
+
+    request.set_id(track_id);
+
+    grpc::Status status = _stub.get()->GetTrackInfo(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, TrackInfo>(to_ext(status), TrackInfo{response.id(), 
+                                                                             response.label(), 
+                                                                             response.name(),
+                                                                             response.input_channels(),
+                                                                             response.input_busses(),
+                                                                             response.output_channels(),
+                                                                             response.output_busses(),
+                                                                             response.processor_count()});
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, TrackInfo>(to_ext(status), TrackInfo());
+    }
+    
+}
+
+std::pair<ControlStatus, std::vector<ProcessorInfo>> SushiControllerClient::get_track_processors(int track_id) const
+{
+    sushi_rpc::TrackIdentifier request;
+    sushi_rpc::ProcessorInfoList response;
+    grpc::ClientContext context;
+
+    request.set_id(track_id);
+
+    grpc::Status status = _stub.get()->GetTrackProcessors(&context, request, &response);
+
+    if(status.ok())
+    {
+        std::vector<ProcessorInfo> output;
+        for (int i = 0; i < response.processors_size(); ++i)
+        {
+            output.push_back(ProcessorInfo{
+                response.processors(i).id(),
+                response.processors(i).label(),
+                response.processors(i).name(),
+                response.processors(i).parameter_count(),
+                response.processors(i).program_count()
+            });
+        }
+        return std::pair<ControlStatus, std::vector<ProcessorInfo>>(to_ext(status),output);
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, std::vector<ProcessorInfo>>(to_ext(status),std::vector<ProcessorInfo>());
+    }
+}
+
+std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_track_parameters(int track_id) const
+{
+    sushi_rpc::TrackIdentifier request;
+    sushi_rpc::ParameterInfoList response;
+    grpc::ClientContext context;
+
+    request.set_id(track_id);
+
+    grpc::Status status = _stub.get()->GetTrackParameters(&context, request, &response);
+
+    if(status.ok())
+    {
+        std::vector<ParameterInfo> output;
+        for (int i = 0; i < response.parameters_size(); ++i)
+        {
+            output.push_back(ParameterInfo{
+                response.parameters(i).id(),
+                to_ext(response.parameters(i).type().type()),
+                response.parameters(i).label(),
+                response.parameters(i).name(),
+                response.parameters(i).unit(),
+                response.parameters(i).automatable(),
+                response.parameters(i).min_range(),
+                response.parameters(i).max_range()
+            });
+        }
+        return std::pair<ControlStatus, std::vector<ParameterInfo>>(ControlStatus::OK, output);
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), std::vector<ParameterInfo>());
+    }
+    
+}
 
 } //sushi_controller

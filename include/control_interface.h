@@ -134,10 +134,10 @@ public:
     virtual ControlStatus                           reset_processor_timings(int processor_id) = 0;
 
     // // Track control
-    // virtual std::pair<ControlStatus, int>           get_track_id(const std::string& track_name) const = 0;
-    // virtual std::pair<ControlStatus, TrackInfo>     get_track_info(int track_id) const = 0;
-    // virtual std::pair<ControlStatus, std::vector<ProcessorInfo>> get_track_processors(int track_id) const = 0;
-    // virtual std::pair<ControlStatus, std::vector<ParameterInfo>> get_track_parameters(int processor_id) const = 0;
+    virtual std::pair<ControlStatus, int>           get_track_id(const std::string& track_name) const = 0;
+    virtual std::pair<ControlStatus, TrackInfo>     get_track_info(int track_id) const = 0;
+    virtual std::pair<ControlStatus, std::vector<ProcessorInfo>> get_track_processors(int track_id) const = 0;
+    virtual std::pair<ControlStatus, std::vector<ParameterInfo>> get_track_parameters(int track_id) const = 0;
 
     // // Processor control
     // virtual std::pair<ControlStatus, int>              get_processor_id(const std::string& processor_name) const = 0;

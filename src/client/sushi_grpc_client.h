@@ -63,10 +63,10 @@ public:
     ControlStatus                           reset_processor_timings(int processor_id) override;
 
     // // Track control
-    // std::pair<ControlStatus, int>           get_track_id(const std::string& track_name) const override;
-    // std::pair<ControlStatus, TrackInfo>     get_track_info(int track_id) const override;
-    // std::pair<ControlStatus, std::vector<ProcessorInfo>> get_track_processors(int track_id) const override;
-    // std::pair<ControlStatus, std::vector<ParameterInfo>> get_track_parameters(int processor_id) const override;
+    std::pair<ControlStatus, int>           get_track_id(const std::string& track_name) const override;
+    std::pair<ControlStatus, TrackInfo>     get_track_info(int track_id) const override;
+    std::pair<ControlStatus, std::vector<ProcessorInfo>> get_track_processors(int track_id) const override;
+    std::pair<ControlStatus, std::vector<ParameterInfo>> get_track_parameters(int track_id) const override;
 
     // // Processor control
     // std::pair<ControlStatus, int>              get_processor_id(const std::string& processor_name) const override;

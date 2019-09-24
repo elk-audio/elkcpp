@@ -230,3 +230,71 @@ TEST_F(SushiClientCpuTimingsTest, ResetProcessorTimings)
 {
     ASSERT_EQ(controller.reset_processor_timings(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id),sushi_controller::ControlStatus::OK);
 }
+
+class SushiClientTrackControlTest : public ::testing::Test
+{
+    protected:
+    SushiClientTrackControlTest()
+    {
+    }
+    void SetUp()
+    {
+    }
+
+    void TearDown()
+    {
+    }
+    sushi_controller::SushiControllerClient controller{"localhost:51051"};
+};
+
+TEST_F(SushiClientTrackControlTest, GetTrackId)
+{
+    std::pair<sushi_controller::ControlStatus, int> result = controller.get_track_id(sushi_controller::expected_results::TRACK_WITH_ID_1.name);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::TRACK_WITH_ID_1.id);
+}
+
+TEST_F(SushiClientTrackControlTest, GetTrackInfo)
+{
+    std::pair<sushi_controller::ControlStatus, sushi_controller::TrackInfo> result = controller.get_track_info(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second.id, sushi_controller::expected_results::TRACK_WITH_ID_1.id);
+    ASSERT_EQ(result.second.label, sushi_controller::expected_results::TRACK_WITH_ID_1.label);
+    ASSERT_EQ(result.second.name, sushi_controller::expected_results::TRACK_WITH_ID_1.name);
+    ASSERT_EQ(result.second.input_channels, sushi_controller::expected_results::TRACK_WITH_ID_1.input_channels);
+    ASSERT_EQ(result.second.input_busses, sushi_controller::expected_results::TRACK_WITH_ID_1.input_busses);
+    ASSERT_EQ(result.second.output_channels, sushi_controller::expected_results::TRACK_WITH_ID_1.output_channels);
+    ASSERT_EQ(result.second.output_channels, sushi_controller::expected_results::TRACK_WITH_ID_1.output_channels);
+    ASSERT_EQ(result.second.processor_count, sushi_controller::expected_results::TRACK_WITH_ID_1.processor_count);
+}
+
+TEST_F(SushiClientTrackControlTest, GetTrackProcessors)
+{
+    std::pair<sushi_controller::ControlStatus, std::vector<sushi_controller::ProcessorInfo>> result = controller.get_track_processors(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    for (uint i = 0; i < sushi_controller::expected_results::PROCESSOR_INFO_LIST.size(); ++i)
+    {
+        ASSERT_EQ(result.second.at(i).id, sushi_controller::expected_results::PROCESSOR_INFO_LIST.at(i).id);
+        ASSERT_EQ(result.second.at(i).label, sushi_controller::expected_results::PROCESSOR_INFO_LIST.at(i).label);
+        ASSERT_EQ(result.second.at(i).name, sushi_controller::expected_results::PROCESSOR_INFO_LIST.at(i).name);
+        ASSERT_EQ(result.second.at(i).parameter_count, sushi_controller::expected_results::PROCESSOR_INFO_LIST.at(i).parameter_count);
+        ASSERT_EQ(result.second.at(i).program_count, sushi_controller::expected_results::PROCESSOR_INFO_LIST.at(i).program_count);
+    }
+}
+
+TEST_F(SushiClientTrackControlTest, GetTrackParameters)
+{
+    std::pair<sushi_controller::ControlStatus, std::vector<sushi_controller::ParameterInfo>> result = controller.get_track_parameters (sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    for (uint i = 0; i < sushi_controller::expected_results::PARAMETER_INFO_LIST.size(); ++i)
+    {
+        ASSERT_EQ(result.second.at(i).id, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).id);
+        ASSERT_EQ(result.second.at(i).type, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).type);
+        ASSERT_EQ(result.second.at(i).label, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).label);
+        ASSERT_EQ(result.second.at(i).name, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).name);
+        ASSERT_EQ(result.second.at(i).unit, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).unit);
+        ASSERT_EQ(result.second.at(i).automatable, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).automatable);
+        ASSERT_EQ(result.second.at(i).min_range, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).min_range);
+        ASSERT_EQ(result.second.at(i).max_range, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).max_range);
+    }
+}
