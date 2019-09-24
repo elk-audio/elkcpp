@@ -163,6 +163,10 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         return grpc::Status::OK;
     }
 
+    //====================//
+    //  Keyboard Control  //
+    //====================//
+
     grpc::Status SendNoteOn(grpc::ServerContext* /* context */,
                             const sushi_rpc::NoteOnRequest* request,
                             sushi_rpc::GenericVoidValue* /* response */)

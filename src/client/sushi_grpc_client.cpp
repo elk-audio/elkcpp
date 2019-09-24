@@ -282,6 +282,10 @@ std::vector<TrackInfo> SushiControllerClient::get_tracks() const
     }    
 }
 
+//====================//
+//  Keyboard Control  //
+//====================//
+
 ControlStatus SushiControllerClient::send_note_on(int track_id, int channel, int note, float velocity)
 {
     sushi_rpc::NoteOnRequest request;

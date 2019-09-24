@@ -46,7 +46,7 @@ public:
     // void                                set_timing_statistics_enabled(bool enabled) const override;
     std::vector<TrackInfo>              get_tracks() const override;
 
-    // // Keyboard control
+    // Keyboard control
     ControlStatus                       send_note_on(int track_id, int channel, int note, float velocity) override;
     ControlStatus                       send_note_off(int track_id, int note, int channel, float velocity) override;
     ControlStatus                       send_note_aftertouch(int track_id, int channel, int note, float value) override;

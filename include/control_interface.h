@@ -117,7 +117,7 @@ public:
     // virtual void                                set_timing_statistics_enabled(bool enabled) const = 0;
     virtual std::vector<TrackInfo>              get_tracks() const = 0;
 
-    // // Keyboard control
+    // Keyboard control
     virtual ControlStatus                       send_note_on(int track_id, int channel, int note, float velocity) = 0;
     virtual ControlStatus                       send_note_off(int track_id, int channel, int note, float velocity) = 0;
     virtual ControlStatus                       send_note_aftertouch(int track_id, int channel, int note, float value) = 0;
