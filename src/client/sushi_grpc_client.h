@@ -47,12 +47,12 @@ public:
     std::vector<TrackInfo>              get_tracks() const override;
 
     // // Keyboard control
-    // ControlStatus                       send_note_on(int track_id, int note, int channel, float velocity) override;
-    // ControlStatus                       send_note_off(int track_id, int note, int channel, float velocity) override;
-    // ControlStatus                       send_note_aftertouch(int track_id, int channel, int note, float value) override;
-    // ControlStatus                       send_aftertouch(int track_id, int channel, float value) override;
-    // ControlStatus                       send_pitch_bend(int track_id, int channel, float value) override;
-    // ControlStatus                       send_modulation(int track_id, int channel, float value) override;
+    ControlStatus                       send_note_on(int track_id, int channel, int note, float velocity) override;
+    ControlStatus                       send_note_off(int track_id, int note, int channel, float velocity) override;
+    ControlStatus                       send_note_aftertouch(int track_id, int channel, int note, float value) override;
+    ControlStatus                       send_aftertouch(int track_id, int channel, float value) override;
+    ControlStatus                       send_pitch_bend(int track_id, int channel, float value) override;
+    ControlStatus                       send_modulation(int track_id, int channel, float value) override;
 
     // // Cpu Timings
     // std::pair<ControlStatus, CpuTimings>    get_engine_timings() const override;

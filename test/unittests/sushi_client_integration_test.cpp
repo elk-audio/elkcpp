@@ -106,3 +106,72 @@ TEST_F(SushiClientTest, GetTracks)
         ASSERT_EQ(track_info_list.at(i).processor_count,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).processor_count);
     }
 }
+
+class SushiClientKeyboardControlTest : public ::testing::Test
+{
+    protected:
+    SushiClientKeyboardControlTest()
+    {
+    }
+    void SetUp()
+    {
+    }
+
+    void TearDown()
+    {
+    }
+    sushi_controller::SushiServerMockup server;
+    sushi_controller::SushiControllerClient controller{"localhost:51051"};
+};
+
+TEST_F(SushiClientKeyboardControlTest, SendNoteOn)
+{
+    sushi_controller::ControlStatus status = controller.send_note_on(sushi_controller::expected_results::MIDI_TRACK_ID,
+                                                                     sushi_controller::expected_results::MIDI_CHANNEL,
+                                                                     sushi_controller::expected_results::MIDI_NOTE,
+                                                                     sushi_controller::expected_results::MIDI_VELOCITY);
+    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
+}
+
+
+TEST_F(SushiClientKeyboardControlTest, SendNoteOff)
+{
+    sushi_controller::ControlStatus status = controller.send_note_off(sushi_controller::expected_results::MIDI_TRACK_ID,
+                                                                      sushi_controller::expected_results::MIDI_CHANNEL,
+                                                                      sushi_controller::expected_results::MIDI_NOTE,
+                                                                      sushi_controller::expected_results::MIDI_VELOCITY);
+    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
+}
+
+TEST_F(SushiClientKeyboardControlTest, SendNoteAftertouch)
+{
+    sushi_controller::ControlStatus status = controller.send_note_aftertouch(sushi_controller::expected_results::MIDI_TRACK_ID,
+                                                                             sushi_controller::expected_results::MIDI_CHANNEL,
+                                                                             sushi_controller::expected_results::MIDI_NOTE,
+                                                                             sushi_controller::expected_results::MIDI_AFTERTOUCH);
+    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
+}
+
+TEST_F(SushiClientKeyboardControlTest, SendAftertouch)
+{
+    sushi_controller::ControlStatus status = controller.send_aftertouch(sushi_controller::expected_results::MIDI_TRACK_ID,
+                                                                        sushi_controller::expected_results::MIDI_CHANNEL,
+                                                                        sushi_controller::expected_results::MIDI_AFTERTOUCH);
+    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
+}
+
+TEST_F(SushiClientKeyboardControlTest, SendPitchBend)
+{
+    sushi_controller::ControlStatus status = controller.send_pitch_bend(sushi_controller::expected_results::MIDI_TRACK_ID,
+                                                                        sushi_controller::expected_results::MIDI_CHANNEL,
+                                                                        sushi_controller::expected_results::MIDI_PITCH_BEND);
+    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
+}
+
+TEST_F(SushiClientKeyboardControlTest, SendModulation)
+{
+    sushi_controller::ControlStatus status = controller.send_modulation(sushi_controller::expected_results::MIDI_TRACK_ID,
+                                                                        sushi_controller::expected_results::MIDI_CHANNEL,
+                                                                        sushi_controller::expected_results::MIDI_MODULATION);
+    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
+}

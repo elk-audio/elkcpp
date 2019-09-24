@@ -163,6 +163,105 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         return grpc::Status::OK;
     }
 
+    grpc::Status SendNoteOn(grpc::ServerContext* /* context */,
+                            const sushi_rpc::NoteOnRequest* request,
+                            sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->track().id() == expected_results::MIDI_TRACK_ID &&
+            request->channel() == expected_results::MIDI_CHANNEL &&
+            request->note() == expected_results::MIDI_NOTE &&
+            request->velocity() == expected_results::MIDI_VELOCITY)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "Midi message did not match expected message");
+        }
+    }
+
+    grpc::Status SendNoteOff(grpc::ServerContext* /* context */,
+                            const sushi_rpc::NoteOffRequest* request,
+                            sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->track().id() == expected_results::MIDI_TRACK_ID &&
+            request->channel() == expected_results::MIDI_CHANNEL &&
+            request->note() == expected_results::MIDI_NOTE &&
+            request->velocity() == expected_results::MIDI_VELOCITY)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "Midi message did not match expected message");
+        }
+    }
+
+    grpc::Status SendNoteAftertouch(grpc::ServerContext* /* context */,
+                                    const sushi_rpc::NoteAftertouchRequest* request,
+                                    sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->track().id() == expected_results::MIDI_TRACK_ID &&
+            request->channel() == expected_results::MIDI_CHANNEL &&
+            request->note() == expected_results::MIDI_NOTE &&
+            request->value() == expected_results::MIDI_AFTERTOUCH)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "Midi message did not match expected message");
+        }
+    }
+
+    grpc::Status SendAftertouch(grpc::ServerContext* /* context */,
+                                    const sushi_rpc::NoteModulationRequest* request,
+                                    sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->track().id() == expected_results::MIDI_TRACK_ID &&
+            request->channel() == expected_results::MIDI_CHANNEL &&
+            request->value() == expected_results::MIDI_AFTERTOUCH)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "Midi message did not match expected message");
+        }
+    }
+
+    grpc::Status SendPitchBend(grpc::ServerContext* /* context */,
+                                    const sushi_rpc::NoteModulationRequest* request,
+                                    sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->track().id() == expected_results::MIDI_TRACK_ID &&
+            request->channel() == expected_results::MIDI_CHANNEL &&
+            request->value() == expected_results::MIDI_PITCH_BEND)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "Midi message did not match expected message");
+        }
+    }
+
+    grpc::Status SendModulation(grpc::ServerContext* /* context */,
+                                    const sushi_rpc::NoteModulationRequest* request,
+                                    sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->track().id() == expected_results::MIDI_TRACK_ID &&
+            request->channel() == expected_results::MIDI_CHANNEL &&
+            request->value() == expected_results::MIDI_MODULATION)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "Midi message did not match expected message");
+        }
+    }
+
     sushi_rpc::PlayingMode::Mode _playing_mode{startup_values::PLAYING_MODE};
     sushi_rpc::SyncMode::Mode _sync_mode{startup_values::SYNC_MODE};
     float _tempo{expected_results::TEMPO};
