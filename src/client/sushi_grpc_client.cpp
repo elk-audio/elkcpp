@@ -210,7 +210,7 @@ ControlStatus SushiControllerClient::set_tempo(float tempo)
 
     if (status.ok())
     {
-        return ControlStatus::OK;
+        return to_ext(status);
     }
     else
     {
@@ -251,7 +251,7 @@ ControlStatus SushiControllerClient::set_time_signature(TimeSignature time_signa
 
     if (status.ok())
     {
-        return ControlStatus::OK;
+        return to_ext(status);
     }
     else
     {
@@ -314,7 +314,7 @@ ControlStatus SushiControllerClient::send_note_on(int track_id, int channel, int
 
     if(status.ok())
     {
-        return ControlStatus::OK;
+        return to_ext(status);
     }
     else
     {
@@ -338,7 +338,7 @@ ControlStatus SushiControllerClient::send_note_off(int track_id, int channel, in
 
     if(status.ok())
     {
-        return ControlStatus::OK;
+        return to_ext(status);
     }
     else
     {
@@ -362,7 +362,7 @@ ControlStatus SushiControllerClient::send_note_aftertouch(int track_id, int chan
 
     if(status.ok())
     {
-        return ControlStatus::OK;
+        return to_ext(status);
     }
     else
     {
@@ -385,7 +385,7 @@ ControlStatus SushiControllerClient::send_aftertouch(int track_id, int channel, 
 
     if(status.ok())
     {
-        return ControlStatus::OK;
+        return to_ext(status);
     }
     else
     {
@@ -408,7 +408,7 @@ ControlStatus SushiControllerClient::send_pitch_bend(int track_id, int channel, 
 
     if(status.ok())
     {
-        return ControlStatus::OK;
+        return to_ext(status);
     }
     else
     {
@@ -431,7 +431,7 @@ ControlStatus SushiControllerClient::send_modulation(int track_id, int channel, 
 
     if(status.ok())
     {
-        return ControlStatus::OK;
+        return to_ext(status);
     }
     else
     {
@@ -680,7 +680,7 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_
                 response.parameters(i).max_range()
             });
         }
-        return std::pair<ControlStatus, std::vector<ParameterInfo>>(ControlStatus::OK, output);
+        return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
     }
     else
     {
