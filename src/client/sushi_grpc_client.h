@@ -68,17 +68,17 @@ public:
     std::pair<ControlStatus, std::vector<ProcessorInfo>> get_track_processors(int track_id) const override;
     std::pair<ControlStatus, std::vector<ParameterInfo>> get_track_parameters(int track_id) const override;
 
-    // // Processor control
-    // std::pair<ControlStatus, int>              get_processor_id(const std::string& processor_name) const override;
-    // std::pair<ControlStatus, ProcessorInfo>    get_processor_info(int processor_id) const override;
-    // std::pair<ControlStatus, bool>             get_processor_bypass_state(int processor_id) const override;
-    // ControlStatus                              set_processor_bypass_state(int processor_id, bool bypass_enabled) override;
-    // std::pair<ControlStatus, int>              get_processor_current_program(int processor_id) const override;
-    // std::pair<ControlStatus, std::string>      get_processor_current_program_name(int processor_id) const override;
-    // std::pair<ControlStatus, std::string>      get_processor_program_name(int processor_id, int program_id) const override;
-    // std::pair<ControlStatus, std::vector<std::string>>   get_processor_programs(int processor_id) const override;
-    // ControlStatus                              set_processor_program(int processor_id, int program_id) override;
-    // std::pair<ControlStatus, std::vector<ParameterInfo>> get_processor_parameters(int processor_id) const override;
+    // Processor control
+    std::pair<ControlStatus, int>              get_processor_id(const std::string& processor_name) const override;
+    std::pair<ControlStatus, ProcessorInfo>    get_processor_info(int processor_id) const override;
+    std::pair<ControlStatus, bool>             get_processor_bypass_state(int processor_id) const override;
+    ControlStatus                              set_processor_bypass_state(int processor_id, bool bypass_enabled) override;
+    std::pair<ControlStatus, int>              get_processor_current_program(int processor_id) const override;
+    std::pair<ControlStatus, std::string>      get_processor_current_program_name(int processor_id) const override;
+    std::pair<ControlStatus, std::string>      get_processor_program_name(int processor_id, int program_id) const override;
+    std::pair<ControlStatus, std::vector<std::string>>   get_processor_programs(int processor_id) const override;
+    ControlStatus                              set_processor_program(int processor_id, int program_id) override;
+    std::pair<ControlStatus, std::vector<ParameterInfo>> get_processor_parameters(int processor_id) const override;
 
     // // Parameter control
     // std::pair<ControlStatus, int>              get_parameter_id(int processor_id, const std::string& parameter) const override;

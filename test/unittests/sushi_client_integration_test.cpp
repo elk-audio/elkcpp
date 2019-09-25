@@ -298,3 +298,106 @@ TEST_F(SushiClientTrackControlTest, GetTrackParameters)
         ASSERT_EQ(result.second.at(i).max_range, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).max_range);
     }
 }
+
+class SushiClientProcessorControlTest : public ::testing::Test
+{
+    protected:
+    SushiClientProcessorControlTest()
+    {
+    }
+    void SetUp()
+    {
+    }
+
+    void TearDown()
+    {
+    }
+    sushi_controller::SushiControllerClient controller{"localhost:51051"};
+};
+
+TEST_F(SushiClientProcessorControlTest, GetProcessorId)
+{
+    std::pair<sushi_controller::ControlStatus, int> result = controller.get_processor_id(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.name);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+}
+
+TEST_F(SushiClientProcessorControlTest, GetProcessorInfo)
+{
+    std::pair<sushi_controller::ControlStatus, sushi_controller::ProcessorInfo> result = controller.get_processor_info(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second.id, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.second.label, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.label);
+    ASSERT_EQ(result.second.name, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.name);
+    ASSERT_EQ(result.second.program_count, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.program_count);
+    ASSERT_EQ(result.second.parameter_count, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.parameter_count);
+}
+
+TEST_F(SushiClientProcessorControlTest, GetProcessorBybassState)
+{
+    std::pair<sushi_controller::ControlStatus, bool> result = controller.get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PROCESSOR_BYPASS_STATE);
+}
+
+TEST_F(SushiClientProcessorControlTest, SetProcessorBypassState)
+{
+    ASSERT_EQ(controller.set_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,false), sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(controller.get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id).second,false);
+    ASSERT_EQ(controller.set_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,true), sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(controller.get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id).second,true);
+}
+
+TEST_F(SushiClientProcessorControlTest, GetProcessorCurrentProgram)
+{
+    std::pair<sushi_controller::ControlStatus, int> result = controller.get_processor_current_program(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PROGRAM_ID);
+}
+
+TEST_F(SushiClientProcessorControlTest, GetProcessorCurrentProgramName)
+{
+    std::pair<sushi_controller::ControlStatus, std::string> result = controller.get_processor_current_program_name(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PROGRAM_NAME);
+}
+
+TEST_F(SushiClientProcessorControlTest, GetProcessorProgramName)
+{
+    std::pair<sushi_controller::ControlStatus, std::string> result = controller.get_processor_program_name(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, sushi_controller::expected_results::PROGRAM_ID);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PROGRAM_NAME);
+}
+
+TEST_F(SushiClientProcessorControlTest, GetProcessorPrograms)
+{
+    std::pair<sushi_controller::ControlStatus, std::vector<std::string>> result = controller.get_processor_programs(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    for (uint i = 0; i < result.second.size(); ++i)
+    {
+        ASSERT_EQ(result.second.at(i), sushi_controller::expected_results::PROGRAM_NAME);
+    }
+}
+
+TEST_F(SushiClientProcessorControlTest, SetProcessorProgram)
+{
+    sushi_controller::ControlStatus result = controller.set_processor_program(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, sushi_controller::expected_results::PROGRAM_ID);
+    ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
+}
+
+TEST_F(SushiClientProcessorControlTest, GetProcessorParameters)
+{
+    std::pair<sushi_controller::ControlStatus, std::vector<sushi_controller::ParameterInfo>> result = controller.get_processor_parameters(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    for(uint i = 0; i < result.second.size(); ++i)
+    {
+        ASSERT_EQ(result.second.at(i).id, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).id);
+        ASSERT_EQ(result.second.at(i).type, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).type);
+        ASSERT_EQ(result.second.at(i).label, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).label);
+        ASSERT_EQ(result.second.at(i).name, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).name);
+        ASSERT_EQ(result.second.at(i).unit, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).unit);
+        ASSERT_EQ(result.second.at(i).automatable, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).automatable);
+        ASSERT_EQ(result.second.at(i).min_range, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).min_range);
+        ASSERT_EQ(result.second.at(i).max_range, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).max_range);
+    }   
+}

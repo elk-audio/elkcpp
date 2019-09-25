@@ -61,6 +61,11 @@ namespace expected_results
     const ProcessorInfo PROCESSOR_WITH_ID_1 = ProcessorInfo{1, "synth1", "synth1", 2, 2};
     const ProcessorInfo PROCESSOR_WITH_ID_2 = ProcessorInfo{2, "delay1", "delay1", 2, 2};
     const std::vector<ProcessorInfo> PROCESSOR_INFO_LIST = {PROCESSOR_WITH_ID_1, PROCESSOR_WITH_ID_2};
+    constexpr bool PROCESSOR_BYPASS_STATE = true;
+
+    // Program test values
+    constexpr int PROGRAM_ID{1};
+    const std::string PROGRAM_NAME{"Program1"};
 
     // Parameter test values
     constexpr ParameterType PARAMETER_TYPE{ParameterType::FLOAT};
@@ -458,10 +463,187 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         }
     }
 
+    //=====================//
+    //  Processor control  //
+    //=====================//
+
+    grpc::Status GetProcessorId(grpc::ServerContext* /* context */,
+                                const sushi_rpc::GenericStringValue* request,
+                                sushi_rpc::ProcessorIdentifier* response)
+    {
+        if(request->value() == expected_results::PROCESSOR_WITH_ID_1.name)
+        {
+            response->set_id(expected_results::PROCESSOR_WITH_ID_1.id);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that name");
+        }
+    }
+
+    grpc::Status GetProcessorInfo(grpc::ServerContext* /* context */,
+                                  const sushi_rpc::ProcessorIdentifier* request,
+                                  sushi_rpc::ProcessorInfo* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            response->set_id(expected_results::PROCESSOR_WITH_ID_1.id);
+            response->set_label(expected_results::PROCESSOR_WITH_ID_1.label);
+            response->set_name(expected_results::PROCESSOR_WITH_ID_1.name);
+            response->set_parameter_count(expected_results::PROCESSOR_WITH_ID_1.parameter_count);
+            response->set_program_count(expected_results::PROCESSOR_WITH_ID_1.program_count);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
+    grpc::Status GetProcessorBypassState(grpc::ServerContext* /* context */,
+                                         const sushi_rpc::ProcessorIdentifier* request,
+                                         sushi_rpc::GenericBoolValue* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            response->set_value(_processor_bypass_state);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
+    grpc::Status SetProcessorBypassState(grpc::ServerContext* /* context */,
+                                         const sushi_rpc::ProcessorBypassStateSetRequest* request,
+                                         sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            _processor_bypass_state = request->value();
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+        
+    }
+
+    grpc::Status GetProcessorCurrentProgram(grpc::ServerContext* /* context */,
+                                            const sushi_rpc::ProcessorIdentifier* request,
+                                            sushi_rpc::ProgramIdentifier* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            response->set_program(expected_results::PROGRAM_ID);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+        
+    }
+
+    grpc::Status GetProcessorCurrentProgramName(grpc::ServerContext* /* context */,
+                                                const sushi_rpc::ProcessorIdentifier* request,
+                                                sushi_rpc::GenericStringValue* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            response->set_value(expected_results::PROGRAM_NAME);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+        
+    }
+
+    grpc::Status GetProcessorProgramName(grpc::ServerContext* /* context */,
+                                         const sushi_rpc::ProcessorProgramIdentifier* request,
+                                         sushi_rpc::GenericStringValue* response)
+    {
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id && request->program() == expected_results::PROGRAM_ID)
+        {
+            response->set_value(expected_results::PROGRAM_NAME);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor and/or program with that id");
+        }
+        
+    }
+
+    grpc::Status GetProcessorPrograms(grpc::ServerContext* /* context */,
+                                      const sushi_rpc::ProcessorIdentifier* request,
+                                      sushi_rpc::ProgramInfoList* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            sushi_rpc::ProgramInfo* program = response->add_programs();
+            program->mutable_id()->set_program(expected_results::PROGRAM_ID);
+            program->set_name(expected_results::PROGRAM_NAME);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+        
+    }
+
+    grpc::Status SetProcessorProgram(grpc::ServerContext* /* context */,
+                                     const sushi_rpc::ProcessorProgramSetRequest* request,
+                                     sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id && request->program().program() == expected_results::PROGRAM_ID)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor and/or program with that id");
+        }
+    }
+
+    grpc::Status GetProcessorParameters(grpc::ServerContext* /* context */,
+                                        const sushi_rpc::ProcessorIdentifier* request,
+                                        sushi_rpc::ParameterInfoList* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            for(uint i = 0; i < expected_results::PARAMETER_INFO_LIST.size(); ++i)
+            {
+                sushi_rpc::ParameterInfo* parameter = response->add_parameters();
+                parameter->set_id(expected_results::PARAMETER_INFO_LIST.at(i).id);
+                parameter->mutable_type()->set_type(sushi_rpc::ParameterType::FLOAT);
+                parameter->set_label(expected_results::PARAMETER_INFO_LIST.at(i).label);
+                parameter->set_name(expected_results::PARAMETER_INFO_LIST.at(i).name);
+                parameter->set_unit(expected_results::PARAMETER_INFO_LIST.at(i).unit);
+                parameter->set_automatable(expected_results::PARAMETER_INFO_LIST.at(i).automatable);
+                parameter->set_min_range(expected_results::PARAMETER_INFO_LIST.at(i).min_range);
+                parameter->set_max_range(expected_results::PARAMETER_INFO_LIST.at(i).max_range);
+            }
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+        
+    }
+
     sushi_rpc::PlayingMode::Mode _playing_mode{startup_values::PLAYING_MODE};
     sushi_rpc::SyncMode::Mode _sync_mode{startup_values::SYNC_MODE};
     float _tempo{expected_results::TEMPO};
     sushi_controller::TimeSignature _time_signature{expected_results::TIME_SIGNATURE};
+    bool _processor_bypass_state{expected_results::PROCESSOR_BYPASS_STATE};
 
 public:
     void setUp()

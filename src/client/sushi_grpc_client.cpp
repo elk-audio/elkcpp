@@ -690,4 +690,254 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_
     
 }
 
+//=====================//
+//  Processor control  //
+//=====================//
+
+std::pair<ControlStatus, int> SushiControllerClient::get_processor_id(const std::string& processor_name) const
+{
+    sushi_rpc::GenericStringValue request;
+    sushi_rpc::ProcessorIdentifier response;
+    grpc::ClientContext context;
+
+    request.set_value(processor_name);
+
+    grpc::Status status = _stub.get()->GetProcessorId(&context, request, &response);
+
+    if (status.ok())
+    {
+        return std::pair<ControlStatus, int>(to_ext(status), response.id());
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, int>(to_ext(status),-1);
+    }
+}
+
+std::pair<ControlStatus, ProcessorInfo> SushiControllerClient::get_processor_info(int processor_id) const
+{
+    sushi_rpc::ProcessorIdentifier request;
+    sushi_rpc::ProcessorInfo response;
+    grpc::ClientContext context;
+
+    request.set_id(processor_id);
+
+    grpc::Status status = _stub.get()->GetProcessorInfo(&context, request, &response);
+
+    if(status.ok())
+    {
+        ProcessorInfo output;
+        output.id = response.id();
+        output.label = response.label();
+        output.name = response.name();
+        output.parameter_count = response.parameter_count();
+        output.program_count = response.program_count();
+        return std::pair<ControlStatus, ProcessorInfo>(to_ext(status), output);
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, ProcessorInfo>(to_ext(status), ProcessorInfo());
+    }
+    
+}
+
+std::pair<ControlStatus, bool> SushiControllerClient::get_processor_bypass_state(int processor_id) const
+{
+    sushi_rpc::ProcessorIdentifier request;
+    sushi_rpc::GenericBoolValue response;
+    grpc::ClientContext context;
+
+    request.set_id(processor_id);
+
+    grpc::Status status = _stub.get()->GetProcessorBypassState(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, bool>(to_ext(status), response.value());
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, bool>(to_ext(status), false);
+    }
+}
+
+ControlStatus SushiControllerClient::set_processor_bypass_state(int processor_id, bool bypass_enabled)
+{
+    sushi_rpc::ProcessorBypassStateSetRequest request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.mutable_processor()->set_id(processor_id);
+    request.set_value(bypass_enabled);
+
+    grpc::Status status = _stub.get()->SetProcessorBypassState(&context, request, &response);
+
+    if(status.ok())
+    {
+        return to_ext(status);
+    }
+    else
+    {
+        return to_ext(status);
+    }
+}
+
+std::pair<ControlStatus, int> SushiControllerClient::get_processor_current_program(int processor_id) const
+{
+    sushi_rpc::ProcessorIdentifier request;
+    sushi_rpc::ProgramIdentifier response;
+    grpc::ClientContext context;
+
+    request.set_id(processor_id);
+
+    grpc::Status status = _stub.get()->GetProcessorCurrentProgram(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, int>(to_ext(status), response.program());
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, int>(to_ext(status), -1);
+    }
+    
+}
+
+std::pair<ControlStatus, std::string> SushiControllerClient::get_processor_current_program_name(int processor_id) const
+{
+    sushi_rpc::ProcessorIdentifier request;
+    sushi_rpc::GenericStringValue response;
+    grpc::ClientContext context;
+
+    request.set_id(processor_id);
+
+    grpc::Status status = _stub.get()->GetProcessorCurrentProgramName(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, std::string>(to_ext(status), "");
+    }
+    
+}
+
+std::pair<ControlStatus, std::string> SushiControllerClient::get_processor_program_name(int processor_id, int program_id) const
+{
+    sushi_rpc::ProcessorProgramIdentifier request;
+    sushi_rpc::GenericStringValue response;
+    grpc::ClientContext context;
+
+    request.mutable_processor()->set_id(processor_id);
+    request.set_program(program_id);
+
+    grpc::Status status = _stub.get()->GetProcessorProgramName(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, std::string>(to_ext(status), "");
+    }
+    
+}
+
+std::pair<ControlStatus, std::vector<std::string>> SushiControllerClient::get_processor_programs(int processor_id) const
+{
+    sushi_rpc::ProcessorIdentifier request;
+    sushi_rpc::ProgramInfoList response;
+    grpc::ClientContext context;
+
+    request.set_id(processor_id);
+
+    grpc::Status status = _stub.get()->GetProcessorPrograms(&context, request, &response);
+
+    if(status.ok())
+    {
+        std::vector<std::string> output;
+        for (int i = 0; i < response.programs_size(); ++i)
+        {
+            output.push_back(response.programs(i).name());
+        }
+        return std::pair<ControlStatus, std::vector<std::string>>(to_ext(status), output);
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, std::vector<std::string>>(to_ext(status), std::vector<std::string>());
+    }
+    
+}
+
+ControlStatus SushiControllerClient::set_processor_program(int processor_id, int program_id)
+{
+    sushi_rpc::ProcessorProgramSetRequest request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.mutable_processor()->set_id(processor_id);
+    request.mutable_program()->set_program(program_id);
+
+    grpc::Status status = _stub.get()->SetProcessorProgram(&context, request, &response);
+
+    if(status.ok())
+    {
+        return to_ext(status);
+    }
+    else
+    {
+        print_status(status);
+        return to_ext(status);
+    }
+   
+}
+
+std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_processor_parameters(int processor_id) const
+{
+    sushi_rpc::ProcessorIdentifier request;
+    sushi_rpc::ParameterInfoList response;
+    grpc::ClientContext context;
+
+    request.set_id(processor_id);
+
+    grpc::Status status = _stub.get()->GetProcessorParameters(&context, request, &response);
+
+    if(status.ok())
+    {
+        std::vector<ParameterInfo> output;
+        for(int i = 0; i < response.parameters_size(); ++i)
+        {
+            output.push_back(
+                ParameterInfo{
+                    response.parameters(i).id(),
+                    to_ext(response.parameters(i).type().type()),
+                    response.parameters(i).label(),
+                    response.parameters(i).name(),
+                    response.parameters(i).unit(),
+                    response.parameters(i).automatable(),
+                    response.parameters(i).min_range(),
+                    response.parameters(i).max_range()
+                }
+            );
+        }
+        return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), std::vector<ParameterInfo>());
+    }
+    
+}
+
 } //sushi_controller
