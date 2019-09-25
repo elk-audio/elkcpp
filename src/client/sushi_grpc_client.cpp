@@ -105,8 +105,7 @@ float SushiControllerClient::get_samplerate() const
     {
         print_status(status);
         return -1;
-    }
-    
+    }  
 }
 
 PlayingMode SushiControllerClient::get_playing_mode() const
@@ -521,7 +520,6 @@ ControlStatus SushiControllerClient::reset_all_timings()
         print_status(status);
         return to_ext(status);
     }
-    
 }
 
 ControlStatus SushiControllerClient::reset_track_timings(int track_id)
@@ -543,7 +541,6 @@ ControlStatus SushiControllerClient::reset_track_timings(int track_id)
         print_status(status);
         return to_ext(status);
     }
-    
 }
 
 ControlStatus SushiControllerClient::reset_processor_timings(int processor_id)
@@ -565,7 +562,6 @@ ControlStatus SushiControllerClient::reset_processor_timings(int processor_id)
         print_status(status);
         return to_ext(status);
     }
-    
 }
 
 //=================//
@@ -619,7 +615,6 @@ std::pair<ControlStatus, TrackInfo> SushiControllerClient::get_track_info(int tr
         print_status(status);
         return std::pair<ControlStatus, TrackInfo>(to_ext(status), TrackInfo());
     }
-    
 }
 
 std::pair<ControlStatus, std::vector<ProcessorInfo>> SushiControllerClient::get_track_processors(int track_id) const
@@ -687,7 +682,6 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_
         print_status(status);
         return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), std::vector<ParameterInfo>());
     }
-    
 }
 
 //=====================//
@@ -740,7 +734,6 @@ std::pair<ControlStatus, ProcessorInfo> SushiControllerClient::get_processor_inf
         print_status(status);
         return std::pair<ControlStatus, ProcessorInfo>(to_ext(status), ProcessorInfo());
     }
-    
 }
 
 std::pair<ControlStatus, bool> SushiControllerClient::get_processor_bypass_state(int processor_id) const
@@ -804,7 +797,6 @@ std::pair<ControlStatus, int> SushiControllerClient::get_processor_current_progr
         print_status(status);
         return std::pair<ControlStatus, int>(to_ext(status), -1);
     }
-    
 }
 
 std::pair<ControlStatus, std::string> SushiControllerClient::get_processor_current_program_name(int processor_id) const
@@ -826,7 +818,6 @@ std::pair<ControlStatus, std::string> SushiControllerClient::get_processor_curre
         print_status(status);
         return std::pair<ControlStatus, std::string>(to_ext(status), "");
     }
-    
 }
 
 std::pair<ControlStatus, std::string> SushiControllerClient::get_processor_program_name(int processor_id, int program_id) const
@@ -849,7 +840,6 @@ std::pair<ControlStatus, std::string> SushiControllerClient::get_processor_progr
         print_status(status);
         return std::pair<ControlStatus, std::string>(to_ext(status), "");
     }
-    
 }
 
 std::pair<ControlStatus, std::vector<std::string>> SushiControllerClient::get_processor_programs(int processor_id) const
@@ -876,7 +866,6 @@ std::pair<ControlStatus, std::vector<std::string>> SushiControllerClient::get_pr
         print_status(status);
         return std::pair<ControlStatus, std::vector<std::string>>(to_ext(status), std::vector<std::string>());
     }
-    
 }
 
 ControlStatus SushiControllerClient::set_processor_program(int processor_id, int program_id)
@@ -898,8 +887,7 @@ ControlStatus SushiControllerClient::set_processor_program(int processor_id, int
     {
         print_status(status);
         return to_ext(status);
-    }
-   
+    } 
 }
 
 std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_processor_parameters(int processor_id) const
@@ -936,8 +924,7 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_
     {
         print_status(status);
         return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), std::vector<ParameterInfo>());
-    }
-    
+    }    
 }
 
 } //sushi_controller

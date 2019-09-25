@@ -316,7 +316,6 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "Track id not found");
         }
-
     }
 
     grpc::Status GetProcessorTimings(grpc::ServerContext* /* context */,
@@ -334,7 +333,6 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "Processor id not found");
         }
-
     }
 
     grpc::Status ResetAllTimings(grpc::ServerContext* /* context */,
@@ -389,7 +387,6 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No track with that name");
         }
-        
     }
 
     grpc::Status GetTrackInfo(grpc::ServerContext* /* context */,
@@ -529,7 +526,6 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
         }
-        
     }
 
     grpc::Status GetProcessorCurrentProgram(grpc::ServerContext* /* context */,
@@ -545,7 +541,6 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
         }
-        
     }
 
     grpc::Status GetProcessorCurrentProgramName(grpc::ServerContext* /* context */,
@@ -561,7 +556,6 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
         }
-        
     }
 
     grpc::Status GetProcessorProgramName(grpc::ServerContext* /* context */,
@@ -577,7 +571,6 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor and/or program with that id");
         }
-        
     }
 
     grpc::Status GetProcessorPrograms(grpc::ServerContext* /* context */,
@@ -595,7 +588,6 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
         }
-        
     }
 
     grpc::Status SetProcessorProgram(grpc::ServerContext* /* context */,
@@ -636,7 +628,6 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
         }
-        
     }
 
     sushi_rpc::PlayingMode::Mode _playing_mode{startup_values::PLAYING_MODE};
