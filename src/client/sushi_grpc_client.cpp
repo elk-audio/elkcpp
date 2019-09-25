@@ -927,4 +927,173 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_
     }    
 }
 
+//=====================//
+//  Parameter control  //
+//=====================//
+
+std::pair<ControlStatus, int> SushiControllerClient::get_parameter_id(int processor_id, const std::string& parameter) const
+{
+    sushi_rpc::ParameterIdRequest request;
+    sushi_rpc::ParameterIdentifier response;
+    grpc::ClientContext context;
+
+    request.mutable_processor()->set_id(processor_id);
+    request.set_parametername(parameter);
+
+    grpc::Status status = _stub.get()->GetParameterId(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, int>(to_ext(status), response.parameter_id());
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, int>(to_ext(status), -1);
+    }   
+}
+
+std::pair<ControlStatus, ParameterInfo> SushiControllerClient::get_parameter_info(int processor_id, int parameter_id) const
+{
+    sushi_rpc::ParameterIdentifier request;
+    sushi_rpc::ParameterInfo response;
+    grpc::ClientContext context;
+
+    request.set_processor_id(processor_id);
+    request.set_parameter_id(parameter_id);
+
+    grpc::Status status = _stub.get()->GetParameterInfo(&context, request, &response);
+
+    if(status.ok())
+    {
+        ParameterInfo output{
+            response.id(),
+            to_ext(response.type().type()),
+            response.label(),
+            response.name(),
+            response.unit(),
+            response.automatable(),
+            response.min_range(),
+            response.max_range()
+        };
+        return std::pair<ControlStatus, ParameterInfo>(to_ext(status), output);
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, ParameterInfo>(to_ext(status), ParameterInfo());
+    }
+}
+
+std::pair<ControlStatus, float> SushiControllerClient::get_parameter_value(int processor_id, int parameter_id) const
+{
+    sushi_rpc::ParameterIdentifier request;
+    sushi_rpc::GenericFloatValue response;
+    grpc::ClientContext context;
+
+    request.set_processor_id(processor_id);
+    request.set_parameter_id(parameter_id);
+
+    grpc::Status status = _stub.get()->GetParameterValue(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, float>(to_ext(status), response.value());
+    }
+    else
+    {
+        return std::pair<ControlStatus, float>(to_ext(status), -1.0f);
+    }  
+}
+
+std::pair<ControlStatus, float> SushiControllerClient::get_parameter_value_normalised(int processor_id, int parameter_id) const
+{
+    sushi_rpc::ParameterIdentifier request;
+    sushi_rpc::GenericFloatValue response;
+    grpc::ClientContext context;
+
+    request.set_processor_id(processor_id);
+    request.set_parameter_id(parameter_id);
+
+    grpc::Status status = _stub.get()->GetParameterValueNormalised(&context, request, &response);
+
+    if(status.ok())
+    {
+        return std::pair<ControlStatus, float>(to_ext(status), response.value());
+    }
+    else
+    {
+        print_status(status);
+        return std::pair<ControlStatus, float>(to_ext(status), -1.0f);
+    }
+}
+
+std::pair<ControlStatus, std::string> SushiControllerClient::get_parameter_value_as_string(int processor_id, int parameter_id) const
+{
+    sushi_rpc::ParameterIdentifier request;
+    sushi_rpc::GenericStringValue response;
+    grpc::ClientContext context;
+
+    request.set_processor_id(processor_id);
+    request.set_parameter_id(parameter_id);
+
+    grpc::Status status = _stub.get()->GetParameterValueAsString(&context, request, &response);
+
+    if (status.ok())
+    {
+        return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    }
+    else
+    {
+        return std::pair<ControlStatus, std::string>(to_ext(status), std::string());
+    }
+}
+
+ControlStatus SushiControllerClient::set_parameter_value(int processor_id, int parameter_id, float value)
+{
+    sushi_rpc::ParameterSetRequest request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.mutable_parameter()->set_processor_id(processor_id);
+    request.mutable_parameter()->set_parameter_id(parameter_id);
+    request.set_value(value);
+
+    grpc::Status status = _stub.get()->SetParameterValue(&context, request, &response);
+
+    if(status.ok())
+    {
+        return to_ext(status);
+    }
+    else
+    {
+        print_status(status);
+        return to_ext(status);
+    }
+    
+}
+
+ControlStatus SushiControllerClient::set_parameter_value_normalised(int processor_id, int parameter_id, float normalised_value)
+{
+    sushi_rpc::ParameterSetRequest request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.mutable_parameter()->set_processor_id(processor_id);
+    request.mutable_parameter()->set_parameter_id(parameter_id);
+    request.set_value(normalised_value);
+
+    grpc::Status status = _stub.get()->SetParameterValueNormalised(&context, request, &response);
+
+    if(status.ok())
+    {
+        return to_ext(status);
+    }
+    else
+    {
+        print_status(status);
+        return to_ext(status);
+    }
+}
+
 } //sushi_controller

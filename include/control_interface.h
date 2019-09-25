@@ -151,15 +151,15 @@ public:
     virtual ControlStatus                              set_processor_program(int processor_id, int program_id)= 0;
     virtual std::pair<ControlStatus, std::vector<ParameterInfo>> get_processor_parameters(int processor_id) const = 0;
 
-    // // Parameter control
-    // virtual std::pair<ControlStatus, int>              get_parameter_id(int processor_id, const std::string& parameter) const = 0;
-    // virtual std::pair<ControlStatus, ParameterInfo>    get_parameter_info(int processor_id, int parameter_id) const = 0;
-    // virtual std::pair<ControlStatus, float>            get_parameter_value(int processor_id, int parameter_id) const = 0;
-    // virtual std::pair<ControlStatus, float>            get_parameter_value_normalised(int processor_id, int parameter_id) const = 0;
-    // virtual std::pair<ControlStatus, std::string>      get_parameter_value_as_string(int processor_id, int parameter_id) const = 0;
+    // Parameter control
+    virtual std::pair<ControlStatus, int>              get_parameter_id(int processor_id, const std::string& parameter) const = 0;
+    virtual std::pair<ControlStatus, ParameterInfo>    get_parameter_info(int processor_id, int parameter_id) const = 0;
+    virtual std::pair<ControlStatus, float>            get_parameter_value(int processor_id, int parameter_id) const = 0;
+    virtual std::pair<ControlStatus, float>            get_parameter_value_normalised(int processor_id, int parameter_id) const = 0;
+    virtual std::pair<ControlStatus, std::string>      get_parameter_value_as_string(int processor_id, int parameter_id) const = 0;
     // virtual std::pair<ControlStatus, std::string>      get_string_property_value(int processor_id, int parameter_id) const = 0;
-    // virtual ControlStatus                              set_parameter_value(int processor_id, int parameter_id, float value) = 0;
-    // virtual ControlStatus                              set_parameter_value_normalised(int processor_id, int parameter_id, float value) = 0;
+    virtual ControlStatus                              set_parameter_value(int processor_id, int parameter_id, float value) = 0;
+    virtual ControlStatus                              set_parameter_value_normalised(int processor_id, int parameter_id, float value) = 0;
     // virtual ControlStatus                              set_string_property_value(int processor_id, int parameter_id, const std::string& value) = 0;
 
 

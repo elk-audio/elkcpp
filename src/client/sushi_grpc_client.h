@@ -80,15 +80,15 @@ public:
     ControlStatus                              set_processor_program(int processor_id, int program_id) override;
     std::pair<ControlStatus, std::vector<ParameterInfo>> get_processor_parameters(int processor_id) const override;
 
-    // // Parameter control
-    // std::pair<ControlStatus, int>              get_parameter_id(int processor_id, const std::string& parameter) const override;
-    // std::pair<ControlStatus, ParameterInfo>    get_parameter_info(int processor_id, int parameter_id) const override;
-    // std::pair<ControlStatus, float>            get_parameter_value(int processor_id, int parameter_id) const override;
-    // std::pair<ControlStatus, float>            get_parameter_value_normalised(int processor_id, int parameter_id) const override;
-    // std::pair<ControlStatus, std::string>      get_parameter_value_as_string(int processor_id, int parameter_id) const override;
+    // Parameter control
+    std::pair<ControlStatus, int>              get_parameter_id(int processor_id, const std::string& parameter) const override;
+    std::pair<ControlStatus, ParameterInfo>    get_parameter_info(int processor_id, int parameter_id) const override;
+    std::pair<ControlStatus, float>            get_parameter_value(int processor_id, int parameter_id) const override;
+    std::pair<ControlStatus, float>            get_parameter_value_normalised(int processor_id, int parameter_id) const override;
+    std::pair<ControlStatus, std::string>      get_parameter_value_as_string(int processor_id, int parameter_id) const override;
     // std::pair<ControlStatus, std::string>      get_string_property_value(int processor_id, int parameter_id) const override;
-    // ControlStatus                              set_parameter_value(int processor_id, int parameter_id, float value) override;
-    // ControlStatus                              set_parameter_value_normalised(int processor_id, int parameter_id, float value) override;
+    ControlStatus                              set_parameter_value(int processor_id, int parameter_id, float value) override;
+    ControlStatus                              set_parameter_value_normalised(int processor_id, int parameter_id, float value) override;
     // ControlStatus                              set_string_property_value(int processor_id, int parameter_id, const std::string& value) override;
 
 private:

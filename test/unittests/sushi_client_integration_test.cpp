@@ -401,3 +401,73 @@ TEST_F(SushiClientProcessorControlTest, GetProcessorParameters)
         ASSERT_EQ(result.second.at(i).max_range, sushi_controller::expected_results::PARAMETER_INFO_LIST.at(i).max_range);
     }   
 }
+
+class SushiClientParameterControlTest : public ::testing::Test
+{
+    protected:
+    SushiClientParameterControlTest()
+    {
+    }
+    void SetUp()
+    {
+    }
+
+    void TearDown()
+    {
+    }
+    sushi_controller::SushiControllerClient controller{"localhost:51051"};
+};
+
+TEST_F(SushiClientParameterControlTest, GetParameterId)
+{
+    std::pair<sushi_controller::ControlStatus, int> result = controller.get_parameter_id(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, sushi_controller::expected_results::PARAMETER_WITH_ID_1.name);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
+}
+
+TEST_F(SushiClientParameterControlTest, GetParameterInfo)
+{
+    std::pair<sushi_controller::ControlStatus, sushi_controller::ParameterInfo> result = controller.get_parameter_info(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second.id, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
+    ASSERT_EQ(result.second.type, sushi_controller::expected_results::PARAMETER_WITH_ID_1.type);
+    ASSERT_EQ(result.second.label, sushi_controller::expected_results::PARAMETER_WITH_ID_1.label);
+    ASSERT_EQ(result.second.name, sushi_controller::expected_results::PARAMETER_WITH_ID_1.name);
+    ASSERT_EQ(result.second.unit, sushi_controller::expected_results::PARAMETER_WITH_ID_1.unit);
+    ASSERT_EQ(result.second.automatable, sushi_controller::expected_results::PARAMETER_WITH_ID_1.automatable);
+    ASSERT_EQ(result.second.min_range, sushi_controller::expected_results::PARAMETER_WITH_ID_1.min_range);
+    ASSERT_EQ(result.second.max_range, sushi_controller::expected_results::PARAMETER_WITH_ID_1.max_range);
+}
+
+TEST_F(SushiClientParameterControlTest, GetParameterValue)
+{
+    std::pair<sushi_controller::ControlStatus, float> result = controller.get_parameter_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_VALUE);
+}
+
+TEST_F(SushiClientParameterControlTest, GetParameterValueNormalised)
+{
+    std::pair<sushi_controller::ControlStatus, float> result = controller.get_parameter_value_normalised(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_NORMALISED_VALUE);
+}
+
+TEST_F(SushiClientParameterControlTest, GetParameterValueAsString)
+{
+    std::pair<sushi_controller::ControlStatus, std::string> result = controller.get_parameter_value_as_string(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_STRING_VALUE);
+}
+
+TEST_F(SushiClientParameterControlTest, SetParameterValue)
+{
+    sushi_controller::ControlStatus result = controller.set_parameter_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id, sushi_controller::expected_results::PARAMETER_VALUE);
+    ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
+}
+
+TEST_F(SushiClientParameterControlTest, SetParameterValueNormalised)
+{
+    sushi_controller::ControlStatus result = controller.set_parameter_value_normalised(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id, sushi_controller::expected_results::PARAMETER_NORMALISED_VALUE);
+    ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
+}
