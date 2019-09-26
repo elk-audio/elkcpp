@@ -601,14 +601,17 @@ std::pair<ControlStatus, TrackInfo> SushiControllerClient::get_track_info(int tr
 
     if(status.ok())
     {
-        return std::pair<ControlStatus, TrackInfo>(to_ext(status), TrackInfo{response.id(), 
-                                                                             response.label(), 
-                                                                             response.name(),
-                                                                             response.input_channels(),
-                                                                             response.input_busses(),
-                                                                             response.output_channels(),
-                                                                             response.output_busses(),
-                                                                             response.processor_count()});
+        TrackInfo output{
+            response.id(), 
+            response.label(), 
+            response.name(),
+            response.input_channels(),
+            response.input_busses(),
+            response.output_channels(),
+            response.output_busses(),
+            response.processor_count()
+        };
+        return std::pair<ControlStatus, TrackInfo>(to_ext(status), output);
     }
     else
     {
