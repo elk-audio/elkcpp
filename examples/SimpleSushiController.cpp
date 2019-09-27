@@ -14,28 +14,31 @@ int main()
     std::unique_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController();
     std::cout << "Listen to the music!" << std::endl;
     std::string processor_name = "obxd";
-    sushi_controller::ControlStatus status;
+    auto get_id_result = controller.get()->get_processor_id(processor_name);
     int processor_id;
-    std::tie(status, processor_id) = controller.get()->get_processor_id(processor_name);
-    
-    if (status != sushi_controller::ControlStatus::OK)
+    if (get_id_result.first == sushi_controller::ControlStatus::OK)
+    {
+        processor_id = get_id_result.second;
+    }
+    else
     {
         std::cout << processor_name << " not found" << std::endl;
         return 1;
     }
     
     std::string parameter_name = "Cutoff";
+    auto get_param_result = controller.get()->get_parameter_id(processor_id, parameter_name);
     int parameter_id;
-    std::tie(status, parameter_id) = controller.get()->get_parameter_id(processor_id, parameter_name);
-    
-    if (status != sushi_controller::ControlStatus::OK)
+    if (get_param_result.first == sushi_controller::ControlStatus::OK)
+    {
+        parameter_id = get_param_result.second;
+    }
+    else
     {
         std::cout << parameter_name << " not found" << std::endl;
         return 1;
     }
-    controller.get()->set_parameter_value_normalised(processor_id, parameter_id, 0.0f);
-    usleep(1000);
-    controller.get()->send_note_on(0, 0, 48, 1.0f);
+
     controller.get()->send_note_on(0, 0, 60, 1.0f);
     controller.get()->send_note_on(0, 0, 64, 1.0f);
     controller.get()->send_note_on(0, 0, 67, 1.0f);
@@ -55,7 +58,6 @@ int main()
         usleep((int)(duration*1000000/number_of_steps));
     }
 
-    controller.get()->send_note_off(0, 0, 48, 1.0f);
     controller.get()->send_note_off(0, 0, 60, 1.0f);
     controller.get()->send_note_off(0, 0, 64, 1.0f);
     controller.get()->send_note_off(0, 0, 67, 1.0f);
