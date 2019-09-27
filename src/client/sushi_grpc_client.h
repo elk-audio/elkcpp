@@ -16,7 +16,7 @@ namespace sushi_controller
 {
 
 /**
- * @brief A class to control sushi vi gRPC
+ * @brief A class to control sushi via gRPC
  * 
  */
 
@@ -32,7 +32,9 @@ public:
 
     ~SushiControllerClient() = default;
 
-    // Main engine controls
+    //========================//
+    //  Main engine controls  //
+    //========================//
 
     /**
      * @brief Get the current samplerate
