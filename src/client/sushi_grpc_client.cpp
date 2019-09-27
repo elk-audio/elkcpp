@@ -1,3 +1,5 @@
+
+#include "sushi_client.h"
 #include "sushi_grpc_client.h"
 
 inline void print_status(grpc::Status status)
@@ -1097,6 +1099,11 @@ ControlStatus SushiControllerClient::set_parameter_value_normalised(int processo
         print_status(status);
         return to_ext(status);
     }
+}
+
+std::unique_ptr<SushiControl> CreateSushiController(std::string address)
+{
+    return std::make_unique<SushiControllerClient>(address);
 }
 
 } //sushi_controller

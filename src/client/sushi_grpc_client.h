@@ -416,7 +416,7 @@ public:
      * @param value The normalised value to set the parameter to
      * @return ControlStatus 
      */
-    ControlStatus                              set_parameter_value_normalised(int processor_id, int parameter_id, float value) override;
+    ControlStatus set_parameter_value_normalised(int processor_id, int parameter_id, float value) override;
     // ControlStatus                              set_string_property_value(int processor_id, int parameter_id, const std::string& value) override;
 
 private:
