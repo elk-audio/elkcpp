@@ -14,26 +14,20 @@ int main()
     std::unique_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController();
     std::cout << "Listen to the music!" << std::endl;
     std::string processor_name = "obxd";
-    auto get_id_result = controller.get()->get_processor_id(processor_name);
+    sushi_controller::ControlStatus status;
     int processor_id;
-    if (get_id_result.first == sushi_controller::ControlStatus::OK)
-    {
-        processor_id = get_id_result.second;
-    }
-    else
+    std::tie(status, processor_id) = controller.get()->get_processor_id(processor_name);
+    
+    if (status != sushi_controller::ControlStatus::OK)
     {
         std::cout << processor_name << " not found" << std::endl;
         return 1;
     }
     
     std::string parameter_name = "Cutoff";
-    auto get_param_result = controller.get()->get_parameter_id(processor_id, parameter_name);
     int parameter_id;
-    if (get_param_result.first == sushi_controller::ControlStatus::OK)
-    {
-        parameter_id = get_param_result.second;
-    }
-    else
+    std::tie(status, parameter_id) = controller.get()->get_parameter_id(processor_id, parameter_name);
+    if (status != sushi_controller::ControlStatus::OK)
     {
         std::cout << parameter_name << " not found" << std::endl;
         return 1;
