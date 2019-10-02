@@ -1,5 +1,5 @@
 # build gtest framework
-add_subdirectory(googletest)
+add_subdirectory(googletest EXCLUDE_FROM_ALL)
 enable_testing()
 
 #####################################
@@ -18,11 +18,9 @@ SET(TEST_FILES unittests/sushi_client_integration_test.cpp)
 #  Include directories relative to test  #
 ##########################################
 
-set(INCLUDE_DIRS "${INCLUDE_DIRS}"
+set(INCLUDE_DIRS ${GRPC_WRAPPER_PUBLIC_HEADER_DIR}
                  ${PROJECT_SOURCE_DIR}/test/googletest/include
                  ${PROJECT_SOURCE_DIR}/src/client)
-
-include_directories(${INCLUDE_DIRS})
 
 #################################
 #  Statically linked libraries  #
@@ -36,6 +34,7 @@ set(LINK_LIBRARIES "${LINK_LIBRARIES}"
 add_executable(unit_tests ${TEST_FILES})
 
 target_link_libraries(unit_tests "${LINK_LIBRARIES}")
+target_include_directories(unit_tests PRIVATE "${INCLUDE_DIRS}")
 
 # TODO: Ugly fix to get tests building. probably existst better solution.
 set(PROTO_SRC_DIR ${CMAKE_BINARY_DIR}/src/proto-src)

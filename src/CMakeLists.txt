@@ -1,6 +1,6 @@
 set(PUBLIC_HEADER_FILES
-    ${GRPC_WRAPPER_PUBLIC_HEADER_DIR}/SushiControllerInterface.h
-    ${GRPC_WRAPPER_PUBLIC_HEADER_DIR}/SushiGRPCClient.h
+    ${GRPC_WRAPPER_PUBLIC_HEADER_DIR}/control_interface.h
+    ${GRPC_WRAPPER_PUBLIC_HEADER_DIR}/sushi_client.h
 )
 
 #####################
@@ -22,44 +22,32 @@ foreach(ITEM ${PROTO_SRCS} ${GRPC_SRCS})
     set_source_files_properties(${ITEM} PROPERTIES COMPILE_FLAGS -Wno-unused-parameters)    
 endforeach()
 
-######################
-#  Helper functions  #
-######################
+####################
+#  Library target  #
+####################
 
-### Add a static library target that depends on gRPC
-#   Usage:
-#       add_grpc_static_library(NAME target_name SRCS source_file_list)
-function(add_grpc_static_library)
-    cmake_parse_arguments(PARSED_ARGS "" "NAME" "SRCS" ${ARGN})
-    # note: if it remains unparsed arguments, here, they can be found in variable PASSED_ARGS_UNPARSED_ARGUMENTS
-    if(NOT PARSED_ARGS_NAME)
-        message(FATAL_ERROR "add_grpc_static_library: NAME not specified")
-    endif(NOT PARSED_ARGS_NAME)
-    add_library(${PARSED_ARGS_NAME} STATIC
-        ${PARSED_ARGS_SRCS}
-        ${PROTO_SRCS}
-        ${GRPC_SRCS}
-    )
-    target_include_directories(${PARSED_ARGS_NAME} PRIVATE ${PROTO_SRC_DIR})
-    target_link_libraries(${PARSED_ARGS_NAME}
-        gRPC::grpc++_reflection
-        protobuf::libprotobuf
-    )
-    set_target_properties(${PARSED_ARGS_NAME} PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADER_FILES}")
-    install(TARGETS ${PARSED_ARGS_NAME}
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include
-    )
-endfunction(add_grpc_static_library)
+set(COMPILATION_UNITS client/sushi_grpc_client.cpp)
 
-################
-#  Client lib  #
-################
+set(EXTRA_CLION_SOURCES ${PUBLIC_HEADER_FILES}
+                        client/sushi_grpc_client.h)
 
-include_directories(${PROJECT_SOURCE_DIR}/src/client)
-set(CLIENT_LIB_SOURCES
-    client/sushi_grpc_client.cpp
+set(SOURCE_FILES "${COMPILATION_UNITS}" "${EXTRA_CLION_SOURCES}" "${PROTO_SRCS}" "${GRPC_SRCS}")
+
+add_library(sushi-grpc-controller STATIC ${SOURCE_FILES})
+target_include_directories(sushi-grpc-controller PUBLIC ${GRPC_WRAPPER_PUBLIC_HEADER_DIR})
+target_include_directories(sushi-grpc-controller PRIVATE ${PROTO_SRC_DIR})
+target_link_libraries(sushi-grpc-controller
+    gRPC::grpc++_reflection
+    protobuf::libprotobuf
 )
 
-add_grpc_static_library(NAME sushi-grpc-controller SRCS ${CLIENT_LIB_SOURCES})
+#############
+#  Install  #
+#############
+
+set_target_properties(sushi-grpc-controller PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADER_FILES}")
+install(TARGETS sushi-grpc-controller
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+)

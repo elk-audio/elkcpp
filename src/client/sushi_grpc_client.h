@@ -28,7 +28,7 @@ public:
      * 
      * @param address, "ip-address:port" The ip-address and port at which to connect to sushi. 
      */
-    SushiControllerClient(std::string address);
+    SushiControllerClient(const std::string& address);
 
     ~SushiControllerClient() = default;
 

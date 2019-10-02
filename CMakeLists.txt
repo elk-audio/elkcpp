@@ -3,7 +3,7 @@
 #########################
 
 project(sushi-grpc-cpp-warpper)
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.8)
 
 # CMake find modules
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -20,7 +20,6 @@ include(CMakeParseArguments)
 set(GRPC_WRAPPER_BUILD_EXAMPLES true CACHE BOOL "Build included examples")
 set(GRPC_WRAPPER_RUN_TESTS true CACHE BOOL "Build and run unit tests")
 
-
 ############################
 #  Compiler configuration  #
 ############################
@@ -29,13 +28,10 @@ set(CMAKE_CXX_STANDARD 14)
 add_compile_options(-Wall -Wextra)
 
 ####################
-#  Public headers  #
+#  Public Headers  #
 ####################
 
-set(GRPC_WRAPPER_PUBLIC_HEADER_DIR
-    "${PROJECT_SOURCE_DIR}/include"
-)
-include_directories(${GRPC_WRAPPER_PUBLIC_HEADER_DIR})
+set(GRPC_WRAPPER_PUBLIC_HEADER_DIR "${PROJECT_SOURCE_DIR}/include")
 
 ##################
 #  Sub projects  #

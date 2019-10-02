@@ -82,7 +82,7 @@ inline sushi_controller::ControlStatus to_ext(const grpc::Status status)
 namespace sushi_controller
 {
 
-SushiControllerClient::SushiControllerClient(std::string address)
+SushiControllerClient::SushiControllerClient(const std::string& address)
     : _stub(sushi_rpc::SushiController::NewStub(
         grpc::CreateChannel(
             address, 
@@ -313,15 +313,11 @@ ControlStatus SushiControllerClient::send_note_on(int track_id, int channel, int
 
     grpc::Status status = _stub.get()->SendNoteOn(&context, request, &response);
 
-    if(status.ok())
-    {
-        return to_ext(status);
-    }
-    else
+    if(!status.ok())
     {
         print_status(status);
-        return to_ext(status);
     }
+    return to_ext(status);
 }
 
 ControlStatus SushiControllerClient::send_note_off(int track_id, int channel, int note, float velocity)
@@ -1101,7 +1097,7 @@ ControlStatus SushiControllerClient::set_parameter_value_normalised(int processo
     }
 }
 
-std::unique_ptr<SushiControl> CreateSushiController(std::string address)
+std::unique_ptr<SushiControl> CreateSushiController(const std::string& address)
 {
     return std::make_unique<SushiControllerClient>(address);
 }
