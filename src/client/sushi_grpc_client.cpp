@@ -1097,9 +1097,9 @@ ControlStatus SushiControllerClient::set_parameter_value_normalised(int processo
     }
 }
 
-std::unique_ptr<SushiControl> CreateSushiController(const std::string& address)
+std::shared_ptr<SushiControl> CreateSushiController(const std::string& address)
 {
-    return std::make_unique<SushiControllerClient>(address);
+    return std::make_shared<SushiControllerClient>(address);
 }
 
 } //sushi_controller

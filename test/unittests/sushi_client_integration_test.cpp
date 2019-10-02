@@ -24,7 +24,7 @@ class SushiClientTest : public ::testing::Test
     void TearDown()
     {
     }
-    std::unique_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
+    std::shared_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
 };
 
 TEST_F(SushiClientTest, GetSampleRate)
@@ -120,7 +120,7 @@ class SushiClientKeyboardControlTest : public ::testing::Test
     void TearDown()
     {
     }
-    std::unique_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
+    std::shared_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
 };
 
 TEST_F(SushiClientKeyboardControlTest, SendNoteOn)
@@ -188,7 +188,7 @@ class SushiClientCpuTimingsTest : public ::testing::Test
     void TearDown()
     {
     }
-    std::unique_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
+    std::shared_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
 };
 
 TEST_F(SushiClientCpuTimingsTest, GetEngineTimings)
@@ -246,7 +246,7 @@ class SushiClientTrackControlTest : public ::testing::Test
     void TearDown()
     {
     }
-    std::unique_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
+    std::shared_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
 };
 
 TEST_F(SushiClientTrackControlTest, GetTrackId)
@@ -314,7 +314,7 @@ class SushiClientProcessorControlTest : public ::testing::Test
     void TearDown()
     {
     }
-    std::unique_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
+    std::shared_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
 };
 
 TEST_F(SushiClientProcessorControlTest, GetProcessorId)
@@ -419,7 +419,7 @@ class SushiClientParameterControlTest : public ::testing::Test
     void TearDown()
     {
     }
-    std::unique_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
+    std::shared_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
 };
 
 TEST_F(SushiClientParameterControlTest, GetParameterId)
