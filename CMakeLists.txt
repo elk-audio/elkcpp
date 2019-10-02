@@ -31,7 +31,7 @@ add_compile_options(-Wall -Wextra)
 #  Public Headers  #
 ####################
 
-set(GRPC_WRAPPER_PUBLIC_HEADER_DIR "${PROJECT_SOURCE_DIR}/include")
+set(GRPC_WRAPPER_PUBLIC_HEADER_DIR "${PROJECT_SOURCE_DIR}/include/sushi_controller")
 
 ##################
 #  Sub projects  #
