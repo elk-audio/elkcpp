@@ -19,8 +19,8 @@
 
 namespace sushi_controller
 {
-
-std::unique_ptr<sushi_controller::SushiControl> CreateSushiController(std::string server_address = "localhost:51051");
+constexpr char DEFAULT_ADDRESS[] = "localhost::51051";
+std::unique_ptr<sushi_controller::SushiControl> CreateSushiController(const std::string& server_address = DEFAULT_ADDRESS);
 
 } //sushi_controller
 
