@@ -92,9 +92,11 @@ inline std::string to_str(const sushi_controller::ControlStatus& code)
     }
 }
 
-inline void handle_error(grpc::Status status)
+inline void handle_error([[maybe_unused]] grpc::Status status)
 {
+#ifdef SUSHI_CONTROLLER_PRINT_ERRORS
     std::cout << "Sushi controller error: " << to_str(to_ext(status)) << ", " << status.error_message() << std::endl;
+#endif
 }
 
 namespace sushi_controller

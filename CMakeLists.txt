@@ -19,6 +19,11 @@ include(CMakeParseArguments)
 
 set(GRPC_WRAPPER_BUILD_EXAMPLES true CACHE BOOL "Build included examples")
 set(GRPC_WRAPPER_RUN_TESTS true CACHE BOOL "Build and run unit tests")
+option(PRINT_ERRORS_TO_CONSOLE "Set to print control status errors to cout" OFF)
+
+if(${PRINT_ERRORS_TO_CONSOLE})
+    add_definitions(-DSUSHI_CONTROLLER_PRINT_ERRORS)
+endif()
 
 ############################
 #  Compiler configuration  #
