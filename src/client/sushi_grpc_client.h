@@ -41,42 +41,42 @@ public:
      * 
      * @return float The current samplerate
      */
-    float get_samplerate() const override;
+    std::pair<ControlStatus, float> get_samplerate() const override;
 
     /**
      * @brief Get the current playing mode
      * 
      * @return PlayingMode The current playing mode
      */
-    PlayingMode get_playing_mode() const override;
+    std::pair<ControlStatus, PlayingMode> get_playing_mode() const override;
 
     /**
      * @brief Set the playing mode
      * 
      * @param playing_mode The playing mode to set
      */
-    void set_playing_mode(PlayingMode playing_mode) override;
+    ControlStatus set_playing_mode(PlayingMode playing_mode) override;
 
     /**
      * @brief Get the sync mode
      * 
      * @return SyncMode The current sync mode
      */
-    SyncMode get_sync_mode() const override;
+    std::pair<ControlStatus, SyncMode> get_sync_mode() const override;
 
     /**
      * @brief Set the sync mode
      * 
      * @param sync_mode The sync mode to set
      */
-    void set_sync_mode(SyncMode sync_mode) override;
+    ControlStatus set_sync_mode(SyncMode sync_mode) override;
 
     /**
      * @brief Get the tempo
      * 
      * @return float The current tempo
      */
-    float get_tempo() const override;
+    std::pair<ControlStatus, float> get_tempo() const override;
 
     /**
      * @brief Set the tempo
@@ -91,7 +91,7 @@ public:
      * 
      * @return TimeSignature The current time signature
      */
-    TimeSignature get_time_signature() const override;
+    std::pair<ControlStatus, TimeSignature> get_time_signature() const override;
 
     /**
      * @brief Set the time signature
@@ -108,7 +108,7 @@ public:
      * 
      * @return std::vector<TrackInfo> Vector containing the info of each track
      */
-    std::vector<TrackInfo> get_tracks() const override;
+    std::pair<ControlStatus, std::vector<TrackInfo>> get_tracks() const override;
 
     //====================//
     //  Keyboard control  //

@@ -21,7 +21,7 @@ enum class ControlStatus
     NOT_FOUND,
     OUT_OF_RANGE,
     INVALID_ARGUMENTS,
-    UNAVILABLE,
+    UNAVAILABLE,
     UNAUTHENTICATED
 };
 
@@ -119,42 +119,42 @@ public:
      * 
      * @return float The current samplerate
      */
-    virtual float get_samplerate() const = 0;
+    virtual std::pair<ControlStatus, float> get_samplerate() const = 0;
 
     /**
      * @brief Get the current playing mode
      * 
      * @return PlayingMode The current playing mode
      */
-    virtual PlayingMode get_playing_mode() const = 0;
+    virtual std::pair<ControlStatus, PlayingMode> get_playing_mode() const = 0;
 
     /**
      * @brief Set the playing mode
      * 
      * @param playing_mode The playing mode to set
      */
-    virtual void set_playing_mode(PlayingMode playing_mode) = 0;
+    virtual ControlStatus set_playing_mode(PlayingMode playing_mode) = 0;
 
     /**
      * @brief Get the sync mode
      * 
      * @return SyncMode The current sync mode
      */
-    virtual SyncMode get_sync_mode() const = 0;
+    virtual std::pair<ControlStatus, SyncMode> get_sync_mode() const = 0;
 
     /**
      * @brief Set the sync mode
      * 
      * @param sync_mode The sync mode to set
      */
-    virtual void set_sync_mode(SyncMode sync_mode) = 0;
+    virtual ControlStatus set_sync_mode(SyncMode sync_mode) = 0;
 
     /**
      * @brief Get the tempo
      * 
      * @return float The current tempo
      */
-    virtual float get_tempo() const = 0;
+    virtual std::pair<ControlStatus, float> get_tempo() const = 0;
 
     /**
      * @brief Set the tempo
@@ -169,7 +169,7 @@ public:
      * 
      * @return TimeSignature The current time signature
      */
-    virtual TimeSignature get_time_signature() const = 0;
+    virtual std::pair<ControlStatus, TimeSignature> get_time_signature() const = 0;
 
     /**
      * @brief Set the time signature
@@ -186,7 +186,7 @@ public:
      * 
      * @return std::vector<TrackInfo> Vector containing the info of each track
      */
-    virtual std::vector<TrackInfo> get_tracks() const = 0;
+    virtual std::pair<ControlStatus, std::vector<TrackInfo>> get_tracks() const = 0;
 
     //====================//
     //  Keyboard control  //

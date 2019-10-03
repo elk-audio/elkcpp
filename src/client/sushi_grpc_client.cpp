@@ -70,31 +70,31 @@ inline sushi_controller::ControlStatus to_ext(const grpc::Status& status)
         case grpc::StatusCode::NOT_FOUND:           return sushi_controller::ControlStatus::NOT_FOUND;
         case grpc::StatusCode::OUT_OF_RANGE:        return sushi_controller::ControlStatus::OUT_OF_RANGE;
         case grpc::StatusCode::INVALID_ARGUMENT:    return sushi_controller::ControlStatus::INVALID_ARGUMENTS;
-        case grpc::StatusCode::UNAVAILABLE:         return sushi_controller::ControlStatus::UNAVILABLE;
+        case grpc::StatusCode::UNAVAILABLE:         return sushi_controller::ControlStatus::UNAVAILABLE;
         case grpc::StatusCode::UNAUTHENTICATED:     return sushi_controller::ControlStatus::UNAUTHENTICATED;
         default:                                    return sushi_controller::ControlStatus::ERROR;
     }
 }
 
-inline std::string to_str(const grpc::StatusCode& code)
+inline std::string to_str(const sushi_controller::ControlStatus& code)
 {
     switch(code)
     {
-        case grpc::StatusCode::OK: return "OK";
-        case grpc::StatusCode::UNKNOWN: return "ERROR";
-        case grpc::StatusCode::FAILED_PRECONDITION: return "UNSUPPORTED OPERATION";
-        case grpc::StatusCode::NOT_FOUND: return "NOT FOUND";
-        case grpc::StatusCode::OUT_OF_RANGE: return "OUT OF RANGE";
-        case grpc::StatusCode::INVALID_ARGUMENT: return "INVALID ARGUMENTS";
-        case grpc::StatusCode::UNAVAILABLE: return "UNAVAILABLE";
-        case grpc::StatusCode::UNAUTHENTICATED: return "UNAUTHENTICATED";
+        case sushi_controller::ControlStatus::OK: return "OK";
+        case sushi_controller::ControlStatus::ERROR: return "ERROR";
+        case sushi_controller::ControlStatus::UNSUPPORTED_OPERATION: return "UNSUPPORTED OPERATION";
+        case sushi_controller::ControlStatus::NOT_FOUND: return "NOT FOUND";
+        case sushi_controller::ControlStatus::OUT_OF_RANGE: return "OUT OF RANGE";
+        case sushi_controller::ControlStatus::INVALID_ARGUMENTS: return "INVALID ARGUMENTS";
+        case sushi_controller::ControlStatus::UNAVAILABLE: return "UNAVAILABLE";
+        case sushi_controller::ControlStatus::UNAUTHENTICATED: return "UNAUTHENTICATED";
         default: return "ERROR";
     }
 }
 
-inline void print_status(grpc::Status status)
+inline void handle_error(grpc::Status status)
 {
-    std::cout << to_str(status.error_code()) << ": " << status.error_message() << std::endl;
+    std::cout << "Sushi controller error: " << to_str(to_ext(status)) << ", " << status.error_message() << std::endl;
 }
 
 namespace sushi_controller
@@ -109,7 +109,7 @@ SushiControllerClient::SushiControllerClient(const std::string& address)
 {
 }
 
-float SushiControllerClient::get_samplerate() const
+std::pair<ControlStatus, float> SushiControllerClient::get_samplerate() const
 {   
     sushi_rpc::GenericVoidValue request;
     sushi_rpc::GenericFloatValue response;
@@ -117,18 +117,14 @@ float SushiControllerClient::get_samplerate() const
 
     grpc::Status status = _stub.get()->GetSamplerate(&context, request, &response);
     
-    if (status.ok())
+    if (!status.ok())
     {
-        return response.value();
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return -1;
-    }  
+    return std::pair<ControlStatus, float>(to_ext(status),response.value());  
 }
 
-PlayingMode SushiControllerClient::get_playing_mode() const
+std::pair<ControlStatus, PlayingMode> SushiControllerClient::get_playing_mode() const
 {
     sushi_rpc::GenericVoidValue request;
     sushi_rpc::PlayingMode response;
@@ -136,18 +132,14 @@ PlayingMode SushiControllerClient::get_playing_mode() const
     
     grpc::Status status = _stub.get()->GetPlayingMode(&context, request, &response);
 
-    if (status.ok())
+    if (!status.ok())
     {
-        return to_ext(response.mode());
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return PlayingMode::STOPPED;
-    }
+    return std::pair<ControlStatus, PlayingMode>(to_ext(status), to_ext(response.mode()));
 }
 
-void SushiControllerClient::set_playing_mode(PlayingMode playing_mode)
+ControlStatus SushiControllerClient::set_playing_mode(PlayingMode playing_mode)
 {
     sushi_rpc::PlayingMode request;
     sushi_rpc::GenericVoidValue response;
@@ -159,11 +151,12 @@ void SushiControllerClient::set_playing_mode(PlayingMode playing_mode)
 
     if (!status.ok())
     {
-        print_status(status);
+        handle_error(status);
     }
+    return to_ext(status);
 }
 
-SyncMode SushiControllerClient::get_sync_mode() const
+std::pair<ControlStatus, SyncMode> SushiControllerClient::get_sync_mode() const
 {
     sushi_rpc::GenericVoidValue request;
     sushi_rpc::SyncMode response;
@@ -171,18 +164,14 @@ SyncMode SushiControllerClient::get_sync_mode() const
 
     grpc::Status status = _stub.get()->GetSyncMode(&context, request, &response);
 
-    if (status.ok())
+    if (!status.ok())
     {
-        return to_ext(response.mode());
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return SyncMode::INTERNAL;
-    }
+    return std::pair<ControlStatus, SyncMode>(to_ext(status), to_ext(response.mode()));
 }
 
-void SushiControllerClient::set_sync_mode(SyncMode mode)
+ControlStatus SushiControllerClient::set_sync_mode(SyncMode mode)
 {
     sushi_rpc::SyncMode request;
     sushi_rpc::GenericVoidValue response;
@@ -194,11 +183,12 @@ void SushiControllerClient::set_sync_mode(SyncMode mode)
 
     if (!status.ok())
     {
-        print_status(status);
+        handle_error(status);
     }
+    return to_ext(status);
 }
 
-float SushiControllerClient::get_tempo() const
+std::pair<ControlStatus, float> SushiControllerClient::get_tempo() const
 {
     sushi_rpc::GenericVoidValue request;
     sushi_rpc::GenericFloatValue response;
@@ -206,15 +196,11 @@ float SushiControllerClient::get_tempo() const
 
     grpc::Status status = _stub.get()->GetTempo(&context, request, &response);
 
-    if (status.ok())
+    if (!status.ok())
     {
-        return response.value();
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return -1.0f;
-    }
+    return std::pair<ControlStatus, float>(to_ext(status), response.value());
 }
 
 ControlStatus SushiControllerClient::set_tempo(float tempo)
@@ -227,18 +213,14 @@ ControlStatus SushiControllerClient::set_tempo(float tempo)
 
     grpc::Status status = _stub.get()->SetTempo(&context, request, &response);
 
-    if (status.ok())
+    if (!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
-TimeSignature SushiControllerClient::get_time_signature() const
+std::pair<ControlStatus, TimeSignature> SushiControllerClient::get_time_signature() const
 {
     sushi_rpc::GenericVoidValue request;
     sushi_rpc::TimeSignature response;
@@ -246,15 +228,11 @@ TimeSignature SushiControllerClient::get_time_signature() const
 
     grpc::Status status = _stub.get()->GetTimeSignature(&context, request, &response);
 
-    if (status.ok())
+    if (!status.ok())
     {
-        return TimeSignature{response.numerator(), response.denominator()};
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return TimeSignature{-1,-1};
-    }
+    return std::pair<ControlStatus, TimeSignature>(to_ext(status), TimeSignature{response.numerator(), response.denominator()});
 }
 
 ControlStatus SushiControllerClient::set_time_signature(TimeSignature time_signature)
@@ -268,18 +246,14 @@ ControlStatus SushiControllerClient::set_time_signature(TimeSignature time_signa
 
     grpc::Status status = _stub.get()->SetTimeSignature(&context, request, &response);
 
-    if (status.ok())
+    if (!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
-std::vector<TrackInfo> SushiControllerClient::get_tracks() const
+std::pair<ControlStatus, std::vector<TrackInfo>> SushiControllerClient::get_tracks() const
 {
     sushi_rpc::GenericVoidValue request;
     sushi_rpc::TrackInfoList response;
@@ -287,31 +261,27 @@ std::vector<TrackInfo> SushiControllerClient::get_tracks() const
 
     grpc::Status status = _stub.get()->GetTracks(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        std::vector<TrackInfo> output;
-        for(int i = 0; i < response.tracks_size(); ++i)
-        {
-            output.push_back(
-                TrackInfo{
-                    response.tracks(i).id(),
-                    response.tracks(i).label(),
-                    response.tracks(i).name(),
-                    response.tracks(i).input_channels(),
-                    response.tracks(i).input_busses(),
-                    response.tracks(i).output_channels(),
-                    response.tracks(i).output_busses(),
-                    response.tracks(i).processor_count()
-                }
-            );
-        }
-        return output;
-    }
-    else
-    {
-        print_status(status);
-        return std::vector<TrackInfo>();
+        handle_error(status);
     }    
+    std::vector<TrackInfo> output;
+    for(int i = 0; i < response.tracks_size(); ++i)
+    {
+        output.push_back(
+            TrackInfo{
+                response.tracks(i).id(),
+                response.tracks(i).label(),
+                response.tracks(i).name(),
+                response.tracks(i).input_channels(),
+                response.tracks(i).input_busses(),
+                response.tracks(i).output_channels(),
+                response.tracks(i).output_busses(),
+                response.tracks(i).processor_count()
+            }
+        );
+    }
+    return std::pair<ControlStatus, std::vector<TrackInfo>>(to_ext(status), output);
 }
 
 //====================//
@@ -333,7 +303,7 @@ ControlStatus SushiControllerClient::send_note_on(int track_id, int channel, int
 
     if(!status.ok())
     {
-        print_status(status);
+        handle_error(status);
     }
     return to_ext(status);
 }
@@ -351,15 +321,11 @@ ControlStatus SushiControllerClient::send_note_off(int track_id, int channel, in
 
     grpc::Status status = _stub.get()->SendNoteOff(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
 ControlStatus SushiControllerClient::send_note_aftertouch(int track_id, int channel, int note, float value)
@@ -375,15 +341,11 @@ ControlStatus SushiControllerClient::send_note_aftertouch(int track_id, int chan
 
     grpc::Status status = _stub.get()->SendNoteAftertouch(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
 ControlStatus SushiControllerClient::send_aftertouch(int track_id, int channel, float value)
@@ -398,15 +360,11 @@ ControlStatus SushiControllerClient::send_aftertouch(int track_id, int channel, 
 
     grpc::Status status = _stub.get()->SendAftertouch(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
 ControlStatus SushiControllerClient::send_pitch_bend(int track_id, int channel, float value)
@@ -421,15 +379,11 @@ ControlStatus SushiControllerClient::send_pitch_bend(int track_id, int channel, 
 
     grpc::Status status = _stub.get()->SendPitchBend(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
 ControlStatus SushiControllerClient::send_modulation(int track_id, int channel, float value)
@@ -444,15 +398,11 @@ ControlStatus SushiControllerClient::send_modulation(int track_id, int channel, 
 
     grpc::Status status = _stub.get()->SendModulation(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
 //===============//
@@ -467,14 +417,11 @@ std::pair<ControlStatus, CpuTimings> SushiControllerClient::get_engine_timings()
 
     grpc::Status status = _stub.get()->GetEngineTimings(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
-    }
-    else
-    {
-        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{-1.0f,-1.0f,-1.0f});
+        handle_error(status);
     }  
+    return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
 }
 
 std::pair<ControlStatus, CpuTimings> SushiControllerClient::get_track_timings(int track_id) const
@@ -487,15 +434,11 @@ std::pair<ControlStatus, CpuTimings> SushiControllerClient::get_track_timings(in
 
     grpc::Status status = _stub.get()->GetTrackTimings(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{-1.0f,-1.0f,-1.0f});
-    }  
+    return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
 }
 
 std::pair<ControlStatus, CpuTimings> SushiControllerClient::get_processor_timings(int processor_id) const
@@ -508,15 +451,11 @@ std::pair<ControlStatus, CpuTimings> SushiControllerClient::get_processor_timing
 
     grpc::Status status = _stub.get()->GetProcessorTimings(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
-    }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{-1.0f,-1.0f,-1.0f});
+        handle_error(status);
     }  
+    return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
 }
 
 ControlStatus SushiControllerClient::reset_all_timings()
@@ -527,15 +466,11 @@ ControlStatus SushiControllerClient::reset_all_timings()
 
     grpc::Status status = _stub.get()->ResetAllTimings(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
 ControlStatus SushiControllerClient::reset_track_timings(int track_id)
@@ -548,15 +483,11 @@ ControlStatus SushiControllerClient::reset_track_timings(int track_id)
 
     grpc::Status status = _stub.get()->ResetTrackTimings(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
 ControlStatus SushiControllerClient::reset_processor_timings(int processor_id)
@@ -569,15 +500,11 @@ ControlStatus SushiControllerClient::reset_processor_timings(int processor_id)
 
     grpc::Status status = _stub.get()->ResetProcessorTimings(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
 //=================//
@@ -594,15 +521,11 @@ std::pair<ControlStatus, int> SushiControllerClient::get_track_id(const std::str
 
     grpc::Status status = _stub.get()->GetTrackId(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, int>(to_ext(status), response.id());
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, int>(to_ext(status), -1);
-    }
+    return std::pair<ControlStatus, int>(to_ext(status), response.id());
 }
 
 std::pair<ControlStatus, TrackInfo> SushiControllerClient::get_track_info(int track_id) const
@@ -615,25 +538,21 @@ std::pair<ControlStatus, TrackInfo> SushiControllerClient::get_track_info(int tr
 
     grpc::Status status = _stub.get()->GetTrackInfo(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        TrackInfo output{
-            response.id(), 
-            response.label(), 
-            response.name(),
-            response.input_channels(),
-            response.input_busses(),
-            response.output_channels(),
-            response.output_busses(),
-            response.processor_count()
-        };
-        return std::pair<ControlStatus, TrackInfo>(to_ext(status), output);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, TrackInfo>(to_ext(status), TrackInfo());
-    }
+    TrackInfo output{
+        response.id(), 
+        response.label(), 
+        response.name(),
+        response.input_channels(),
+        response.input_busses(),
+        response.output_channels(),
+        response.output_busses(),
+        response.processor_count()
+    };
+    return std::pair<ControlStatus, TrackInfo>(to_ext(status), output);
 }
 
 std::pair<ControlStatus, std::vector<ProcessorInfo>> SushiControllerClient::get_track_processors(int track_id) const
@@ -646,26 +565,22 @@ std::pair<ControlStatus, std::vector<ProcessorInfo>> SushiControllerClient::get_
 
     grpc::Status status = _stub.get()->GetTrackProcessors(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        std::vector<ProcessorInfo> output;
-        for (int i = 0; i < response.processors_size(); ++i)
-        {
-            output.push_back(ProcessorInfo{
-                response.processors(i).id(),
-                response.processors(i).label(),
-                response.processors(i).name(),
-                response.processors(i).parameter_count(),
-                response.processors(i).program_count()
-            });
-        }
-        return std::pair<ControlStatus, std::vector<ProcessorInfo>>(to_ext(status),output);
+        handle_error(status);
     }
-    else
+    std::vector<ProcessorInfo> output;
+    for (int i = 0; i < response.processors_size(); ++i)
     {
-        print_status(status);
-        return std::pair<ControlStatus, std::vector<ProcessorInfo>>(to_ext(status),std::vector<ProcessorInfo>());
+        output.push_back(ProcessorInfo{
+            response.processors(i).id(),
+            response.processors(i).label(),
+            response.processors(i).name(),
+            response.processors(i).parameter_count(),
+            response.processors(i).program_count()
+        });
     }
+    return std::pair<ControlStatus, std::vector<ProcessorInfo>>(to_ext(status),output);
 }
 
 std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_track_parameters(int track_id) const
@@ -678,29 +593,25 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_
 
     grpc::Status status = _stub.get()->GetTrackParameters(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        std::vector<ParameterInfo> output;
-        for (int i = 0; i < response.parameters_size(); ++i)
-        {
-            output.push_back(ParameterInfo{
-                response.parameters(i).id(),
-                to_ext(response.parameters(i).type().type()),
-                response.parameters(i).label(),
-                response.parameters(i).name(),
-                response.parameters(i).unit(),
-                response.parameters(i).automatable(),
-                response.parameters(i).min_range(),
-                response.parameters(i).max_range()
-            });
-        }
-        return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
+        handle_error(status);
     }
-    else
+    std::vector<ParameterInfo> output;
+    for (int i = 0; i < response.parameters_size(); ++i)
     {
-        print_status(status);
-        return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), std::vector<ParameterInfo>());
+        output.push_back(ParameterInfo{
+            response.parameters(i).id(),
+            to_ext(response.parameters(i).type().type()),
+            response.parameters(i).label(),
+            response.parameters(i).name(),
+            response.parameters(i).unit(),
+            response.parameters(i).automatable(),
+            response.parameters(i).min_range(),
+            response.parameters(i).max_range()
+        });
     }
+    return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
 }
 
 //=====================//
@@ -717,15 +628,11 @@ std::pair<ControlStatus, int> SushiControllerClient::get_processor_id(const std:
 
     grpc::Status status = _stub.get()->GetProcessorId(&context, request, &response);
 
-    if (status.ok())
+    if (!status.ok())
     {
-        return std::pair<ControlStatus, int>(to_ext(status), response.id());
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, int>(to_ext(status),-1);
-    }
+    return std::pair<ControlStatus, int>(to_ext(status), response.id());
 }
 
 std::pair<ControlStatus, ProcessorInfo> SushiControllerClient::get_processor_info(int processor_id) const
@@ -738,21 +645,17 @@ std::pair<ControlStatus, ProcessorInfo> SushiControllerClient::get_processor_inf
 
     grpc::Status status = _stub.get()->GetProcessorInfo(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        ProcessorInfo output;
-        output.id = response.id();
-        output.label = response.label();
-        output.name = response.name();
-        output.parameter_count = response.parameter_count();
-        output.program_count = response.program_count();
-        return std::pair<ControlStatus, ProcessorInfo>(to_ext(status), output);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, ProcessorInfo>(to_ext(status), ProcessorInfo());
-    }
+    ProcessorInfo output;
+    output.id = response.id();
+    output.label = response.label();
+    output.name = response.name();
+    output.parameter_count = response.parameter_count();
+    output.program_count = response.program_count();
+    return std::pair<ControlStatus, ProcessorInfo>(to_ext(status), output);
 }
 
 std::pair<ControlStatus, bool> SushiControllerClient::get_processor_bypass_state(int processor_id) const
@@ -765,15 +668,11 @@ std::pair<ControlStatus, bool> SushiControllerClient::get_processor_bypass_state
 
     grpc::Status status = _stub.get()->GetProcessorBypassState(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, bool>(to_ext(status), response.value());
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, bool>(to_ext(status), false);
-    }
+    return std::pair<ControlStatus, bool>(to_ext(status), response.value());
 }
 
 ControlStatus SushiControllerClient::set_processor_bypass_state(int processor_id, bool bypass_enabled)
@@ -787,14 +686,11 @@ ControlStatus SushiControllerClient::set_processor_bypass_state(int processor_id
 
     grpc::Status status = _stub.get()->SetProcessorBypassState(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
 std::pair<ControlStatus, int> SushiControllerClient::get_processor_current_program(int processor_id) const
@@ -807,15 +703,11 @@ std::pair<ControlStatus, int> SushiControllerClient::get_processor_current_progr
 
     grpc::Status status = _stub.get()->GetProcessorCurrentProgram(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, int>(to_ext(status), response.program());
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, int>(to_ext(status), -1);
-    }
+    return std::pair<ControlStatus, int>(to_ext(status), response.program());
 }
 
 std::pair<ControlStatus, std::string> SushiControllerClient::get_processor_current_program_name(int processor_id) const
@@ -828,15 +720,11 @@ std::pair<ControlStatus, std::string> SushiControllerClient::get_processor_curre
 
     grpc::Status status = _stub.get()->GetProcessorCurrentProgramName(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, std::string>(to_ext(status), "");
-    }
+    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
 }
 
 std::pair<ControlStatus, std::string> SushiControllerClient::get_processor_program_name(int processor_id, int program_id) const
@@ -850,15 +738,11 @@ std::pair<ControlStatus, std::string> SushiControllerClient::get_processor_progr
 
     grpc::Status status = _stub.get()->GetProcessorProgramName(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, std::string>(to_ext(status), "");
-    }
+    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
 }
 
 std::pair<ControlStatus, std::vector<std::string>> SushiControllerClient::get_processor_programs(int processor_id) const
@@ -871,20 +755,16 @@ std::pair<ControlStatus, std::vector<std::string>> SushiControllerClient::get_pr
 
     grpc::Status status = _stub.get()->GetProcessorPrograms(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        std::vector<std::string> output;
-        for (int i = 0; i < response.programs_size(); ++i)
-        {
-            output.push_back(response.programs(i).name());
-        }
-        return std::pair<ControlStatus, std::vector<std::string>>(to_ext(status), output);
+        handle_error(status);
     }
-    else
+    std::vector<std::string> output;
+    for (int i = 0; i < response.programs_size(); ++i)
     {
-        print_status(status);
-        return std::pair<ControlStatus, std::vector<std::string>>(to_ext(status), std::vector<std::string>());
+        output.push_back(response.programs(i).name());
     }
+    return std::pair<ControlStatus, std::vector<std::string>>(to_ext(status), output);
 }
 
 ControlStatus SushiControllerClient::set_processor_program(int processor_id, int program_id)
@@ -898,15 +778,11 @@ ControlStatus SushiControllerClient::set_processor_program(int processor_id, int
 
     grpc::Status status = _stub.get()->SetProcessorProgram(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
-    }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
+        handle_error(status);
     } 
+    return to_ext(status);
 }
 
 std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_processor_parameters(int processor_id) const
@@ -919,31 +795,27 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_
 
     grpc::Status status = _stub.get()->GetProcessorParameters(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        std::vector<ParameterInfo> output;
-        for(int i = 0; i < response.parameters_size(); ++i)
-        {
-            output.push_back(
-                ParameterInfo{
-                    response.parameters(i).id(),
-                    to_ext(response.parameters(i).type().type()),
-                    response.parameters(i).label(),
-                    response.parameters(i).name(),
-                    response.parameters(i).unit(),
-                    response.parameters(i).automatable(),
-                    response.parameters(i).min_range(),
-                    response.parameters(i).max_range()
-                }
-            );
-        }
-        return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
-    }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), std::vector<ParameterInfo>());
+        handle_error(status);
     }    
+    std::vector<ParameterInfo> output;
+    for(int i = 0; i < response.parameters_size(); ++i)
+    {
+        output.push_back(
+            ParameterInfo{
+                response.parameters(i).id(),
+                to_ext(response.parameters(i).type().type()),
+                response.parameters(i).label(),
+                response.parameters(i).name(),
+                response.parameters(i).unit(),
+                response.parameters(i).automatable(),
+                response.parameters(i).min_range(),
+                response.parameters(i).max_range()
+            }
+        );
+    }
+    return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
 }
 
 //=====================//
@@ -961,15 +833,11 @@ std::pair<ControlStatus, int> SushiControllerClient::get_parameter_id(int proces
 
     grpc::Status status = _stub.get()->GetParameterId(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, int>(to_ext(status), response.parameter_id());
-    }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, int>(to_ext(status), -1);
+        handle_error(status);
     }   
+    return std::pair<ControlStatus, int>(to_ext(status), response.parameter_id());
 }
 
 std::pair<ControlStatus, ParameterInfo> SushiControllerClient::get_parameter_info(int processor_id, int parameter_id) const
@@ -983,25 +851,21 @@ std::pair<ControlStatus, ParameterInfo> SushiControllerClient::get_parameter_inf
 
     grpc::Status status = _stub.get()->GetParameterInfo(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        ParameterInfo output{
-            response.id(),
-            to_ext(response.type().type()),
-            response.label(),
-            response.name(),
-            response.unit(),
-            response.automatable(),
-            response.min_range(),
-            response.max_range()
-        };
-        return std::pair<ControlStatus, ParameterInfo>(to_ext(status), output);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, ParameterInfo>(to_ext(status), ParameterInfo());
-    }
+    ParameterInfo output{
+        response.id(),
+        to_ext(response.type().type()),
+        response.label(),
+        response.name(),
+        response.unit(),
+        response.automatable(),
+        response.min_range(),
+        response.max_range()
+    };
+    return std::pair<ControlStatus, ParameterInfo>(to_ext(status), output);
 }
 
 std::pair<ControlStatus, float> SushiControllerClient::get_parameter_value(int processor_id, int parameter_id) const
@@ -1015,14 +879,11 @@ std::pair<ControlStatus, float> SushiControllerClient::get_parameter_value(int p
 
     grpc::Status status = _stub.get()->GetParameterValue(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, float>(to_ext(status), response.value());
-    }
-    else
-    {
-        return std::pair<ControlStatus, float>(to_ext(status), -1.0f);
+        handle_error(status);
     }  
+    return std::pair<ControlStatus, float>(to_ext(status), response.value());
 }
 
 std::pair<ControlStatus, float> SushiControllerClient::get_parameter_value_normalised(int processor_id, int parameter_id) const
@@ -1036,15 +897,11 @@ std::pair<ControlStatus, float> SushiControllerClient::get_parameter_value_norma
 
     grpc::Status status = _stub.get()->GetParameterValueNormalised(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return std::pair<ControlStatus, float>(to_ext(status), response.value());
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return std::pair<ControlStatus, float>(to_ext(status), -1.0f);
-    }
+    return std::pair<ControlStatus, float>(to_ext(status), response.value());
 }
 
 std::pair<ControlStatus, std::string> SushiControllerClient::get_parameter_value_as_string(int processor_id, int parameter_id) const
@@ -1058,14 +915,11 @@ std::pair<ControlStatus, std::string> SushiControllerClient::get_parameter_value
 
     grpc::Status status = _stub.get()->GetParameterValueAsString(&context, request, &response);
 
-    if (status.ok())
+    if (!status.ok())
     {
-        return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+        handle_error(status);
     }
-    else
-    {
-        return std::pair<ControlStatus, std::string>(to_ext(status), std::string());
-    }
+    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
 }
 
 ControlStatus SushiControllerClient::set_parameter_value(int processor_id, int parameter_id, float value)
@@ -1080,15 +934,11 @@ ControlStatus SushiControllerClient::set_parameter_value(int processor_id, int p
 
     grpc::Status status = _stub.get()->SetParameterValue(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
     
 }
 
@@ -1104,15 +954,11 @@ ControlStatus SushiControllerClient::set_parameter_value_normalised(int processo
 
     grpc::Status status = _stub.get()->SetParameterValueNormalised(&context, request, &response);
 
-    if(status.ok())
+    if(!status.ok())
     {
-        return to_ext(status);
+        handle_error(status);
     }
-    else
-    {
-        print_status(status);
-        return to_ext(status);
-    }
+    return to_ext(status);
 }
 
 std::shared_ptr<SushiControl> CreateSushiController(const std::string& address)
