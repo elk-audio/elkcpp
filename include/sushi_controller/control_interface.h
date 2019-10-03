@@ -20,7 +20,9 @@ enum class ControlStatus
     UNSUPPORTED_OPERATION,
     NOT_FOUND,
     OUT_OF_RANGE,
-    INVALID_ARGUMENTS
+    INVALID_ARGUMENTS,
+    UNAVILABLE,
+    UNAUTHENTICATED
 };
 
 enum class PlayingMode

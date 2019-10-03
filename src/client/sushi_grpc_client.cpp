@@ -2,12 +2,7 @@
 #include "sushi_client.h"
 #include "sushi_grpc_client.h"
 
-inline void print_status(grpc::Status status)
-{
-    std::cout << status.error_code() << ": " << status.error_message() << std::endl;
-}
-
-inline sushi_controller::ParameterType to_ext(const sushi_rpc::ParameterType::Type type)
+inline sushi_controller::ParameterType to_ext(const sushi_rpc::ParameterType::Type& type)
 {
     switch (type)
     {
@@ -20,7 +15,7 @@ inline sushi_controller::ParameterType to_ext(const sushi_rpc::ParameterType::Ty
     }
 }
 
-inline sushi_controller::PlayingMode to_ext(const sushi_rpc::PlayingMode::Mode mode)
+inline sushi_controller::PlayingMode to_ext(const sushi_rpc::PlayingMode::Mode& mode)
 {
     switch(mode)
     {
@@ -31,7 +26,7 @@ inline sushi_controller::PlayingMode to_ext(const sushi_rpc::PlayingMode::Mode m
     }
 }
 
-inline sushi_rpc::PlayingMode::Mode to_grpc(const sushi_controller::PlayingMode mode)
+inline sushi_rpc::PlayingMode::Mode to_grpc(const sushi_controller::PlayingMode& mode)
 {
     switch(mode)
     {
@@ -43,7 +38,7 @@ inline sushi_rpc::PlayingMode::Mode to_grpc(const sushi_controller::PlayingMode 
 }
 
 
-inline sushi_controller::SyncMode to_ext(const sushi_rpc::SyncMode::Mode mode)
+inline sushi_controller::SyncMode to_ext(const sushi_rpc::SyncMode::Mode& mode)
 {
     switch(mode)
     {
@@ -65,7 +60,7 @@ inline sushi_rpc::SyncMode::Mode to_grpc(const sushi_controller::SyncMode mode)
     }
 }
 
-inline sushi_controller::ControlStatus to_ext(const grpc::Status status)
+inline sushi_controller::ControlStatus to_ext(const grpc::Status& status)
 {
     switch(status.error_code())
     {
@@ -75,8 +70,31 @@ inline sushi_controller::ControlStatus to_ext(const grpc::Status status)
         case grpc::StatusCode::NOT_FOUND:           return sushi_controller::ControlStatus::NOT_FOUND;
         case grpc::StatusCode::OUT_OF_RANGE:        return sushi_controller::ControlStatus::OUT_OF_RANGE;
         case grpc::StatusCode::INVALID_ARGUMENT:    return sushi_controller::ControlStatus::INVALID_ARGUMENTS;
+        case grpc::StatusCode::UNAVAILABLE:         return sushi_controller::ControlStatus::UNAVILABLE;
+        case grpc::StatusCode::UNAUTHENTICATED:     return sushi_controller::ControlStatus::UNAUTHENTICATED;
         default:                                    return sushi_controller::ControlStatus::ERROR;
     }
+}
+
+inline std::string to_str(const grpc::StatusCode& code)
+{
+    switch(code)
+    {
+        case grpc::StatusCode::OK: return "OK";
+        case grpc::StatusCode::UNKNOWN: return "ERROR";
+        case grpc::StatusCode::FAILED_PRECONDITION: return "UNSUPPORTED OPERATION";
+        case grpc::StatusCode::NOT_FOUND: return "NOT FOUND";
+        case grpc::StatusCode::OUT_OF_RANGE: return "OUT OF RANGE";
+        case grpc::StatusCode::INVALID_ARGUMENT: return "INVALID ARGUMENTS";
+        case grpc::StatusCode::UNAVAILABLE: return "UNAVAILABLE";
+        case grpc::StatusCode::UNAUTHENTICATED: return "UNAUTHENTICATED";
+        default: return "ERROR";
+    }
+}
+
+inline void print_status(grpc::Status status)
+{
+    std::cout << to_str(status.error_code()) << ": " << status.error_message() << std::endl;
 }
 
 namespace sushi_controller
