@@ -2,12 +2,6 @@
 add_subdirectory(googletest EXCLUDE_FROM_ALL)
 enable_testing()
 
-#####################################
-#  Disable logging at compile time  #
-#####################################
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDISABLE_LOGGING")
-
 ################
 #  Test Files  #
 ################
@@ -26,8 +20,7 @@ set(INCLUDE_DIRS ${GRPC_WRAPPER_PUBLIC_HEADER_DIR}
 #  Statically linked libraries  #
 #################################
 
-set(LINK_LIBRARIES "${LINK_LIBRARIES}"
-                   sushi-grpc-controller
+set(LINK_LIBRARIES sushi-grpc-controller
                    gtest
                    gtest_main)
 
@@ -35,9 +28,6 @@ add_executable(unit_tests ${TEST_FILES})
 
 target_link_libraries(unit_tests "${LINK_LIBRARIES}")
 target_include_directories(unit_tests PRIVATE "${INCLUDE_DIRS}")
-
-# TODO: Ugly fix to get tests building. probably existst better solution.
-set(PROTO_SRC_DIR ${CMAKE_BINARY_DIR}/src/proto-src)
 target_include_directories(unit_tests PRIVATE ${PROTO_SRC_DIR})
 
 add_test(unit_tests unit_tests)
