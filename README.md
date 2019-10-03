@@ -34,7 +34,7 @@ Then include the library to your source file using:
 ```
 To create a controller instance use:
 ```c++
-std::make_unique<sushi_controller:ControlInterface> controller = sushi_controller::CreateSushiController();
+std::shared_ptr<sushi_controller::ControlInterface> controller = sushi_controller::CreateSushiController();
 ```
 
 A more in depth example can be found [here](https://bitbucket.org/mindswteam/sushi-grpc-cxx-wrapper/src/master/examples/SimpleSushiController.cpp).
