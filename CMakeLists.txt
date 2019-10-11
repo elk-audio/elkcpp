@@ -47,15 +47,15 @@ set(PUBLIC_HEADER_FILES
 #  gRPC / Protobuf  #
 #####################
 
-set(PROTOS
-    ${PROJECT_SOURCE_DIR}/protos/sushi_rpc.proto
+set(PROTO_FILE_PATH
+    ${PROJECT_SOURCE_DIR}/protos/sushi_rpc.proto CACHE STRING "Path to the proto file for the sushi rpc"
 )
 
 set(PROTO_SRC_DIR ${CMAKE_CURRENT_BINARY_DIR}/proto-src)
 file(MAKE_DIRECTORY ${PROTO_SRC_DIR})
 
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_SRC_DIR} ${PROTOS})
-grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_SRC_DIR} ${PROTOS})
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_SRC_DIR} ${PROTO_FILE_PATH})
+grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_SRC_DIR} ${PROTO_FILE_PATH})
 
 # there are plenty of these warnings in auto-generated files
 foreach(ITEM ${PROTO_SRCS} ${GRPC_SRCS})
