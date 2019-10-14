@@ -20,7 +20,7 @@ set(INCLUDE_DIRS ${GRPC_WRAPPER_PUBLIC_HEADER_DIR}
 #  Statically linked libraries  #
 #################################
 
-set(LINK_LIBRARIES sushi-grpc-controller
+set(LINK_LIBRARIES elkcpp
                    gtest
                    gtest_main)
 

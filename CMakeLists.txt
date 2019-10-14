@@ -2,7 +2,7 @@
 #  CMake configuration  #
 #########################
 
-project(sushi-grpc-cpp-warpper)
+project(elkcpp)
 cmake_minimum_required(VERSION 3.8)
 
 # CMake find modules
@@ -73,10 +73,10 @@ set(EXTRA_CLION_SOURCES ${PUBLIC_HEADER_FILES}
 
 set(SOURCE_FILES "${COMPILATION_UNITS}" "${EXTRA_CLION_SOURCES}" "${PROTO_SRCS}" "${GRPC_SRCS}")
 
-add_library(sushi-grpc-controller STATIC ${SOURCE_FILES})
-target_include_directories(sushi-grpc-controller PUBLIC ${GRPC_WRAPPER_PUBLIC_HEADER_DIR})
-target_include_directories(sushi-grpc-controller PRIVATE ${PROTO_SRC_DIR})
-target_link_libraries(sushi-grpc-controller
+add_library(elkcpp STATIC ${SOURCE_FILES})
+target_include_directories(elkcpp PUBLIC ${GRPC_WRAPPER_PUBLIC_HEADER_DIR})
+target_include_directories(elkcpp PRIVATE ${PROTO_SRC_DIR})
+target_link_libraries(elkcpp
     gRPC::grpc++_reflection
     protobuf::libprotobuf
 )
@@ -85,8 +85,8 @@ target_link_libraries(sushi-grpc-controller
 #  Install  #
 #############
 
-set_target_properties(sushi-grpc-controller PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADER_FILES}")
-install(TARGETS sushi-grpc-controller
+set_target_properties(elkcpp PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADER_FILES}")
+install(TARGETS elkcpp
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include

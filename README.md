@@ -4,11 +4,7 @@ A simple wrapper for controlling sushi over gRPC via c++.
 
 ### Installation ###
 
-Clone the repository using:
-```console
-$ git clone git@bitbucket.org:mindswteam/sushi-grpc-cxx-wrapper.git
-```
-Generate the build directory with the generate script using:
+Clone the repository and generate the build directory with the generate script using:
 ```console
 $ ./generate --cmake-args="-DPROTO_FILE_PATH=your/path/to/sushi_rpc.proto"
 ```
@@ -23,10 +19,10 @@ $ make install
 
 ### Include in CMake-base Projects ###
 
-Add the sushi-grpc-cxx-wrapper folder to you project folder and in your CMakeLists.txt add:
+Add the elkcpp folder to you project folder and in your CMakeLists.txt add:
 ```cmake
-add_subdirectory($PATH_TO_SUSHI_GRPC_WRAPPER)
-target_link_libraries($YOUR_TARGET sushi-grpc-controller)
+add_subdirectory($PATH_TO_ELKCPP)
+target_link_libraries($YOUR_TARGET elkcpp)
 ```
 
 ### Usage ###
@@ -40,4 +36,4 @@ To create a controller instance use:
 std::shared_ptr<sushi_controller::ControlInterface> controller = sushi_controller::CreateSushiController();
 ```
 
-A more in depth example can be found [here](https://bitbucket.org/mindswteam/sushi-grpc-cxx-wrapper/src/master/examples/SimpleSushiController.cpp).
+A more in depth example can be found [here](https://bitbucket.org/mindswteam/elkcpp/src/master/examples/SimpleSushiController.cpp).
