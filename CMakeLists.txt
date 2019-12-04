@@ -2,7 +2,7 @@
 #  CMake configuration  #
 #########################
 
-project(sushi-grpc-cpp-warpper)
+project(elkcpp)
 cmake_minimum_required(VERSION 3.8)
 
 # CMake find modules
@@ -47,15 +47,15 @@ set(PUBLIC_HEADER_FILES
 #  gRPC / Protobuf  #
 #####################
 
-set(PROTOS
-    ${PROJECT_SOURCE_DIR}/protos/sushi_rpc.proto
+set(PROTO_FILE_PATH
+    ${PROJECT_SOURCE_DIR}/protos/sushi_rpc.proto CACHE STRING "Path to the proto file for the sushi rpc"
 )
 
 set(PROTO_SRC_DIR ${CMAKE_CURRENT_BINARY_DIR}/proto-src)
 file(MAKE_DIRECTORY ${PROTO_SRC_DIR})
 
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_SRC_DIR} ${PROTOS})
-grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_SRC_DIR} ${PROTOS})
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_SRC_DIR} ${PROTO_FILE_PATH})
+grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_SRC_DIR} ${PROTO_FILE_PATH})
 
 # there are plenty of these warnings in auto-generated files
 foreach(ITEM ${PROTO_SRCS} ${GRPC_SRCS})
@@ -73,10 +73,10 @@ set(EXTRA_CLION_SOURCES ${PUBLIC_HEADER_FILES}
 
 set(SOURCE_FILES "${COMPILATION_UNITS}" "${EXTRA_CLION_SOURCES}" "${PROTO_SRCS}" "${GRPC_SRCS}")
 
-add_library(sushi-grpc-controller STATIC ${SOURCE_FILES})
-target_include_directories(sushi-grpc-controller PUBLIC ${GRPC_WRAPPER_PUBLIC_HEADER_DIR})
-target_include_directories(sushi-grpc-controller PRIVATE ${PROTO_SRC_DIR})
-target_link_libraries(sushi-grpc-controller
+add_library(elkcpp STATIC ${SOURCE_FILES})
+target_include_directories(elkcpp PUBLIC ${GRPC_WRAPPER_PUBLIC_HEADER_DIR})
+target_include_directories(elkcpp PRIVATE ${PROTO_SRC_DIR})
+target_link_libraries(elkcpp
     gRPC::grpc++_reflection
     protobuf::libprotobuf
 )
@@ -85,8 +85,8 @@ target_link_libraries(sushi-grpc-controller
 #  Install  #
 #############
 
-set_target_properties(sushi-grpc-controller PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADER_FILES}")
-install(TARGETS sushi-grpc-controller
+set_target_properties(elkcpp PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADER_FILES}")
+install(TARGETS elkcpp
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include
