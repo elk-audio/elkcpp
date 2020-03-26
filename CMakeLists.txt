@@ -59,14 +59,15 @@ grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_SRC_DIR} ${PROTO_FILE_PATH})
 
 # there are plenty of these warnings in auto-generated files
 foreach(ITEM ${PROTO_SRCS} ${GRPC_SRCS})
-    set_source_files_properties(${ITEM} PROPERTIES COMPILE_FLAGS -Wno-unused-parameters)    
+    set_source_files_properties(${ITEM} PROPERTIES COMPILE_FLAGS -Wno-unused-parameters)
 endforeach()
 
 ####################
 #  Library target  #
 ####################
 
-set(COMPILATION_UNITS src/client/sushi_grpc_client.cpp)
+set(COMPILATION_UNITS src/client/sushi_grpc_client.cpp
+                      src/client/async_client_call_data.cpp)
 
 set(EXTRA_CLION_SOURCES ${PUBLIC_HEADER_FILES}
                         src/client/sushi_grpc_client.h)

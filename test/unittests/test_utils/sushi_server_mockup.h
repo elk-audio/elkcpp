@@ -37,7 +37,7 @@ namespace expected_results
     constexpr SyncMode SYNC_MODE = SyncMode::INTERNAL;
     constexpr float TEMPO = 120.0f;
     constexpr TimeSignature TIME_SIGNATURE{4,4};
-    
+
     // MIDI test values
     constexpr int MIDI_TRACK_ID = 1;
     constexpr int MIDI_CHANNEL = 3;
@@ -71,10 +71,14 @@ namespace expected_results
     constexpr ParameterType PARAMETER_TYPE{ParameterType::FLOAT};
     constexpr float PARAMETER_VALUE{5.34f};
     constexpr float PARAMETER_NORMALISED_VALUE{0.87f};
-    const std::string PARAMETER_STRING_VALUE{"5.34"};                   
+    const std::string PARAMETER_STRING_VALUE{"5.34"};
     const ParameterInfo PARAMETER_WITH_ID_1 = ParameterInfo{1, PARAMETER_TYPE, "param1", "param1", "Hz", true, 0.0f, 1.0f};
     const ParameterInfo PARAMETER_WITH_ID_2 = ParameterInfo{2, PARAMETER_TYPE, "param2", "param2", "Hz", true, 0.0f, 1.0f};
-    const std::vector<ParameterInfo> PARAMETER_INFO_LIST = {PARAMETER_WITH_ID_1, PARAMETER_WITH_ID_2}; 
+    const std::vector<ParameterInfo> PARAMETER_INFO_LIST = {PARAMETER_WITH_ID_1, PARAMETER_WITH_ID_2};
+
+    // Notification test values
+    constexpr std::array<float, 3> PARAMETER_CHANGE_VALUES = {0.0f, 0.5f, 1.0f};
+
 } //expected_results
 
 std::thread server_thread;
@@ -86,7 +90,7 @@ void KillServerMockup();
 class SushiServiceMockup final : public sushi_rpc::SushiController::Service
 {
 
-    grpc::Status GetSamplerate(grpc::ServerContext* /* context */, 
+    grpc::Status GetSamplerate(grpc::ServerContext* /* context */,
                                const sushi_rpc::GenericVoidValue* /* request */,
                                sushi_rpc::GenericFloatValue* response) override
     {
@@ -94,7 +98,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         return grpc::Status::OK;
     }
 
-    grpc::Status GetPlayingMode(grpc::ServerContext* /* context */, 
+    grpc::Status GetPlayingMode(grpc::ServerContext* /* context */,
                                const sushi_rpc::GenericVoidValue* /* context */,
                                sushi_rpc::PlayingMode* response) override
     {
@@ -152,7 +156,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
     }
 
     grpc::Status SetTimeSignature(grpc::ServerContext* /* context */,
-                                  const sushi_rpc::TimeSignature* request, 
+                                  const sushi_rpc::TimeSignature* request,
                                   sushi_rpc::GenericVoidValue* /* response */) override
     {
         _time_signature.numerator = request->numerator();
@@ -565,7 +569,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
                                          const sushi_rpc::ProcessorProgramIdentifier* request,
                                          sushi_rpc::GenericStringValue* response)
     {
-        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id
         && request->program() == expected_results::PROGRAM_ID)
         {
             response->set_value(expected_results::PROGRAM_NAME);
@@ -598,7 +602,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
                                      const sushi_rpc::ProcessorProgramSetRequest* request,
                                      sushi_rpc::GenericVoidValue* /* response */)
     {
-        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id
         && request->program().program() == expected_results::PROGRAM_ID)
         {
             return grpc::Status::OK;
@@ -643,7 +647,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
                                 const sushi_rpc::ParameterIdRequest* request,
                                 sushi_rpc::ParameterIdentifier* response)
     {
-        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id
         && request->parametername() == expected_results::PARAMETER_WITH_ID_1.name)
         {
             response->set_processor_id(expected_results::PROCESSOR_WITH_ID_1.id);
@@ -654,14 +658,14 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id and/or parameter with that name");
         }
-        
+
     }
 
     grpc::Status GetParameterInfo(grpc::ServerContext* /* context */,
                                   const sushi_rpc::ParameterIdentifier* request,
                                   sushi_rpc::ParameterInfo* response)
     {
-        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
         && request->parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
         {
             response->set_id(expected_results::PARAMETER_WITH_ID_1.id);
@@ -678,14 +682,14 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor and/or parameter with that id");
         }
-        
+
     }
 
     grpc::Status GetParameterValue(grpc::ServerContext* /* context */,
                                    const sushi_rpc::ParameterIdentifier* request,
                                    sushi_rpc::GenericFloatValue* response)
     {
-        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
         && request->parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
         {
             response->set_value(expected_results::PARAMETER_VALUE);
@@ -695,13 +699,13 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No procesor and/or parameter with that id");
         }
-    }  
+    }
 
     grpc::Status GetParameterValueNormalised(grpc::ServerContext* /* context */,
                                    const sushi_rpc::ParameterIdentifier* request,
                                    sushi_rpc::GenericFloatValue* response)
     {
-        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
         && request->parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
         {
             response->set_value(expected_results::PARAMETER_NORMALISED_VALUE);
@@ -717,7 +721,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
                                    const sushi_rpc::ParameterIdentifier* request,
                                    sushi_rpc::GenericStringValue* response)
     {
-        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
         && request->parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
         {
             response->set_value(expected_results::PARAMETER_STRING_VALUE);
@@ -733,9 +737,9 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
                                    const sushi_rpc::ParameterSetRequest* request,
                                    sushi_rpc::GenericVoidValue* /* response */)
     {
-        if(request->parameter().processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
-        && request->parameter().parameter_id() == expected_results::PARAMETER_WITH_ID_1.id 
-        && request->value() == expected_results::PARAMETER_VALUE) 
+        if(request->parameter().processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
+        && request->parameter().parameter_id() == expected_results::PARAMETER_WITH_ID_1.id
+        && request->value() == expected_results::PARAMETER_VALUE)
         {
             return grpc::Status::OK;
         }
@@ -749,9 +753,9 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
                                    const sushi_rpc::ParameterSetRequest* request,
                                    sushi_rpc::GenericVoidValue* /* response */)
     {
-        if(request->parameter().processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
-        && request->parameter().parameter_id() == expected_results::PARAMETER_WITH_ID_1.id 
-        && request->value() == expected_results::PARAMETER_NORMALISED_VALUE) 
+        if(request->parameter().processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
+        && request->parameter().parameter_id() == expected_results::PARAMETER_WITH_ID_1.id
+        && request->value() == expected_results::PARAMETER_NORMALISED_VALUE)
         {
             return grpc::Status::OK;
         }
@@ -759,6 +763,41 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No procesor and/or parameter with that id");
         }
+    }
+
+    grpc::Status SubscribeToParameterUpdates(grpc::ServerContext* /* context*/,
+                                             const sushi_rpc::ParameterNotificationRequest* request,
+                                             grpc::ServerWriter<sushi_rpc::ParameterSetRequest>* response)
+    {
+        grpc::Status status;
+        for (int i = 0; i < request->parameters_size(); ++i)
+        {
+            auto& parameter = request->parameters(i);
+            if (parameter.processor_id() == expected_results::PROCESSOR_WITH_ID_1.id &&
+                parameter.parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
+            {
+                status = grpc::Status::OK;
+            }
+        }
+        sushi_rpc::ParameterSetRequest response_message;
+        response_message.mutable_parameter()->set_parameter_id(expected_results::PROCESSOR_WITH_ID_2.id);
+        response_message.mutable_parameter()->set_processor_id(expected_results::PARAMETER_WITH_ID_2.id);
+        response_message.set_value(expected_results::PARAMETER_CHANGE_VALUES[0]);
+        if (response->Write(response_message) == false)
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
+        }
+        response_message.set_value(expected_results::PARAMETER_CHANGE_VALUES[1]);
+        if (response->Write(response_message) == false)
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
+        }
+        response_message.set_value(expected_results::PARAMETER_CHANGE_VALUES[2]);
+        if (response->Write(response_message) == false)
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
+        }
+        return status;
     }
 
     sushi_rpc::PlayingMode::Mode _playing_mode{startup_values::PLAYING_MODE};

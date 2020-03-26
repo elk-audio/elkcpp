@@ -496,8 +496,18 @@ public:
      * @param value The normalised value to set the parameter to
      * @return ControlStatus 
      */
-    virtual ControlStatus                              set_parameter_value_normalised(int processor_id, int parameter_id, float value) = 0;
-    // virtual ControlStatus                              set_string_property_value(int processor_id, int parameter_id, const std::string& value) = 0;
+    virtual ControlStatus set_parameter_value_normalised(int processor_id, int parameter_id, float value) = 0;
+    // virtual ControlStatus set_string_property_value(int processor_id, int parameter_id, const std::string& value) = 0;
+
+    /**
+     * @brief Subscribe callback to parameter change notifications
+     * 
+     * @param callback The callback to run when a parameter notification is received
+     * @param parameter_blacklist Parameters to blacklist. The first int in the pair is a processor id.
+     * The second int is a processor id
+     */
+    virtual void subscribe_to_parameter_notifications(void (*callback)(int parameter_id, int processor_id, float value), 
+                                                      std::vector<std::pair<int,int>> parameter_blacklist) = 0;       
 
 
 protected:
