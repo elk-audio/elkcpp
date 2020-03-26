@@ -393,7 +393,7 @@ public:
      * @param parameter_id The id of the parameter to get the normalised value from
      * @return std::pair<ControlStatus, float>
      */
-    std::pair<ControlStatus, float> get_parameter_value_normalised(int processor_id, int parameter_id) const override;
+    std::pair<ControlStatus, float> get_parameter_value_in_domain(int processor_id, int parameter_id) const override;
 
     /**
      * @brief Get the current value of a parameter as a string
@@ -415,15 +415,6 @@ public:
      */
     ControlStatus set_parameter_value(int processor_id, int parameter_id, float value) override;
 
-    /**
-     * @brief Set the normalised value of a parameter
-     *
-     * @param processor_id The id of the processor containing the parameter
-     * @param parameter_id The id of the parameter to set the normalised value of
-     * @param value The normalised value to set the parameter to
-     * @return ControlStatus
-     */
-    ControlStatus set_parameter_value_normalised(int processor_id, int parameter_id, float value) override;
     // ControlStatus                              set_string_property_value(int processor_id, int parameter_id, const std::string& value) override;
 
     void subscribe_to_parameter_notifications(void (*callback)(int parameter_id, int processor_id, float value),

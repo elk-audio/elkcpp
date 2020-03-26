@@ -456,8 +456,8 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
                 parameter->set_name(expected_results::PARAMETER_INFO_LIST.at(i).name);
                 parameter->set_unit(expected_results::PARAMETER_INFO_LIST.at(i).unit);
                 parameter->set_automatable(expected_results::PARAMETER_INFO_LIST.at(i).automatable);
-                parameter->set_min_range(expected_results::PARAMETER_INFO_LIST.at(i).min_range);
-                parameter->set_max_range(expected_results::PARAMETER_INFO_LIST.at(i).max_range);
+                parameter->set_min_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).min_domain_value);
+                parameter->set_max_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).max_domain_value);
             }
             return grpc::Status::OK;
         }
@@ -628,8 +628,8 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
                 parameter->set_name(expected_results::PARAMETER_INFO_LIST.at(i).name);
                 parameter->set_unit(expected_results::PARAMETER_INFO_LIST.at(i).unit);
                 parameter->set_automatable(expected_results::PARAMETER_INFO_LIST.at(i).automatable);
-                parameter->set_min_range(expected_results::PARAMETER_INFO_LIST.at(i).min_range);
-                parameter->set_max_range(expected_results::PARAMETER_INFO_LIST.at(i).max_range);
+                parameter->set_min_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).min_domain_value);
+                parameter->set_max_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).max_domain_value);
             }
             return grpc::Status::OK;
         }
@@ -674,8 +674,8 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
             response->set_label(expected_results::PARAMETER_WITH_ID_1.label);
             response->set_unit(expected_results::PARAMETER_WITH_ID_1.unit);
             response->set_automatable(expected_results::PARAMETER_WITH_ID_1.automatable);
-            response->set_min_range(expected_results::PARAMETER_WITH_ID_1.min_range);
-            response->set_max_range(expected_results::PARAMETER_WITH_ID_1.max_range);
+            response->set_min_domain_value(expected_results::PARAMETER_WITH_ID_1.min_domain_value);
+            response->set_max_domain_value(expected_results::PARAMETER_WITH_ID_1.max_domain_value);
             return grpc::Status::OK;
         }
         else
@@ -701,7 +701,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         }
     }
 
-    grpc::Status GetParameterValueNormalised(grpc::ServerContext* /* context */,
+    grpc::Status GetParameterValueInDomain(grpc::ServerContext* /* context */,
                                    const sushi_rpc::ParameterIdentifier* request,
                                    sushi_rpc::GenericFloatValue* response)
     {
@@ -740,22 +740,6 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         if(request->parameter().processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
         && request->parameter().parameter_id() == expected_results::PARAMETER_WITH_ID_1.id
         && request->value() == expected_results::PARAMETER_VALUE)
-        {
-            return grpc::Status::OK;
-        }
-        else
-        {
-            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No procesor and/or parameter with that id");
-        }
-    }
-
-    grpc::Status SetParameterValueNormalised(grpc::ServerContext* /* context */,
-                                   const sushi_rpc::ParameterSetRequest* request,
-                                   sushi_rpc::GenericVoidValue* /* response */)
-    {
-        if(request->parameter().processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
-        && request->parameter().parameter_id() == expected_results::PARAMETER_WITH_ID_1.id
-        && request->value() == expected_results::PARAMETER_NORMALISED_VALUE)
         {
             return grpc::Status::OK;
         }
