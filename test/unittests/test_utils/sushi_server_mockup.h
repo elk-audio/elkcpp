@@ -452,8 +452,8 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
                 parameter->set_name(expected_results::PARAMETER_INFO_LIST.at(i).name);
                 parameter->set_unit(expected_results::PARAMETER_INFO_LIST.at(i).unit);
                 parameter->set_automatable(expected_results::PARAMETER_INFO_LIST.at(i).automatable);
-                parameter->set_min_range(expected_results::PARAMETER_INFO_LIST.at(i).min_range);
-                parameter->set_max_range(expected_results::PARAMETER_INFO_LIST.at(i).max_range);
+                parameter->set_min_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).min_domain_value);
+                parameter->set_max_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).max_domain_value);
             }
             return grpc::Status::OK;
         }
@@ -624,8 +624,8 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
                 parameter->set_name(expected_results::PARAMETER_INFO_LIST.at(i).name);
                 parameter->set_unit(expected_results::PARAMETER_INFO_LIST.at(i).unit);
                 parameter->set_automatable(expected_results::PARAMETER_INFO_LIST.at(i).automatable);
-                parameter->set_min_range(expected_results::PARAMETER_INFO_LIST.at(i).min_range);
-                parameter->set_max_range(expected_results::PARAMETER_INFO_LIST.at(i).max_range);
+                parameter->set_min_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).min_domain_value);
+                parameter->set_max_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).max_domain_value);
             }
             return grpc::Status::OK;
         }
@@ -670,8 +670,8 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
             response->set_label(expected_results::PARAMETER_WITH_ID_1.label);
             response->set_unit(expected_results::PARAMETER_WITH_ID_1.unit);
             response->set_automatable(expected_results::PARAMETER_WITH_ID_1.automatable);
-            response->set_min_range(expected_results::PARAMETER_WITH_ID_1.min_range);
-            response->set_max_range(expected_results::PARAMETER_WITH_ID_1.max_range);
+            response->set_min_domain_value(expected_results::PARAMETER_WITH_ID_1.min_domain_value);
+            response->set_max_domain_value(expected_results::PARAMETER_WITH_ID_1.max_domain_value);
             return grpc::Status::OK;
         }
         else

@@ -69,8 +69,8 @@ struct ParameterInfo
     std::string     name;
     std::string     unit;
     bool            automatable;
-    float           min_range;
-    float           max_range;
+    float           min_domain_value;
+    float           max_domain_value;
 };
 
 struct ProcessorInfo
