@@ -67,7 +67,7 @@ int main()
     for(int i = 0; i < number_of_steps; ++i)
     {
         // Set the cutoff parameter
-        controller->set_parameter_value_normalised(processor_id, parameter_id, cutoff);
+        controller->set_parameter_value(processor_id, parameter_id, cutoff);
         // Set the pitch bend
         controller->send_pitch_bend(0, 0, pitch_bend);
         // Increment the cutoff

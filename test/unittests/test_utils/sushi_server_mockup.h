@@ -69,7 +69,7 @@ namespace expected_results
 
     // Parameter test values
     constexpr ParameterType PARAMETER_TYPE{ParameterType::FLOAT};
-    constexpr float PARAMETER_VALUE{5.34f};
+    constexpr float PARAMETER_DOMAIN_VALUE{5.34f};
     constexpr float PARAMETER_NORMALISED_VALUE{0.87f};
     const std::string PARAMETER_STRING_VALUE{"5.34"};                   
     const ParameterInfo PARAMETER_WITH_ID_1 = ParameterInfo{1, PARAMETER_TYPE, "param1", "param1", "Hz", true, 0.0f, 1.0f};
@@ -688,7 +688,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
         && request->parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
         {
-            response->set_value(expected_results::PARAMETER_VALUE);
+            response->set_value(expected_results::PARAMETER_NORMALISED_VALUE);
             return grpc::Status::OK;
         }
         else
@@ -697,14 +697,14 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
         }
     }  
 
-    grpc::Status GetParameterValueNormalised(grpc::ServerContext* /* context */,
-                                   const sushi_rpc::ParameterIdentifier* request,
-                                   sushi_rpc::GenericFloatValue* response)
+    grpc::Status GetParameterValueInDomain(grpc::ServerContext* /* context */,
+                                           const sushi_rpc::ParameterIdentifier* request,
+                                           sushi_rpc::GenericFloatValue* response)
     {
         if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
         && request->parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
         {
-            response->set_value(expected_results::PARAMETER_NORMALISED_VALUE);
+            response->set_value(expected_results::PARAMETER_DOMAIN_VALUE);
             return grpc::Status::OK;
         }
         else
@@ -735,7 +735,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
     {
         if(request->parameter().processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
         && request->parameter().parameter_id() == expected_results::PARAMETER_WITH_ID_1.id 
-        && request->value() == expected_results::PARAMETER_VALUE) 
+        && request->value() == expected_results::PARAMETER_DOMAIN_VALUE)
         {
             return grpc::Status::OK;
         }

@@ -888,7 +888,7 @@ std::pair<ControlStatus, float> SushiControllerClient::get_parameter_value(int p
     return std::pair<ControlStatus, float>(to_ext(status), response.value());
 }
 
-std::pair<ControlStatus, float> SushiControllerClient::get_parameter_value_normalised(int processor_id, int parameter_id) const
+std::pair<ControlStatus, float> SushiControllerClient::get_parameter_value_in_domain(int processor_id, int parameter_id) const
 {
     sushi_rpc::ParameterIdentifier request;
     sushi_rpc::GenericFloatValue response;
@@ -897,7 +897,7 @@ std::pair<ControlStatus, float> SushiControllerClient::get_parameter_value_norma
     request.set_processor_id(processor_id);
     request.set_parameter_id(parameter_id);
 
-    grpc::Status status = _stub.get()->GetParameterValueNormalised(&context, request, &response);
+    grpc::Status status = _stub.get()->GetParameterValueInDomain(&context, request, &response);
 
     if(!status.ok())
     {
@@ -942,25 +942,6 @@ ControlStatus SushiControllerClient::set_parameter_value(int processor_id, int p
     }
     return to_ext(status);
     
-}
-
-ControlStatus SushiControllerClient::set_parameter_value_normalised(int processor_id, int parameter_id, float normalised_value)
-{
-    sushi_rpc::ParameterSetRequest request;
-    sushi_rpc::GenericVoidValue response;
-    grpc::ClientContext context;
-
-    request.mutable_parameter()->set_processor_id(processor_id);
-    request.mutable_parameter()->set_parameter_id(parameter_id);
-    request.set_value(normalised_value);
-
-    grpc::Status status = _stub.get()->SetParameterValueNormalised(&context, request, &response);
-
-    if(!status.ok())
-    {
-        handle_error(status);
-    }
-    return to_ext(status);
 }
 
 std::shared_ptr<SushiControl> CreateSushiController(const std::string& address)
