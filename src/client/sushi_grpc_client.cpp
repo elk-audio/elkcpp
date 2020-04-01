@@ -609,8 +609,8 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_
             response.parameters(i).name(),
             response.parameters(i).unit(),
             response.parameters(i).automatable(),
-            response.parameters(i).min_range(),
-            response.parameters(i).max_range()
+            response.parameters(i).min_domain_value(),
+            response.parameters(i).max_domain_value()
         });
     }
     return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
@@ -812,8 +812,8 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> SushiControllerClient::get_
                 response.parameters(i).name(),
                 response.parameters(i).unit(),
                 response.parameters(i).automatable(),
-                response.parameters(i).min_range(),
-                response.parameters(i).max_range()
+                response.parameters(i).min_domain_value(),
+                response.parameters(i).max_domain_value()
             }
         );
     }
@@ -864,8 +864,8 @@ std::pair<ControlStatus, ParameterInfo> SushiControllerClient::get_parameter_inf
         response.name(),
         response.unit(),
         response.automatable(),
-        response.min_range(),
-        response.max_range()
+        response.min_domain_value(),
+        response.max_domain_value()
     };
     return std::pair<ControlStatus, ParameterInfo>(to_ext(status), output);
 }
