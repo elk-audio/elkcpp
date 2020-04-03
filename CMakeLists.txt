@@ -48,7 +48,7 @@ set(PUBLIC_HEADER_FILES
 #####################
 
 set(PROTO_FILE_PATH
-    ${PROJECT_SOURCE_DIR}/protos/sushi_rpc.proto CACHE STRING "Path to the proto file for the sushi rpc"
+    /usr/share/sushi/sushi_rpc.proto CACHE STRING "Path to the proto file for the sushi rpc"
 )
 
 set(PROTO_SRC_DIR ${CMAKE_CURRENT_BINARY_DIR}/proto-src)
@@ -59,7 +59,7 @@ grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_SRC_DIR} ${PROTO_FILE_PATH})
 
 # there are plenty of these warnings in auto-generated files
 foreach(ITEM ${PROTO_SRCS} ${GRPC_SRCS})
-    set_source_files_properties(${ITEM} PROPERTIES COMPILE_FLAGS -Wno-unused-parameters)    
+    set_source_files_properties(${ITEM} PROPERTIES COMPILE_FLAGS -Wno-unused-parameters)
 endforeach()
 
 ####################
