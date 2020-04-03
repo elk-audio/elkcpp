@@ -466,15 +466,15 @@ TEST_F(SushiClientParameterControlTest, GetParameterValue)
     std::pair<sushi_controller::ControlStatus, float> result = controller->get_parameter_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, 
                                                                                               sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_VALUE);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_NORMALISED_VALUE);
 }
 
-TEST_F(SushiClientParameterControlTest, GetParameterValueNormalised)
+TEST_F(SushiClientParameterControlTest, GetParameterValueInDomain)
 {
-    std::pair<sushi_controller::ControlStatus, float> result = controller->get_parameter_value_normalised(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, 
+    std::pair<sushi_controller::ControlStatus, float> result = controller->get_parameter_value_in_domain(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                                                                                          sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_NORMALISED_VALUE);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_DOMAIN_VALUE);
 }
 
 TEST_F(SushiClientParameterControlTest, GetParameterValueAsString)
@@ -488,16 +488,10 @@ TEST_F(SushiClientParameterControlTest, GetParameterValueAsString)
 TEST_F(SushiClientParameterControlTest, SetParameterValue)
 {
     sushi_controller::ControlStatus result = controller->set_parameter_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, 
-                                                                            sushi_controller::expected_results::PARAMETER_WITH_ID_1.id, 
-                                                                            sushi_controller::expected_results::PARAMETER_VALUE);
+                                                                             sushi_controller::expected_results::PARAMETER_WITH_ID_1.id,
+                                                                             sushi_controller::expected_results::PARAMETER_DOMAIN_VALUE);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
 }
 
-TEST_F(SushiClientParameterControlTest, SetParameterValueNormalised)
-{
-    sushi_controller::ControlStatus result = controller->set_parameter_value_normalised(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, 
-                                                                                       sushi_controller::expected_results::PARAMETER_WITH_ID_1.id, 
-                                                                                       sushi_controller::expected_results::PARAMETER_NORMALISED_VALUE);
-    ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
-}
+
 

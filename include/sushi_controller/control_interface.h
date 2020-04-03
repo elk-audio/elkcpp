@@ -451,7 +451,7 @@ public:
     virtual std::pair<ControlStatus, ParameterInfo> get_parameter_info(int processor_id, int parameter_id) const = 0;
     
     /**
-     * @brief Get the current value of a parameter
+     * @brief Get the current value of a parameter, normalised between 0 and 1
      * 
      * @param processor_id The id of the processor containing the parameter
      * @param parameter_id The id of parameter to get the value from
@@ -460,13 +460,13 @@ public:
     virtual std::pair<ControlStatus, float> get_parameter_value(int processor_id, int parameter_id) const = 0;
     
     /**
-     * @brief Get the normalised current value of a parameter
+     * @brief Get the current value of a parameter in the parameter specific domain
      * 
      * @param processor_id The id of the processor containing the parameter
      * @param parameter_id The id of the parameter to get the normalised value from
      * @return std::pair<ControlStatus, float> 
      */
-    virtual std::pair<ControlStatus, float> get_parameter_value_normalised(int processor_id, int parameter_id) const = 0;
+    virtual std::pair<ControlStatus, float> get_parameter_value_in_domain(int processor_id, int parameter_id) const = 0;
     
     /**
      * @brief Get the current value of a parameter as a string
@@ -483,20 +483,11 @@ public:
      * 
      * @param processor_id The id of the processor containing the parameter
      * @param parameter_id The id of the parameter to set the value of
-     * @param value The value to set the parameter to
+     * @param value The value to set the parameter to, normalised between 0 and 1
      * @return ControlStatus 
      */
     virtual ControlStatus set_parameter_value(int processor_id, int parameter_id, float value) = 0;
-    
-    /**
-     * @brief Set the normalised value of a parameter
-     * 
-     * @param processor_id The id of the processor containing the parameter
-     * @param parameter_id The id of the parameter to set the normalised value of
-     * @param value The normalised value to set the parameter to
-     * @return ControlStatus 
-     */
-    virtual ControlStatus                              set_parameter_value_normalised(int processor_id, int parameter_id, float value) = 0;
+
     // virtual ControlStatus                              set_string_property_value(int processor_id, int parameter_id, const std::string& value) = 0;
 
 
