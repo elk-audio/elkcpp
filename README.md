@@ -36,4 +36,4 @@ To create a controller instance use:
 std::shared_ptr<sushi_controller::ControlInterface> controller = sushi_controller::CreateSushiController();
 ```
 
-A more in depth example can be found [here](https://bitbucket.org/mindswteam/elkcpp/src/master/examples/SimpleSushiController.cpp).
+A more in depth example can be found [here](https://github.com/elk-audio/elkcpp/blob/master/examples/SimpleSushiController.cpp).
