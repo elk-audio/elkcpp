@@ -12,7 +12,7 @@
 int main()
 {
     // Create a controller object to connect to sushi
-    std::shared_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController();
+    std::shared_ptr<sushi_controller::SushiController> controller = sushi_controller::CreateSushiController();
 
     // "Fun" message
     std::cout << "Listen to the music!" << std::endl;
@@ -27,7 +27,7 @@ int main()
     int processor_id;
 
     // Get the id of the processor matching the processor name
-    std::tie(status, processor_id) = controller->get_processor_id(processor_name);
+    std::tie(status, processor_id) = controller->audio_graph_controller()->get_processor_id(processor_name);
 
     // Check if the call was succesful and print an error if not
     if (status != sushi_controller::ControlStatus::OK)
@@ -43,7 +43,7 @@ int main()
     int parameter_id;
 
     // Get the id of the parameter matching the parameter name
-    std::tie(status, parameter_id) = controller->get_parameter_id(processor_id, parameter_name);
+    std::tie(status, parameter_id) = controller->parameter_controller()->get_parameter_id(processor_id, parameter_name);
 
     // Check if the call was succesful and print an error if not
     if (status != sushi_controller::ControlStatus::OK)
@@ -53,10 +53,10 @@ int main()
     }
 
     // Start a Cmaj7 chord
-    controller->send_note_on(0, 0, 60, 1.0f);
-    controller->send_note_on(0, 0, 64, 1.0f);
-    controller->send_note_on(0, 0, 67, 1.0f);
-    controller->send_note_on(0, 0, 71, 1.0f);
+    controller->keyboard_controller()->send_note_on(0, 0, 60, 1.0f);
+    controller->keyboard_controller()->send_note_on(0, 0, 64, 1.0f);
+    controller->keyboard_controller()->send_note_on(0, 0, 67, 1.0f);
+    controller->keyboard_controller()->send_note_on(0, 0, 71, 1.0f);
 
     // Initialize variables for the command sequence
     float cutoff = 0.0f;
@@ -67,9 +67,9 @@ int main()
     for(int i = 0; i < number_of_steps; ++i)
     {
         // Set the cutoff parameter
-        controller->set_parameter_value(processor_id, parameter_id, cutoff);
+        controller->parameter_controller()->set_parameter_value(processor_id, parameter_id, cutoff);
         // Set the pitch bend
-        controller->send_pitch_bend(0, 0, pitch_bend);
+        controller->keyboard_controller()->send_pitch_bend(0, 0, pitch_bend);
         // Increment the cutoff
         cutoff += duration/(float)number_of_steps;
         // Increment the pitch bend value
@@ -79,9 +79,9 @@ int main()
     }
 
     // Stop the notes that were started
-    controller->send_note_off(0, 0, 60, 1.0f);
-    controller->send_note_off(0, 0, 64, 1.0f);
-    controller->send_note_off(0, 0, 67, 1.0f);
-    controller->send_note_off(0, 0, 71, 1.0f);
+    controller->keyboard_controller()->send_note_off(0, 0, 60, 1.0f);
+    controller->keyboard_controller()->send_note_off(0, 0, 64, 1.0f);
+    controller->keyboard_controller()->send_note_off(0, 0, 67, 1.0f);
+    controller->keyboard_controller()->send_note_off(0, 0, 71, 1.0f);
     return 0;
 }

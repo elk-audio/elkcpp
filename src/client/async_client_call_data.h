@@ -22,15 +22,16 @@
 #define SUSHI_ASYNCCLIENTCALLDATA_H
 
 #include <grpcpp/alarm.h>
+#include <functional>
 
-#include "sushi_grpc_client.h"
+#include "sushi_rpc.grpc.pb.h"
 
 namespace sushi_controller {
 
 class CallData
 {
 public:
-    CallData(sushi_rpc::SushiController::Stub* stub, grpc::CompletionQueue* cq)
+    CallData(sushi_rpc::NotificationController::Stub* stub, grpc::CompletionQueue* cq)
         : _cq(cq),
           _stub(stub),
           _status(CREATE) {}
@@ -52,7 +53,7 @@ public:
 protected:
     grpc::CompletionQueue* _cq;
     grpc::ClientContext _ctx;
-    sushi_rpc::SushiController::Stub* _stub;
+    sushi_rpc::NotificationController::Stub* _stub;
 
     grpc::Alarm _alarm;
 
@@ -69,13 +70,13 @@ protected:
 class SubscribeToParameterUpdatesCallData : public CallData
 {
 public:
-    SubscribeToParameterUpdatesCallData(sushi_rpc::SushiController::Stub* stub,
+    SubscribeToParameterUpdatesCallData(sushi_rpc::NotificationController::Stub* stub,
                                         grpc::CompletionQueue* cq,
-                                        void (*callback)(int,int,float),
+                                        std::function<void(int parameter_id, int processor_id, float value)> callback,
                                         std::vector<std::pair<int,int>> parameter_blacklist)
     : CallData(stub, cq),
       _callback(callback),
-      _parameter_blacklist(parameter_blacklist),
+      _parameter_blocklist(parameter_blacklist),
       _first_iteration(true)
     {
         proceed();
@@ -84,11 +85,11 @@ public:
     void proceed() override;
 
 private:
-    std::unique_ptr<grpc::ClientAsyncReader<sushi_rpc::ParameterSetRequest>> _reader;
-    sushi_rpc::ParameterSetRequest _response;
+    std::unique_ptr<grpc::ClientAsyncReader<sushi_rpc::ParameterValue>> _reader;
+    sushi_rpc::ParameterValue _response;
 
-    void (*_callback)(int,int,float);
-    std::vector<std::pair<int,int>> _parameter_blacklist;
+    std::function<void(int parameter_id, int processor_id, float value)> _callback;
+    std::vector<std::pair<int,int>> _parameter_blocklist;
 
     bool _first_iteration;
 };

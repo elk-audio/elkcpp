@@ -17,15 +17,15 @@ void print_notification(int processor_id, int parameter_id, float value)
 int main()
 {
     // Create a controller object to connect to sushi
-    std::shared_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController();
+    std::shared_ptr<sushi_controller::SushiController> controller = sushi_controller::CreateSushiController();
     std::vector<std::pair<int, int>> blacklist;
-    controller->subscribe_to_parameter_notifications(print_notification, blacklist);
+    controller->notification_controller()->subscribe_to_parameter_updates(print_notification, blacklist);
     for (int i = 0; i < 3; ++i)
     {
-        controller->set_playing_mode(sushi_controller::PlayingMode::PLAYING);
+        controller->transport_controller()->set_playing_mode(sushi_controller::PlayingMode::PLAYING);
         std::cout << "Started playback" << std::endl;
         sleep(2);
-        controller->set_playing_mode(sushi_controller::PlayingMode::STOPPED);
+        controller->transport_controller()->set_playing_mode(sushi_controller::PlayingMode::STOPPED);
         std::cout << "Stopped playback" << std::endl;
         sleep(1);
     }

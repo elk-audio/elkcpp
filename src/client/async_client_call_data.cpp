@@ -7,8 +7,8 @@ void SubscribeToParameterUpdatesCallData::proceed()
     if (_status == CREATE)
     {
         // Format blacklist
-        auto request = sushi_rpc::ParameterNotificationRequest();
-        for (auto parameter : _parameter_blacklist)
+        auto request = sushi_rpc::ParameterNotificationBlocklist();
+        for (auto parameter : _parameter_blocklist)
         {
             auto parameter_to_add = request.add_parameters();
             parameter_to_add->set_parameter_id(parameter.first);

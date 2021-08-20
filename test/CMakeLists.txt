@@ -6,7 +6,14 @@ enable_testing()
 #  Test Files  #
 ################
 
-SET(TEST_FILES unittests/sushi_client_integration_test.cpp)
+SET(TEST_FILES unittests/audio_graph_integration_test.cpp
+               unittests/keyboard_integration_test.cpp
+               unittests/notification_integration_test.cpp
+               unittests/parameter_integration_test.cpp
+               unittests/program_integration_test.cpp
+               unittests/system_integration_test.cpp
+               unittests/timing_integration_test.cpp
+               unittests/transport_integration_test.cpp)
 
 ##########################################
 #  Include directories relative to test  #
