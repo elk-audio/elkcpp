@@ -7,28 +7,6 @@
 namespace sushi_controller
 {
 
-inline sushi_rpc::PluginType_Type to_grpc(PluginType type)
-{
-    switch (type)
-    {
-    case PluginType::INTERNAL:
-        return sushi_rpc::PluginType_Type_INTERNAL;
-        break;
-    case PluginType::LV2:
-        return sushi_rpc::PluginType_Type_LV2;
-        break;
-    case PluginType::VST2X:
-        return sushi_rpc::PluginType_Type_VST2X;
-        break;
-    case PluginType::VST3X:
-        return sushi_rpc::PluginType_Type_VST3X;
-        break;
-    default:
-        return sushi_rpc::PluginType_Type_DUMMY;
-        break;
-    }
-}
-
 AudioGraphControllerClient::AudioGraphControllerClient(const std::string& address)
     : _stub(sushi_rpc::AudioGraphController::NewStub(
         grpc::CreateChannel(

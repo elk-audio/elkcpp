@@ -14,125 +14,9 @@
 #include <vector>
 #include <variant>
 
+#include "controller_types.h"
+
 namespace sushi_controller {
-
-enum class ControlStatus
-{
-    OK,
-    ERROR,
-    UNSUPPORTED_OPERATION,
-    NOT_FOUND,
-    OUT_OF_RANGE,
-    INVALID_ARGUMENTS,
-    UNAVAILABLE,
-    UNAUTHENTICATED
-};
-
-enum class PlayingMode
-{
-    STOPPED,
-    PLAYING,
-    RECORDING
-};
-
-enum class SyncMode
-{
-    INTERNAL,
-    MIDI,
-    LINK
-};
-
-struct TimeSignature
-{
-    int numerator;
-    int denominator;
-};
-
-struct CpuTimings
-{
-    float avg;
-    float min;
-    float max;
-};
-
-enum class ParameterType
-{
-    BOOL,
-    INT,
-    FLOAT,
-};
-
-enum class PluginType
-{
-   INTERNAL,
-   VST2X,
-   VST3X,
-   LV2
-};
-
-struct ParameterInfo
-{
-    int             id;
-    ParameterType   type;
-    std::string     label;
-    std::string     name;
-    std::string     unit;
-    bool            automatable;
-    float           min_domain_value;
-    float           max_domain_value;
-};
-
-struct ProcessorInfo
-{
-    int         id;
-    std::string label;
-    std::string name;
-    int         parameter_count;
-    int         program_count;
-};
-
-struct ProgramInfo
-{
-    int         id;
-    std::string name;
-};
-
-struct TrackInfo
-{
-    int              id;
-    std::string      label;
-    std::string      name;
-    int              input_channels;
-    int              input_busses;
-    int              output_channels;
-    int              output_busses;
-    std::vector<int> processors;
-};
-
-using TransportUpdate = std::variant<float, PlayingMode, SyncMode, TimeSignature>;
-
-struct TrackUpdate
-{
-    enum class Action
-    {
-        TRACK_ADDED,
-        TRACK_DELETED
-    };
-    Action action;
-    int track_id;
-};
-
-struct ProcessorUpdate
-{
-    enum class Action
-    {
-        PROCESSOR_ADDED,
-        PROCESSOR_DELETED
-    };
-    Action action;
-    int processor_id;
-    int parent_track_id;
-};
 
 class SystemController
 {
@@ -702,7 +586,7 @@ public:
      *
      * @param callback The callback to run when a change is made to the transport
      */
-    virtual void subscribe_to_transport_changes(std::function<void(TransportUpdate update)> callback) = 0;
+    virtual void subscribe_to_transport_changes(std::function<void(TransportUpdate update, TransportUpdateType type)> callback) = 0;
 
     /**
      * @brief Subscribe to timing updates

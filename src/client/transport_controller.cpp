@@ -7,50 +7,6 @@
 namespace sushi_controller
 {
 
-inline sushi_controller::PlayingMode to_ext(const sushi_rpc::PlayingMode::Mode& mode)
-{
-    switch(mode)
-    {
-        case sushi_rpc::PlayingMode::STOPPED:   return sushi_controller::PlayingMode::STOPPED;
-        case sushi_rpc::PlayingMode::PLAYING:   return sushi_controller::PlayingMode::PLAYING;
-        case sushi_rpc::PlayingMode::RECORDING: return sushi_controller::PlayingMode::RECORDING;
-        default:                                return sushi_controller::PlayingMode::PLAYING;
-    }
-}
-
-inline sushi_rpc::PlayingMode::Mode to_grpc(const sushi_controller::PlayingMode& mode)
-{
-    switch(mode)
-    {
-        case sushi_controller::PlayingMode::STOPPED:   return sushi_rpc::PlayingMode::STOPPED;
-        case sushi_controller::PlayingMode::PLAYING:   return sushi_rpc::PlayingMode::PLAYING;
-        case sushi_controller::PlayingMode::RECORDING: return sushi_rpc::PlayingMode::RECORDING;
-        default:                                       return sushi_rpc::PlayingMode::PLAYING;
-    }
-}
-
-inline sushi_controller::SyncMode to_ext(const sushi_rpc::SyncMode::Mode& mode)
-{
-    switch(mode)
-    {
-        case sushi_rpc::SyncMode::INTERNAL:   return sushi_controller::SyncMode::INTERNAL;
-        case sushi_rpc::SyncMode::MIDI:       return sushi_controller::SyncMode::MIDI;
-        case sushi_rpc::SyncMode::LINK:       return sushi_controller::SyncMode::LINK;
-        default:                              return sushi_controller::SyncMode::INTERNAL;
-    }
-}
-
-inline sushi_rpc::SyncMode::Mode to_grpc(const sushi_controller::SyncMode mode)
-{
-    switch(mode)
-    {
-        case sushi_controller::SyncMode::INTERNAL:   return sushi_rpc::SyncMode::INTERNAL;
-        case sushi_controller::SyncMode::MIDI:       return sushi_rpc::SyncMode::MIDI;
-        case sushi_controller::SyncMode::LINK:       return sushi_rpc::SyncMode::LINK;
-        default:                              return sushi_rpc::SyncMode::INTERNAL;
-    }
-}
-
 TransportControllerClient::TransportControllerClient(const std::string& address)
     : _stub(sushi_rpc::TransportController::NewStub(
         grpc::CreateChannel(

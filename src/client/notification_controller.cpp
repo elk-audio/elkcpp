@@ -30,21 +30,41 @@ NotificationControllerClient::~NotificationControllerClient()
     {
         _worker.join();
     }
+}
 
-    for (auto& call_data : _active_call_datas)
-    {
-        delete call_data;
-    }
+void NotificationControllerClient::subscribe_to_transport_changes(std::function<void(TransportUpdate update, TransportUpdateType type)> callback)
+{
+    _active_call_datas.push_back(
+        std::make_unique<SubscribeToTransportChangesCallData>(_stub.get(),
+                                                              &_cq,
+                                                              callback)
+    );
+}
+
+void NotificationControllerClient::subscribe_to_engine_cpu_timing_updates(std::function<void(CpuTimings timings)> callback)
+{
+
+}
+
+void NotificationControllerClient::subscribe_to_track_changes(std::function<void(TrackUpdate update)> callback)
+{
+
+}
+
+void NotificationControllerClient::subscribe_to_processor_changes(std::function<void(ProcessorUpdate update)> callback)
+{
+
 }
 
 void NotificationControllerClient::subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float value)> callback,
                                                                   std::vector<std::pair<int, int>> parameter_blocklist)
 {
-    auto call_data = new SubscribeToParameterUpdatesCallData(_stub.get(),
-                                                             &_cq,
-                                                             callback,
-                                                             parameter_blocklist);
-    _active_call_datas.push_back(call_data);
+    _active_call_datas.push_back(
+        std::make_unique<SubscribeToParameterUpdatesCallData>(_stub.get(),
+                                                              &_cq,
+                                                              callback,
+                                                              parameter_blocklist)
+    );
 }
 
 void NotificationControllerClient::notification_loop()

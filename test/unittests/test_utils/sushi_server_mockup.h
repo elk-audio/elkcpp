@@ -50,8 +50,7 @@ namespace expected_results
     const ParameterInfo PARAMETER_WITH_ID_2 = ParameterInfo{2, PARAMETER_TYPE, "param2", "param2", "Hz", true, 0.0f, 1.0f};
     const std::vector<ParameterInfo> PARAMETER_INFO_LIST = {PARAMETER_WITH_ID_1, PARAMETER_WITH_ID_2};
 
-    // Notification test values
-    constexpr std::array<float, 3> PARAMETER_CHANGE_VALUES = {0.0f, 0.5f, 1.0f};
+
 
 } //expected_results
 
@@ -92,40 +91,7 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
     //=====================//
 
 
-    grpc::Status SubscribeToParameterUpdates(grpc::ServerContext* /* context*/,
-                                             const sushi_rpc::ParameterNotificationRequest* request,
-                                             grpc::ServerWriter<sushi_rpc::ParameterSetRequest>* response)
-    {
-        grpc::Status status;
-        for (int i = 0; i < request->parameters_size(); ++i)
-        {
-            auto& parameter = request->parameters(i);
-            if (parameter.processor_id() == expected_results::PROCESSOR_WITH_ID_1.id &&
-                parameter.parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
-            {
-                status = grpc::Status::OK;
-            }
-        }
-        sushi_rpc::ParameterSetRequest response_message;
-        response_message.mutable_parameter()->set_parameter_id(expected_results::PROCESSOR_WITH_ID_2.id);
-        response_message.mutable_parameter()->set_processor_id(expected_results::PARAMETER_WITH_ID_2.id);
-        response_message.set_value(expected_results::PARAMETER_CHANGE_VALUES[0]);
-        if (response->Write(response_message) == false)
-        {
-            return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
-        }
-        response_message.set_value(expected_results::PARAMETER_CHANGE_VALUES[1]);
-        if (response->Write(response_message) == false)
-        {
-            return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
-        }
-        response_message.set_value(expected_results::PARAMETER_CHANGE_VALUES[2]);
-        if (response->Write(response_message) == false)
-        {
-            return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
-        }
-        return status;
-    }
+
 
     bool _processor_bypass_state{expected_results::PROCESSOR_BYPASS_STATE};
 

@@ -26,7 +26,7 @@ public:
      *
      * @param callback The callback to run when a change is made to the transport
      */
-    virtual void subscribe_to_transport_changes(std::function<void(TransportUpdate update)> callback) override;
+    virtual void subscribe_to_transport_changes(std::function<void(TransportUpdate update, TransportUpdateType type)> callback) override;
 
     /**
      * @brief Subscribe to timing updates
@@ -66,7 +66,7 @@ private:
     grpc::CompletionQueue _cq;
     std::thread _worker;
     std::atomic<bool> _running;
-    std::vector<CallData*> _active_call_datas;
+    std::vector<std::unique_ptr<CallData>> _active_call_datas;
 };
 
 } // namespace sushi_controller

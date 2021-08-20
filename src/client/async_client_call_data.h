@@ -25,6 +25,7 @@
 #include <functional>
 
 #include "sushi_rpc.grpc.pb.h"
+#include "controller_types.h"
 
 namespace sushi_controller {
 
@@ -65,6 +66,30 @@ protected:
         PUSH_TO_BACK
     };
     CallStatus _status;
+};
+
+class SubscribeToTransportChangesCallData : public CallData
+{
+public:
+    SubscribeToTransportChangesCallData(sushi_rpc::NotificationController::Stub* stub,
+                                        grpc::CompletionQueue* cq,
+                                        std::function<void(TransportUpdate update, TransportUpdateType type)> callback)
+    : CallData(stub, cq),
+      _callback(callback),
+      _first_iteration(true)
+    {
+        proceed();
+    }
+
+    void proceed() override;
+
+private:
+    std::unique_ptr<grpc::ClientAsyncReader<sushi_rpc::TransportUpdate>> _reader;
+    sushi_rpc::TransportUpdate _response;
+
+    std::function<void(TransportUpdate update, TransportUpdateType type)> _callback;
+
+    bool _first_iteration;
 };
 
 class SubscribeToParameterUpdatesCallData : public CallData
