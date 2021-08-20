@@ -92,6 +92,30 @@ private:
     bool _first_iteration;
 };
 
+class SubscribeToEngineCpuTimingUpdatesCallData : public CallData
+{
+public:
+    SubscribeToEngineCpuTimingUpdatesCallData(sushi_rpc::NotificationController::Stub* stub,
+                                               grpc::CompletionQueue* cq,
+                                               std::function<void(CpuTimings timings)> callback)
+    : CallData(stub, cq),
+      _callback(callback),
+      _first_iteration(true)
+    {
+        proceed();
+    }
+
+    void proceed() override;
+
+private:
+    std::unique_ptr<grpc::ClientAsyncReader<sushi_rpc::CpuTimings>> _reader;
+    sushi_rpc::CpuTimings _response;
+
+    std::function<void(CpuTimings timings)> _callback;
+
+    bool _first_iteration;
+};
+
 class SubscribeToParameterUpdatesCallData : public CallData
 {
 public:

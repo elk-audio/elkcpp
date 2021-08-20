@@ -42,6 +42,7 @@ namespace expected_results
     constexpr TransportUpdate SYNC_UPDATE = SyncMode::LINK;
     constexpr TransportUpdate TIME_SIG_UPDATE = TimeSignature{6,8};
     constexpr std::array<TransportUpdate, 4> TRANSPORT_UPDATE_CHANGES = {TEMPO_UPDATE, PLAYING_UPDATE, SYNC_UPDATE, TIME_SIG_UPDATE};
+    constexpr std::array<CpuTimings, 2> TIMING_UPDATES = {CpuTimings{1.0f,2.0f,3.0f}, CpuTimings{4.0f,5.0f,6.0f}};
     constexpr std::array<float, 3> PARAMETER_CHANGE_VALUES = {0.0f, 0.5f, 1.0f};
 
 } // namespace expected_results
@@ -75,6 +76,25 @@ class NotificationServiceMockup : public sushi_rpc::NotificationController::Serv
         if (response->Write(response_message) == false)
         {
             return grpc::Status(grpc::StatusCode::UNKNOWN, "Failed to write time signature");
+        }
+        return grpc::Status::OK;
+    }
+
+    grpc::Status SubscribeToEngineCpuTimingUpdates(grpc::ServerContext* /* context */,
+                                                   const sushi_rpc::GenericVoidValue* /* request */,
+                                                   grpc::ServerWriter<sushi_rpc::CpuTimings>* response)
+    {
+        grpc::Status status;
+        sushi_rpc::CpuTimings response_message;
+        for (auto& timings : expected_results::TIMING_UPDATES)
+        {
+            response_message.set_average(timings.avg);
+            response_message.set_max(timings.max);
+            response_message.set_min(timings.min);
+            if (response->Write(response_message) == false)
+            {
+                return grpc::Status(grpc::StatusCode::UNKNOWN, "Write failed");
+            }
         }
         return grpc::Status::OK;
     }

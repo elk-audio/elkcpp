@@ -52,6 +52,11 @@ struct CpuTimings
     float max;
 };
 
+inline bool operator==(const CpuTimings& lhs, const CpuTimings& rhs)
+{
+    return (lhs.avg == rhs.avg) && (lhs.max == rhs.max) && (lhs.min == rhs.min);
+}
+
 enum class ParameterType
 {
     BOOL,

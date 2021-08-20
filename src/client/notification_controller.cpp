@@ -43,7 +43,11 @@ void NotificationControllerClient::subscribe_to_transport_changes(std::function<
 
 void NotificationControllerClient::subscribe_to_engine_cpu_timing_updates(std::function<void(CpuTimings timings)> callback)
 {
-
+    _active_call_datas.push_back(
+        std::make_unique<SubscribeToEngineCpuTimingUpdatesCallData>(_stub.get(),
+                                                                    &_cq,
+                                                                    callback)
+    );
 }
 
 void NotificationControllerClient::subscribe_to_track_changes(std::function<void(TrackUpdate update)> callback)

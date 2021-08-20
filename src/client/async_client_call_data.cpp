@@ -61,6 +61,39 @@ void SubscribeToTransportChangesCallData::proceed()
     }
 }
 
+void SubscribeToEngineCpuTimingUpdatesCallData::proceed()
+{
+    if (_status == CREATE)
+    {
+        // Format blacklist
+        auto request = sushi_rpc::GenericVoidValue();
+        // Request response from server
+        _reader = _stub->AsyncSubscribeToEngineCpuTimingUpdates(&_ctx, request, _cq, this);
+        _status = PROCESS;
+    }
+    else if (_status == PROCESS)
+    {
+        // Read one notification
+        _reader->Read(&_response, this);
+
+        // first iteration returns an empty message so we discard it.
+        if (_first_iteration)
+        {
+            _first_iteration = false;
+        }
+        else
+        {
+            // Call callback
+            _callback({_response.average(), _response.min(), _response.max()});
+        }
+    }
+    else
+    {
+        assert(_status == FINISH);
+        _ctx.TryCancel();
+    }
+}
+
 
 void SubscribeToParameterUpdatesCallData::proceed()
 {
