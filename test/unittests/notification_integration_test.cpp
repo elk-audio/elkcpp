@@ -12,7 +12,7 @@ public:
     void transport_change_test_callback(sushi_controller::TransportUpdate update, sushi_controller::TransportUpdateType type)
     {
         static size_t iteration = 0;
-        _transport_change_callback_called = true;
+        _transport_changes_callback_called = true;
         ASSERT_EQ(sushi_controller::expected_results::TRANSPORT_UPDATE_TYPES[iteration], type);
         ASSERT_EQ(sushi_controller::expected_results::TRANSPORT_UPDATE_CHANGES[iteration], update);
         if (iteration >= sushi_controller::expected_results::TRANSPORT_UPDATE_CHANGES.size())
@@ -28,6 +28,30 @@ public:
         _engine_cpu_timing_callback_called = true;
         ASSERT_EQ(sushi_controller::expected_results::TIMING_UPDATES[iteration], timings);
         if (iteration >= sushi_controller::expected_results::TIMING_UPDATES.size())
+        {
+            FAIL();
+        }
+        iteration++;
+    }
+
+    void track_changes_test_callback(sushi_controller::TrackUpdate update)
+    {
+        static size_t iteration = 0;
+        _track_changes_callback_called = true;
+        ASSERT_EQ(sushi_controller::expected_results::TRACK_UPDATES[iteration], update);
+        if (iteration >= sushi_controller::expected_results::TRACK_UPDATES.size())
+        {
+            FAIL();
+        }
+        iteration++;
+    }
+
+    void processor_changes_test_callback(sushi_controller::ProcessorUpdate update)
+    {
+        static size_t iteration = 0;
+        _processor_changes_callback_called = true;
+        ASSERT_EQ(sushi_controller::expected_results::PROCESSOR_UPDATES[iteration], update);
+        if (iteration >= sushi_controller::expected_results::PROCESSOR_UPDATES.size())
         {
             FAIL();
         }
@@ -61,11 +85,12 @@ protected:
     {
     }
 
-
     sushi_controller::NotificationServerMockup server;
     std::shared_ptr<sushi_controller::NotificationController> controller = sushi_controller::CreateNotificationController("localhost:51051");
-    bool _transport_change_callback_called{false};
+    bool _transport_changes_callback_called{false};
     bool _engine_cpu_timing_callback_called{false};
+    bool _track_changes_callback_called{false};
+    bool _processor_changes_callback_called{false};
     bool _parameter_update_callback_called{false};
 };
 
@@ -77,7 +102,25 @@ TEST_F(NotificationControllerTest, SubscribeToTransportChanges)
                                                          std::placeholders::_1,
                                                          std::placeholders::_2));
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    ASSERT_TRUE(_transport_change_callback_called);
+    ASSERT_TRUE(_transport_changes_callback_called);
+}
+
+TEST_F(NotificationControllerTest, SubscribeToTrackChanges)
+{
+    controller->subscribe_to_track_changes(std::bind(&NotificationControllerTest::track_changes_test_callback,
+                                                     this,
+                                                     std::placeholders::_1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    ASSERT_TRUE(_track_changes_callback_called);
+}
+
+TEST_F(NotificationControllerTest, SubscribeToProcessorChanges)
+{
+    controller->subscribe_to_processor_changes(std::bind(&NotificationControllerTest::processor_changes_test_callback,
+                                                     this,
+                                                     std::placeholders::_1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    ASSERT_TRUE(_processor_changes_callback_called);
 }
 
 TEST_F(NotificationControllerTest, SubscribeToEngineCpuTimingUpdates)

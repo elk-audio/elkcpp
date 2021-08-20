@@ -43,6 +43,8 @@ namespace expected_results
     constexpr TransportUpdate TIME_SIG_UPDATE = TimeSignature{6,8};
     constexpr std::array<TransportUpdate, 4> TRANSPORT_UPDATE_CHANGES = {TEMPO_UPDATE, PLAYING_UPDATE, SYNC_UPDATE, TIME_SIG_UPDATE};
     constexpr std::array<CpuTimings, 2> TIMING_UPDATES = {CpuTimings{1.0f,2.0f,3.0f}, CpuTimings{4.0f,5.0f,6.0f}};
+    constexpr std::array<TrackUpdate, 2> TRACK_UPDATES = {TrackUpdate{TrackUpdate::Action::TRACK_ADDED, 1}, TrackUpdate{TrackUpdate::Action::TRACK_DELETED, 2}};
+    constexpr std::array<ProcessorUpdate, 2> PROCESSOR_UPDATES = {ProcessorUpdate{ProcessorUpdate::Action::PROCESSOR_ADDED, 1, 10}, ProcessorUpdate{ProcessorUpdate::Action::PROCESSOR_DELETED, 2, 9}};
     constexpr std::array<float, 3> PARAMETER_CHANGE_VALUES = {0.0f, 0.5f, 1.0f};
 
 } // namespace expected_results
@@ -99,7 +101,44 @@ class NotificationServiceMockup : public sushi_rpc::NotificationController::Serv
         return grpc::Status::OK;
     }
 
-    grpc::Status SubscribeToParameterUpdates(grpc::ServerContext* /* context*/,
+    grpc::Status SubscribeToTrackChanges(grpc::ServerContext* /* context */,
+                                         const sushi_rpc::GenericVoidValue* /* request */,
+                                         grpc::ServerWriter<sushi_rpc::TrackUpdate>* response)
+    {
+        grpc::Status status;
+        sushi_rpc::TrackUpdate response_message;
+        for (auto& updates : expected_results::TRACK_UPDATES)
+        {
+            response_message.set_action(to_grpc(updates.action));
+            response_message.mutable_track()->set_id(updates.track_id);
+            if (response->Write(response_message) == false)
+            {
+                return grpc::Status(grpc::StatusCode::UNKNOWN, "Write failed");
+            }
+        }
+        return grpc::Status::OK;
+    }
+
+    grpc::Status SubscribeToProcessorChanges(grpc::ServerContext* /* context */,
+                                             const sushi_rpc::GenericVoidValue* /* request */,
+                                             grpc::ServerWriter<sushi_rpc::ProcessorUpdate>* response)
+    {
+        grpc::Status status;
+        sushi_rpc::ProcessorUpdate response_message;
+        for (auto& updates : expected_results::PROCESSOR_UPDATES)
+        {
+            response_message.set_action(to_grpc(updates.action));
+            response_message.mutable_processor()->set_id(updates.processor_id);
+            response_message.mutable_parent_track()->set_id(updates.parent_track_id);
+            if (response->Write(response_message) == false)
+            {
+                return grpc::Status(grpc::StatusCode::UNKNOWN, "Write failed");
+            }
+        }
+        return grpc::Status::OK;
+    }
+
+    grpc::Status SubscribeToParameterUpdates(grpc::ServerContext* /* context */,
                                              const sushi_rpc::ParameterNotificationBlocklist* request,
                                              grpc::ServerWriter<sushi_rpc::ParameterValue>* response)
     {

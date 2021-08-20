@@ -52,12 +52,20 @@ void NotificationControllerClient::subscribe_to_engine_cpu_timing_updates(std::f
 
 void NotificationControllerClient::subscribe_to_track_changes(std::function<void(TrackUpdate update)> callback)
 {
-
+    _active_call_datas.push_back(
+        std::make_unique<SubscribeToTrackChangesCallData>(_stub.get(),
+                                                          &_cq,
+                                                          callback)
+    );
 }
 
 void NotificationControllerClient::subscribe_to_processor_changes(std::function<void(ProcessorUpdate update)> callback)
 {
-
+    _active_call_datas.push_back(
+        std::make_unique<SubscribeToProcessorChangesCallData>(_stub.get(),
+                                                              &_cq,
+                                                              callback)
+    );
 }
 
 void NotificationControllerClient::subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float value)> callback,

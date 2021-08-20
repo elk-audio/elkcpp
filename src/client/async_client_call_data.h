@@ -92,6 +92,7 @@ private:
     bool _first_iteration;
 };
 
+
 class SubscribeToEngineCpuTimingUpdatesCallData : public CallData
 {
 public:
@@ -116,6 +117,53 @@ private:
     bool _first_iteration;
 };
 
+class SubscribeToTrackChangesCallData : public CallData
+{
+public:
+    SubscribeToTrackChangesCallData(sushi_rpc::NotificationController::Stub* stub,
+                                    grpc::CompletionQueue* cq,
+                                    std::function<void(TrackUpdate update)> callback)
+    : CallData(stub, cq),
+      _callback(callback),
+      _first_iteration(true)
+    {
+        proceed();
+    }
+
+    void proceed() override;
+
+private:
+    std::unique_ptr<grpc::ClientAsyncReader<sushi_rpc::TrackUpdate>> _reader;
+    sushi_rpc::TrackUpdate _response;
+
+    std::function<void(TrackUpdate update)> _callback;
+
+    bool _first_iteration;
+};
+
+class SubscribeToProcessorChangesCallData : public CallData
+{
+public:
+    SubscribeToProcessorChangesCallData(sushi_rpc::NotificationController::Stub* stub,
+                                    grpc::CompletionQueue* cq,
+                                    std::function<void(ProcessorUpdate update)> callback)
+    : CallData(stub, cq),
+      _callback(callback),
+      _first_iteration(true)
+    {
+        proceed();
+    }
+
+    void proceed() override;
+
+private:
+    std::unique_ptr<grpc::ClientAsyncReader<sushi_rpc::ProcessorUpdate>> _reader;
+    sushi_rpc::ProcessorUpdate _response;
+
+    std::function<void(ProcessorUpdate update)> _callback;
+
+    bool _first_iteration;
+};
 class SubscribeToParameterUpdatesCallData : public CallData
 {
 public:

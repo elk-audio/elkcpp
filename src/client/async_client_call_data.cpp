@@ -94,6 +94,73 @@ void SubscribeToEngineCpuTimingUpdatesCallData::proceed()
     }
 }
 
+void SubscribeToTrackChangesCallData::proceed()
+{
+    if (_status == CREATE)
+    {
+        // Format blacklist
+        auto request = sushi_rpc::GenericVoidValue();
+        // Request response from server
+        _reader = _stub->AsyncSubscribeToTrackChanges(&_ctx, request, _cq, this);
+        _status = PROCESS;
+    }
+    else if (_status == PROCESS)
+    {
+        // Read one notification
+        _reader->Read(&_response, this);
+
+        // first iteration returns an empty message so we discard it.
+        if (_first_iteration)
+        {
+            _first_iteration = false;
+        }
+        else
+        {
+            // Call callback
+            _callback({to_ext(_response.action()), _response.track().id()});
+        }
+    }
+    else
+    {
+        assert(_status == FINISH);
+        _ctx.TryCancel();
+    }
+}
+
+void SubscribeToProcessorChangesCallData::proceed()
+{
+    if (_status == CREATE)
+    {
+        // Format blacklist
+        auto request = sushi_rpc::GenericVoidValue();
+        // Request response from server
+        _reader = _stub->AsyncSubscribeToProcessorChanges(&_ctx, request, _cq, this);
+        _status = PROCESS;
+    }
+    else if (_status == PROCESS)
+    {
+        // Read one notification
+        _reader->Read(&_response, this);
+
+        // first iteration returns an empty message so we discard it.
+        if (_first_iteration)
+        {
+            _first_iteration = false;
+        }
+        else
+        {
+            // Call callback
+            _callback({to_ext(_response.action()),
+                      _response.processor().id(),
+                      _response.parent_track().id()});
+        }
+    }
+    else
+    {
+        assert(_status == FINISH);
+        _ctx.TryCancel();
+    }
+}
 
 void SubscribeToParameterUpdatesCallData::proceed()
 {

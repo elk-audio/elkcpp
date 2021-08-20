@@ -131,6 +131,11 @@ struct TrackUpdate
     int track_id;
 };
 
+inline bool operator==(const TrackUpdate& lhs, const TrackUpdate& rhs)
+{
+    return (lhs.action == rhs.action) && (lhs.track_id && rhs.track_id);
+}
+
 struct ProcessorUpdate
 {
     enum class Action
@@ -142,6 +147,13 @@ struct ProcessorUpdate
     int processor_id;
     int parent_track_id;
 };
+
+inline bool operator==(const ProcessorUpdate& lhs, const ProcessorUpdate& rhs)
+{
+    return (lhs.action == rhs.action) &&
+           (lhs.processor_id == rhs.processor_id) &&
+           (lhs.parent_track_id == rhs.parent_track_id);
+}
 
 } // namespace sushi_controller
 

@@ -29,6 +29,70 @@ inline sushi_rpc::PluginType_Type to_grpc(PluginType type)
     }
 }
 
+inline TrackUpdate::Action to_ext(sushi_rpc::TrackUpdate_Action action)
+{
+    switch (action)
+    {
+    case sushi_rpc::TrackUpdate_Action_TRACK_ADDED:
+        return TrackUpdate::Action::TRACK_ADDED;
+        break;
+    case sushi_rpc::TrackUpdate_Action_TRACK_DELETED:
+        return TrackUpdate::Action::TRACK_DELETED;
+        break;
+    default:
+        return TrackUpdate::Action::TRACK_ADDED;
+        break;
+    }
+}
+
+inline sushi_rpc::TrackUpdate_Action to_grpc(TrackUpdate::Action action)
+{
+    switch (action)
+    {
+    case TrackUpdate::Action::TRACK_ADDED:
+        return sushi_rpc::TrackUpdate_Action_TRACK_ADDED;
+        break;
+    case TrackUpdate::Action::TRACK_DELETED:
+        return sushi_rpc::TrackUpdate_Action_TRACK_DELETED;
+        break;
+    default:
+        return sushi_rpc::TrackUpdate_Action_DUMMY;
+        break;
+    }
+}
+
+inline ProcessorUpdate::Action to_ext(sushi_rpc::ProcessorUpdate_Action action)
+{
+    switch (action)
+    {
+    case sushi_rpc::ProcessorUpdate_Action_PROCESSOR_ADDED:
+        return ProcessorUpdate::Action::PROCESSOR_ADDED;
+        break;
+    case sushi_rpc::ProcessorUpdate_Action_PROCESSOR_DELETED:
+        return ProcessorUpdate::Action::PROCESSOR_DELETED;
+        break;
+    default:
+        return ProcessorUpdate::Action::PROCESSOR_ADDED;
+        break;
+    }
+}
+
+inline sushi_rpc::ProcessorUpdate_Action to_grpc(ProcessorUpdate::Action action)
+{
+    switch (action)
+    {
+    case ProcessorUpdate::Action::PROCESSOR_ADDED:
+        return sushi_rpc::ProcessorUpdate_Action_PROCESSOR_ADDED;
+        break;
+    case ProcessorUpdate::Action::PROCESSOR_DELETED:
+        return sushi_rpc::ProcessorUpdate_Action_PROCESSOR_DELETED;
+        break;
+    default:
+        return sushi_rpc::ProcessorUpdate_Action_DUMMY;
+        break;
+    }
+}
+
 inline sushi_controller::PlayingMode to_ext(const sushi_rpc::PlayingMode::Mode& mode)
 {
     switch(mode)
