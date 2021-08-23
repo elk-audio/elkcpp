@@ -20,7 +20,39 @@ namespace sushi_controller {
 
 class SystemController
 {
+public:
+    virtual ~SystemController() = default;
 
+    /**
+     * @brief Get the sushi version as a string
+     *
+     * @return std::pair<ControlStatus, std::string>
+     */
+    virtual std::pair<ControlStatus, std::string> get_sushi_version() = 0;
+
+    /**
+     * @brief Get the info used for building sushi
+     *
+     * @return std::pair<ControlStatus, BuildInfo>
+     */
+    virtual std::pair<ControlStatus, BuildInfo> get_build_info() = 0;
+
+    /**
+     * @brief Get the number of input channels available to sushi
+     *
+     * @return std::pair<ControlStatus, int>
+     */
+    virtual std::pair<ControlStatus, int> get_input_audio_channel_count() = 0;
+
+    /**
+     * @brief Get the number of output channels available to sushi
+     *
+     * @return std::pair<ControlStatus, int>
+     */
+    virtual std::pair<ControlStatus, int> get_output_audio_channel_count() = 0;
+
+protected:
+    SystemController() = default;
 };
 
 class TransportController

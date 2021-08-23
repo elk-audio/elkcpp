@@ -34,6 +34,24 @@ enum class SyncMode
     LINK
 };
 
+struct BuildInfo
+{
+    std::string version;
+    std::vector<std::string> build_options;
+    int audio_buffer_size;
+    std::string commit_hash;
+    std::string build_date;
+};
+
+inline bool operator==(const BuildInfo& lhs, const BuildInfo& rhs)
+{
+    return (lhs.version == rhs.version) &&
+           (lhs.build_options == rhs.build_options) &&
+           (lhs.audio_buffer_size == rhs.audio_buffer_size) &&
+           (lhs.commit_hash == rhs.commit_hash) &&
+           (lhs.build_date == rhs.build_date);
+}
+
 struct TimeSignature
 {
     int numerator;
