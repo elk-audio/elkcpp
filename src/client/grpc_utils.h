@@ -7,6 +7,128 @@
 namespace sushi_controller
 {
 
+inline sushi_rpc::MidiChannel_Channel to_grpc(MidiChannel channel)
+{
+    switch (channel)
+    {
+    case MidiChannel::MIDI_CH_1:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_1;
+        break;
+    case MidiChannel::MIDI_CH_2:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_2;
+        break;
+    case MidiChannel::MIDI_CH_3:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_3;
+        break;
+    case MidiChannel::MIDI_CH_4:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_4;
+        break;
+    case MidiChannel::MIDI_CH_5:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_5;
+        break;
+    case MidiChannel::MIDI_CH_6:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_6;
+        break;
+    case MidiChannel::MIDI_CH_7:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_7;
+        break;
+    case MidiChannel::MIDI_CH_8:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_8;
+        break;
+    case MidiChannel::MIDI_CH_9:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_9;
+        break;
+    case MidiChannel::MIDI_CH_10:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_10;
+        break;
+    case MidiChannel::MIDI_CH_11:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_11;
+        break;
+    case MidiChannel::MIDI_CH_12:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_12;
+        break;
+    case MidiChannel::MIDI_CH_13:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_13;
+        break;
+    case MidiChannel::MIDI_CH_14:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_14;
+        break;
+    case MidiChannel::MIDI_CH_15:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_15;
+        break;
+    case MidiChannel::MIDI_CH_16:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_16;
+        break;
+    case MidiChannel::MIDI_CH_OMNI:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_OMNI;
+        break;
+    default:
+        return sushi_rpc::MidiChannel_Channel_MIDI_CH_OMNI;
+        break;
+    }
+}
+
+inline MidiChannel to_ext(sushi_rpc::MidiChannel_Channel channel)
+{
+    switch (channel)
+    {
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_1:
+        return MidiChannel::MIDI_CH_1;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_2:
+        return MidiChannel::MIDI_CH_2;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_3:
+        return MidiChannel::MIDI_CH_3;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_4:
+        return MidiChannel::MIDI_CH_4;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_5:
+        return MidiChannel::MIDI_CH_5;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_6:
+        return MidiChannel::MIDI_CH_6;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_7:
+        return MidiChannel::MIDI_CH_7;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_8:
+        return MidiChannel::MIDI_CH_8;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_9:
+        return MidiChannel::MIDI_CH_9;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_10:
+        return MidiChannel::MIDI_CH_10;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_11:
+        return MidiChannel::MIDI_CH_11;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_12:
+        return MidiChannel::MIDI_CH_12;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_13:
+        return MidiChannel::MIDI_CH_13;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_14:
+        return MidiChannel::MIDI_CH_14;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_15:
+        return MidiChannel::MIDI_CH_15;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_16:
+        return MidiChannel::MIDI_CH_16;
+        break;
+    case sushi_rpc::MidiChannel_Channel_MIDI_CH_OMNI:
+        return MidiChannel::MIDI_CH_OMNI;
+        break;
+    default:
+        return MidiChannel::MIDI_CH_OMNI;
+        break;
+    }
+}
+
 inline sushi_rpc::PluginType_Type to_grpc(PluginType type)
 {
     switch (type)

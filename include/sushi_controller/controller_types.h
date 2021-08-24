@@ -34,6 +34,21 @@ enum class SyncMode
     LINK
 };
 
+enum class ParameterType
+{
+    BOOL,
+    INT,
+    FLOAT,
+};
+
+enum class PluginType
+{
+   INTERNAL,
+   VST2X,
+   VST3X,
+   LV2
+};
+
 struct BuildInfo
 {
     std::string version;
@@ -75,21 +90,6 @@ inline bool operator==(const CpuTimings& lhs, const CpuTimings& rhs)
     return (lhs.avg == rhs.avg) && (lhs.max == rhs.max) && (lhs.min == rhs.min);
 }
 
-enum class ParameterType
-{
-    BOOL,
-    INT,
-    FLOAT,
-};
-
-enum class PluginType
-{
-   INTERNAL,
-   VST2X,
-   VST3X,
-   LV2
-};
-
 struct ParameterInfo
 {
     int             id;
@@ -128,6 +128,80 @@ struct TrackInfo
     int              output_busses;
     std::vector<int> processors;
 };
+
+enum class MidiChannel
+{
+    MIDI_CH_1 = 1,
+    MIDI_CH_2 = 2,
+    MIDI_CH_3 = 3,
+    MIDI_CH_4 = 4,
+    MIDI_CH_5 = 5,
+    MIDI_CH_6 = 6,
+    MIDI_CH_7 = 7,
+    MIDI_CH_8 = 8,
+    MIDI_CH_9 = 9,
+    MIDI_CH_10 = 10,
+    MIDI_CH_11 = 11,
+    MIDI_CH_12 = 12,
+    MIDI_CH_13 = 13,
+    MIDI_CH_14 = 14,
+    MIDI_CH_15 = 15,
+    MIDI_CH_16 = 16,
+    MIDI_CH_OMNI = 17
+};
+
+struct MidiKbdConnection
+{
+    int track_id;
+    MidiChannel channel;
+    int port;
+    bool raw_midi;
+};
+
+inline bool operator==(const MidiKbdConnection& lhs, const MidiKbdConnection& rhs)
+{
+    return (lhs.track_id == rhs.track_id) &&
+           (lhs.channel == rhs.channel) &&
+           (lhs.port == rhs.port) &&
+           (lhs.raw_midi == rhs.raw_midi);
+}
+
+struct MidiCCConnection
+{
+    int parameter_id;
+    int processor_id;
+    MidiChannel channel;
+    int port;
+    int cc_number;
+    float min_range;
+    float max_range;
+    bool relative_mode;
+};
+
+inline bool operator==(const MidiCCConnection& lhs, const MidiCCConnection& rhs)
+{
+    return (lhs.parameter_id == rhs.parameter_id) &&
+           (lhs.channel == rhs.channel) &&
+           (lhs.port == rhs.port) &&
+           (lhs.cc_number == rhs.cc_number) &&
+           (lhs.min_range == rhs.min_range) &&
+           (lhs.max_range == rhs.max_range) &&
+           (lhs.relative_mode == rhs.relative_mode);
+}
+
+struct MidiPCConnection
+{
+    int processor_id;
+    MidiChannel channel;
+    int port;
+};
+
+inline bool operator==(const MidiPCConnection& lhs, const MidiPCConnection& rhs)
+{
+    return (lhs.processor_id == rhs.processor_id) &&
+           (lhs.channel == rhs.channel) &&
+           (lhs.port == rhs.port);
+}
 
 enum class TransportUpdateType
 {
