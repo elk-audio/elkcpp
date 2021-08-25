@@ -1,5 +1,5 @@
-#ifndef ELKCPP_TRANSPORT_SERVER_MOCKUP
-#define ELKCPP_TRANSPORT_SERVER_MOCKUP
+#ifndef ELKCPP_NOTIFICATION_SERVER_MOCKUP_H
+#define ELKCPP_NOTIFICATION_SERVER_MOCKUP_H
 
 #include <thread>
 #include <array>
@@ -224,4 +224,4 @@ void KillServerMockup()
 } // namespace sushi_controller
 
 
-#endif // ELKCPP_TRANSPORT_SERVER_MOCKUP
+#endif // ELKCPP_NOTIFICATION_SERVER_MOCKUP_H

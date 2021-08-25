@@ -1,5 +1,5 @@
-#ifndef ELKCPP_TIMING_SERVER_MOCKUP
-#define ELKCPP_TIMING_SERVER_MOCKUP
+#ifndef ELKCPP_TIMING_SERVER_MOCKUP_H
+#define ELKCPP_TIMING_SERVER_MOCKUP_H
 
 #include <thread>
 
@@ -184,4 +184,4 @@ void KillServerMockup()
 } // namespace sushi_controller
 
 
-#endif // ELKCPP_TIMING_SERVER_MOCKUP
+#endif // ELKCPP_TIMING_SERVER_MOCKUP_H

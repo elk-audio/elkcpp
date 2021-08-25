@@ -1,5 +1,5 @@
-#ifndef ELKCPP_KEYBOARD_SERVER_MOCKUP
-#define ELKCPP_KEYBOARD_SERVER_MOCKUP
+#ifndef ELKCPP_KEYBOARD_SERVER_MOCKUP_H
+#define ELKCPP_KEYBOARD_SERVER_MOCKUP_H
 
 #include <thread>
 
@@ -178,4 +178,4 @@ void KillServerMockup()
 } // namespace sushi_controller
 
 
-#endif // ELKCPP_KEYBOARD_SERVER_MOCKUP
+#endif // ELKCPP_KEYBOARD_SERVER_MOCKUP_H
