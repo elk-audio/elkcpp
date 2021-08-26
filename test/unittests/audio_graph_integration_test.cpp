@@ -26,7 +26,7 @@ class AudioGraphControllerTest : public ::testing::Test
 
 TEST_F(AudioGraphControllerTest, GetAllTracks)
 {
-    std::pair<sushi_controller::ControlStatus, std::vector<sushi_controller::TrackInfo>> result = controller->get_all_tracks();
+    auto result = controller->get_all_tracks();
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     std::vector<sushi_controller::TrackInfo> track_info_list = result.second;
     for(uint i = 0; i < track_info_list.size(); ++i)
@@ -44,14 +44,14 @@ TEST_F(AudioGraphControllerTest, GetAllTracks)
 
 TEST_F(AudioGraphControllerTest, GetTrackId)
 {
-    std::pair<sushi_controller::ControlStatus, int> result = controller->get_track_id(sushi_controller::expected_results::TRACK_WITH_ID_1.name);
+    auto result = controller->get_track_id(sushi_controller::expected_results::TRACK_WITH_ID_1.name);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::TRACK_WITH_ID_1.id);
 }
 
 TEST_F(AudioGraphControllerTest, GetTrackInfo)
 {
-    std::pair<sushi_controller::ControlStatus, sushi_controller::TrackInfo> result = controller->get_track_info(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
+    auto result = controller->get_track_info(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second.id, sushi_controller::expected_results::TRACK_WITH_ID_1.id);
     ASSERT_EQ(result.second.label, sushi_controller::expected_results::TRACK_WITH_ID_1.label);
@@ -65,7 +65,7 @@ TEST_F(AudioGraphControllerTest, GetTrackInfo)
 
 TEST_F(AudioGraphControllerTest, GetTrackProcessors)
 {
-    std::pair<sushi_controller::ControlStatus, std::vector<sushi_controller::ProcessorInfo>> result = controller->get_track_processors(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
+    auto result = controller->get_track_processors(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     for (uint i = 0; i < sushi_controller::expected_results::PROCESSOR_INFO_LIST.size(); ++i)
     {
@@ -79,14 +79,14 @@ TEST_F(AudioGraphControllerTest, GetTrackProcessors)
 
 TEST_F(AudioGraphControllerTest, GetProcessorId)
 {
-    std::pair<sushi_controller::ControlStatus, int> result = controller->get_processor_id(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.name);
+    auto result = controller->get_processor_id(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.name);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
 }
 
 TEST_F(AudioGraphControllerTest, GetProcessorInfo)
 {
-    std::pair<sushi_controller::ControlStatus, sushi_controller::ProcessorInfo> result = controller->get_processor_info(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    auto result = controller->get_processor_info(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second.id, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
     ASSERT_EQ(result.second.label, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.label);
@@ -97,7 +97,7 @@ TEST_F(AudioGraphControllerTest, GetProcessorInfo)
 
 TEST_F(AudioGraphControllerTest, GetProcessorBybassState)
 {
-    std::pair<sushi_controller::ControlStatus, bool> result = controller->get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    auto result = controller->get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::PROCESSOR_BYPASS_STATE);
 }
@@ -112,7 +112,7 @@ TEST_F(AudioGraphControllerTest, SetProcessorBypassState)
 
 TEST_F(AudioGraphControllerTest, CreateTrack)
 {
-    sushi_controller::ControlStatus result = controller->create_track(sushi_controller::expected_results::DYN_TRACK_NAME,
+    auto result = controller->create_track(sushi_controller::expected_results::DYN_TRACK_NAME,
                                                                       sushi_controller::expected_results::DYN_TRACK_CHANNELS);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
     result = controller->create_track(sushi_controller::expected_results::DYN_TRACK_NAME,
@@ -122,7 +122,7 @@ TEST_F(AudioGraphControllerTest, CreateTrack)
 
 TEST_F(AudioGraphControllerTest, CreateMultibusTrack)
 {
-    sushi_controller::ControlStatus result = controller->create_multibus_track(sushi_controller::expected_results::DYN_TRACK_NAME,
+    auto result = controller->create_multibus_track(sushi_controller::expected_results::DYN_TRACK_NAME,
                                                                                sushi_controller::expected_results::DYN_TRACK_OUTPUT_BUSSES,
                                                                                sushi_controller::expected_results::DYN_TRACK_INPUT_BUSSES);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
@@ -134,7 +134,7 @@ TEST_F(AudioGraphControllerTest, CreateMultibusTrack)
 
 TEST_F(AudioGraphControllerTest, CreateProcessorOnTrack)
 {
-    sushi_controller::ControlStatus result = controller->create_processor_on_track(sushi_controller::expected_results::DYN_PROC_NAME,
+    auto result = controller->create_processor_on_track(sushi_controller::expected_results::DYN_PROC_NAME,
                                                                                    sushi_controller::expected_results::DYN_PROC_UID,
                                                                                    sushi_controller::expected_results::DYN_PROC_PATH,
                                                                                    sushi_controller::expected_results::DYN_PROC_TYPE,
@@ -154,7 +154,7 @@ TEST_F(AudioGraphControllerTest, CreateProcessorOnTrack)
 
 TEST_F(AudioGraphControllerTest, MoveProcessorOnTrack)
 {
-    sushi_controller::ControlStatus result = controller->move_processor_on_track(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+    auto result = controller->move_processor_on_track(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                                                                  sushi_controller::expected_results::DYN_PROC_SRC_TRACK,
                                                                                  sushi_controller::expected_results::DYN_PROC_DST_TRACK,
                                                                                  sushi_controller::expected_results::DYN_PROC_BEFORE_PROC,
@@ -170,7 +170,7 @@ TEST_F(AudioGraphControllerTest, MoveProcessorOnTrack)
 
 TEST_F(AudioGraphControllerTest, DeleteProcessorFromTrack)
 {
-    sushi_controller::ControlStatus result = controller->delete_processor_from_track(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+    auto result = controller->delete_processor_from_track(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                                                                      sushi_controller::expected_results::TRACK_WITH_ID_1.id);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
     result = controller->delete_processor_from_track(-1, -1);
@@ -179,7 +179,7 @@ TEST_F(AudioGraphControllerTest, DeleteProcessorFromTrack)
 
 TEST_F(AudioGraphControllerTest, DeleteTrack)
 {
-    sushi_controller::ControlStatus result = controller->delete_track(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
+    auto result = controller->delete_track(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
     result = controller->delete_track(-1);
     ASSERT_EQ(result, sushi_controller::ControlStatus::INVALID_ARGUMENTS);

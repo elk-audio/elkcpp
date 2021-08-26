@@ -25,13 +25,13 @@ class TransportControllerTest : public ::testing::Test
 
 TEST_F(TransportControllerTest, GetSampleRate)
 {
-    std::pair<sushi_controller::ControlStatus, float> result = controller->get_samplerate();
+    auto result = controller->get_samplerate();
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_FLOAT_EQ(result.second,sushi_controller::expected_results::SAMPLERATE);
 }
 TEST_F(TransportControllerTest, GetPlayingMode)
 {
-    std::pair<sushi_controller::ControlStatus, sushi_controller::PlayingMode> result = controller->get_playing_mode();
+    auto result = controller->get_playing_mode();
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::PLAYING_MODE);
 }
@@ -51,7 +51,7 @@ TEST_F(TransportControllerTest, SetPlayingMode)
 
 TEST_F(TransportControllerTest, GetSyncMode)
 {
-    std::pair<sushi_controller::ControlStatus, sushi_controller::SyncMode> result = controller->get_sync_mode();
+    auto result = controller->get_sync_mode();
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::SYNC_MODE);
 }
@@ -71,7 +71,7 @@ TEST_F(TransportControllerTest, SetSyncMode)
 
 TEST_F(TransportControllerTest, GetTempo)
 {
-    std::pair<sushi_controller::ControlStatus, float> result = controller->get_tempo();
+    auto result = controller->get_tempo();
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_FLOAT_EQ(result.second,sushi_controller::expected_results::TEMPO);
 }
@@ -85,7 +85,7 @@ TEST_F(TransportControllerTest, SetTempoPositive)
 
 TEST_F(TransportControllerTest, GetTimeSignature)
 {
-    std::pair<sushi_controller::ControlStatus, sushi_controller::TimeSignature> result = controller->get_time_signature();
+    auto result = controller->get_time_signature();
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second.numerator,sushi_controller::expected_results::TIME_SIGNATURE.numerator);
     ASSERT_EQ(result.second.denominator,sushi_controller::expected_results::TIME_SIGNATURE.denominator);
@@ -96,7 +96,7 @@ TEST_F(TransportControllerTest, SetTimeSignature)
     sushi_controller::TimeSignature modified_time_signature{6,8};
     sushi_controller::ControlStatus status = controller->set_time_signature(modified_time_signature);
     ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
-    std::pair<sushi_controller::ControlStatus, sushi_controller::TimeSignature> result = controller->get_time_signature();
+    auto result = controller->get_time_signature();
     ASSERT_EQ(result.second.numerator, modified_time_signature.numerator);
     ASSERT_EQ(result.second.denominator, modified_time_signature.denominator);
 }

@@ -20,17 +20,10 @@ namespace expected_results
     // Processor test values
     const ProcessorInfo PROCESSOR_WITH_ID_1 = ProcessorInfo{1, "synth1", "synth1", 2, 2};
     const ProcessorInfo PROCESSOR_WITH_ID_2 = ProcessorInfo{2, "delay1", "delay1", 2, 2};
-    const std::vector<ProcessorInfo> PROCESSOR_INFO_LIST = {PROCESSOR_WITH_ID_1, PROCESSOR_WITH_ID_2};
-    constexpr bool PROCESSOR_BYPASS_STATE = true;
 
     // Parameter test values
-    constexpr ParameterType PARAMETER_TYPE{ParameterType::FLOAT};
-    constexpr float PARAMETER_VALUE{5.34f};
-    constexpr float PARAMETER_NORMALISED_VALUE{0.87f};
-    const std::string PARAMETER_STRING_VALUE{"5.34"};
-    const ParameterInfo PARAMETER_WITH_ID_1 = ParameterInfo{1, PARAMETER_TYPE, "param1", "param1", "Hz", true, 0.0f, 1.0f};
-    const ParameterInfo PARAMETER_WITH_ID_2 = ParameterInfo{2, PARAMETER_TYPE, "param2", "param2", "Hz", true, 0.0f, 1.0f};
-    const std::vector<ParameterInfo> PARAMETER_INFO_LIST = {PARAMETER_WITH_ID_1, PARAMETER_WITH_ID_2};
+    const ParameterInfo PARAMETER_WITH_ID_1 = ParameterInfo{1, ParameterType::FLOAT, "param1", "param1", "Hz", true, 0.0f, 1.0f};
+    const ParameterInfo PARAMETER_WITH_ID_2 = ParameterInfo{2, ParameterType::FLOAT, "param2", "param2", "Hz", true, 0.0f, 1.0f};
 
     // Notification test values
     constexpr std::array<TransportUpdateType, 4> TRANSPORT_UPDATE_TYPES = {TransportUpdateType::TEMPO,

@@ -26,7 +26,7 @@ class ParameterControllerTest : public ::testing::Test
 
 TEST_F(ParameterControllerTest, GetTrackParameters)
 {
-    std::pair<sushi_controller::ControlStatus, std::vector<sushi_controller::ParameterInfo>> result = controller->get_track_parameters (sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    auto result = controller->get_track_parameters (sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     for (uint i = 0; i < sushi_controller::expected_results::PARAMETER_INFO_LIST.size(); ++i)
     {
@@ -43,7 +43,7 @@ TEST_F(ParameterControllerTest, GetTrackParameters)
 
 TEST_F(ParameterControllerTest, GetProcessorParameters)
 {
-    std::pair<sushi_controller::ControlStatus, std::vector<sushi_controller::ParameterInfo>> result = controller->get_processor_parameters(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    auto result = controller->get_processor_parameters(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     for(uint i = 0; i < result.second.size(); ++i)
     {
@@ -60,7 +60,7 @@ TEST_F(ParameterControllerTest, GetProcessorParameters)
 
 TEST_F(ParameterControllerTest, GetParameterId)
 {
-    std::pair<sushi_controller::ControlStatus, int> result = controller->get_parameter_id(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+    auto result = controller->get_parameter_id(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                                                                          sushi_controller::expected_results::PARAMETER_WITH_ID_1.name);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
@@ -68,7 +68,7 @@ TEST_F(ParameterControllerTest, GetParameterId)
 
 TEST_F(ParameterControllerTest, GetParameterInfo)
 {
-    std::pair<sushi_controller::ControlStatus, sushi_controller::ParameterInfo> result = controller->get_parameter_info(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+    auto result = controller->get_parameter_info(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                                                                                                        sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second.id, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
@@ -83,7 +83,7 @@ TEST_F(ParameterControllerTest, GetParameterInfo)
 
 TEST_F(ParameterControllerTest, GetParameterValue)
 {
-    std::pair<sushi_controller::ControlStatus, float> result = controller->get_parameter_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+    auto result = controller->get_parameter_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                                                                               sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_VALUE);
@@ -91,7 +91,7 @@ TEST_F(ParameterControllerTest, GetParameterValue)
 
 TEST_F(ParameterControllerTest, GetParameterValueInDomain)
 {
-    std::pair<sushi_controller::ControlStatus, float> result = controller->get_parameter_value_in_domain(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+    auto result = controller->get_parameter_value_in_domain(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                                                                                          sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_NORMALISED_VALUE);
@@ -99,7 +99,7 @@ TEST_F(ParameterControllerTest, GetParameterValueInDomain)
 
 TEST_F(ParameterControllerTest, GetParameterValueAsString)
 {
-    std::pair<sushi_controller::ControlStatus, std::string> result = controller->get_parameter_value_as_string(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+    auto result = controller->get_parameter_value_as_string(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                                                                                               sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::PARAMETER_STRING_VALUE);
@@ -107,7 +107,7 @@ TEST_F(ParameterControllerTest, GetParameterValueAsString)
 
 TEST_F(ParameterControllerTest, SetParameterValue)
 {
-    sushi_controller::ControlStatus result = controller->set_parameter_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+    auto result = controller->set_parameter_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                                                             sushi_controller::expected_results::PARAMETER_WITH_ID_1.id,
                                                                             sushi_controller::expected_results::PARAMETER_VALUE);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);

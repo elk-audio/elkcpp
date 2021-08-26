@@ -25,7 +25,7 @@ class TimingControllerTest : public ::testing::Test
 
 TEST_F(TimingControllerTest, GetTimingsEnabled)
 {
-    std::pair<sushi_controller::ControlStatus, bool> result = controller->get_timings_enabled();
+    auto result = controller->get_timings_enabled();
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::TIMINGS_ENABLED);
 }
@@ -33,9 +33,9 @@ TEST_F(TimingControllerTest, GetTimingsEnabled)
 TEST_F(TimingControllerTest, SetTimingsEnabled)
 {
     bool value_to_set = !sushi_controller::expected_results::TIMINGS_ENABLED;
-    sushi_controller::ControlStatus result = controller->set_timings_enabled(value_to_set);
+    auto result = controller->set_timings_enabled(value_to_set);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
-    std::pair<sushi_controller::ControlStatus, bool> result2 = controller->get_timings_enabled();
+    auto result2 = controller->get_timings_enabled();
     ASSERT_EQ(result2.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result2.second, value_to_set);
 
@@ -49,7 +49,7 @@ TEST_F(TimingControllerTest, SetTimingsEnabled)
 
 TEST_F(TimingControllerTest, GetEngineTimings)
 {
-    std::pair<sushi_controller::ControlStatus, sushi_controller::CpuTimings> result = controller->get_engine_timings();
+    auto result = controller->get_engine_timings();
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second.min, sushi_controller::expected_results::ENGINE_TIMINGS.min);
     ASSERT_EQ(result.second.max, sushi_controller::expected_results::ENGINE_TIMINGS.max);
@@ -58,7 +58,7 @@ TEST_F(TimingControllerTest, GetEngineTimings)
 
 TEST_F(TimingControllerTest, GetTrackTimings)
 {
-    std::pair<sushi_controller::ControlStatus, sushi_controller::CpuTimings> result = controller->get_track_timings(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
+    auto result = controller->get_track_timings(sushi_controller::expected_results::TRACK_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second.min, sushi_controller::expected_results::TRACK_TIMINGS.min);
     ASSERT_EQ(result.second.max, sushi_controller::expected_results::TRACK_TIMINGS.max);
@@ -67,7 +67,7 @@ TEST_F(TimingControllerTest, GetTrackTimings)
 
 TEST_F(TimingControllerTest, GetProcessorTimings)
 {
-    std::pair<sushi_controller::ControlStatus, sushi_controller::CpuTimings> result = controller->get_processor_timings(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    auto result = controller->get_processor_timings(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second.min, sushi_controller::expected_results::PROCESSOR_TIMINGS.min);
     ASSERT_EQ(result.second.max, sushi_controller::expected_results::PROCESSOR_TIMINGS.max);
