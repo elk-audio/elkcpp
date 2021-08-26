@@ -136,9 +136,8 @@ class NotificationServiceMockup : public sushi_rpc::NotificationController::Serv
                                              grpc::ServerWriter<sushi_rpc::ParameterValue>* response)
     {
         grpc::Status status;
-        for (int i = 0; i < request->parameters_size(); ++i)
+        for (auto& parameter : request->parameters())
         {
-            auto& parameter = request->parameters(i);
             if (parameter.processor_id() == expected_results::PROCESSOR_WITH_ID_1.id &&
                 parameter.parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
             {

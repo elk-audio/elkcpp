@@ -81,9 +81,9 @@ std::pair<ControlStatus, std::vector<std::string>> ProgramControllerClient::get_
         handle_error(status);
     }
     std::vector<std::string> output;
-    for (int i = 0; i < response.programs_size(); ++i)
+    for (auto& program : response.programs())
     {
-        output.push_back(response.programs(i).name());
+        output.push_back(program.name());
     }
     return std::pair<ControlStatus, std::vector<std::string>>(to_ext(status), output);
 }
