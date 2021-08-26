@@ -844,6 +844,59 @@ class OscController
 public:
     virtual ~OscController() = default;
 
+    /**
+     * @brief Get the port osc is sent to
+     *
+     * @return std::pair<ControlStatus, int>
+     */
+    virtual std::pair<ControlStatus, int> get_send_port() const = 0;
+
+    /**
+     * @brief Get the port osc is received on
+     *
+     * @return std::pair<ControlStatus, int>
+     */
+    virtual std::pair<ControlStatus, int> get_receive_port() const = 0;
+
+    /**
+     * @brief Get the enabled parameter output osc addresses
+     *
+     * @return std::pair<ControlStatus, std::vector<std::string>>
+     */
+    virtual std::pair<ControlStatus, std::vector<std::string>> get_enabled_parameter_outputs() const = 0;
+
+    /**
+     * @brief Enable osc output for a parameter
+     *
+     * @param processor_id The id of the processor the parameter belongs to
+     * @param parameter_id The id of the parameter to output as osc
+     * @return ControlStatus
+     */
+    virtual ControlStatus enable_output_for_parameter(int processor_id, int parameter_id) = 0;
+
+    /**
+     * @brief Disable osc output for a parameter
+     *
+     * @param processor_id The id of the processor the parameter belongs to
+     * @param parameter_id The id of the parameter to output as osc
+     * @return ControlStatus
+     */
+    virtual ControlStatus disable_output_for_parameter(int processor_id, int parameter_id) = 0;
+
+    /**
+     * @brief Enable osc output for all parameters
+     *
+     * @return ControlStatus
+     */
+    virtual ControlStatus enable_all_output() = 0;
+
+    /**
+     * @brief Disable osc output for all parameters
+     *
+     * @return ControlStatus
+     */
+    virtual ControlStatus disable_all_output() = 0;
+
 protected:
     OscController() = default;
 };
