@@ -263,14 +263,14 @@ inline bool operator==(const AudioConnection& lhs, const AudioConnection& rhs)
 
 struct CvConnection
 {
-    int track_id;
+    int processor_id;
     int parameter_id;
     int cv_port_id;
 };
 
 inline bool operator==(const CvConnection& lhs, const CvConnection& rhs)
 {
-    return (lhs.track_id == rhs.track_id) &&
+    return (lhs.processor_id == rhs.processor_id) &&
            (lhs.parameter_id == rhs.parameter_id) &&
            (lhs.cv_port_id == rhs.cv_port_id);
 }

@@ -8,6 +8,7 @@ enable_testing()
 
 SET(TEST_FILES unittests/audio_graph_integration_test.cpp
                unittests/audio_routing_integration_test.cpp
+               unittests/cv_gate_integration_test.cpp
                unittests/keyboard_integration_test.cpp
                unittests/midi_integration_test.cpp
                unittests/notification_integration_test.cpp
