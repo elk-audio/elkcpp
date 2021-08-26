@@ -247,6 +247,49 @@ inline bool operator==(const ProcessorUpdate& lhs, const ProcessorUpdate& rhs)
            (lhs.parent_track_id == rhs.parent_track_id);
 }
 
+struct AudioConnection
+{
+    int track_id;
+    int track_channel;
+    int engine_channel;
+};
+
+inline bool operator==(const AudioConnection& lhs, const AudioConnection& rhs)
+{
+    return (lhs.track_id == rhs.track_id) &&
+           (lhs.track_channel == rhs.track_channel) &&
+           (lhs.engine_channel == rhs.engine_channel);
+}
+
+struct CvConnection
+{
+    int track_id;
+    int parameter_id;
+    int cv_port_id;
+};
+
+inline bool operator==(const CvConnection& lhs, const CvConnection& rhs)
+{
+    return (lhs.track_id == rhs.track_id) &&
+           (lhs.parameter_id == rhs.parameter_id) &&
+           (lhs.cv_port_id == rhs.cv_port_id);
+}
+struct GateConnection
+{
+    int processor_id;
+    int gate_port_id;
+    int channel;
+    int note_no;
+};
+
+inline bool operator==(const GateConnection& lhs, const GateConnection& rhs)
+{
+    return (lhs.processor_id == rhs.processor_id) &&
+           (lhs.gate_port_id == rhs.gate_port_id) &&
+           (lhs.channel == rhs.channel) &&
+           (lhs.note_no == rhs.note_no);
+}
+
 } // namespace sushi_controller
 
 

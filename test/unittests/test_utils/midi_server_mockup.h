@@ -368,7 +368,7 @@ void RunServerMockup()
     builder.RegisterService(&service);
 
     server = builder.BuildAndStart();
-    std::cout << "Mockup server listening on " << server_address << std::endl;
+    // std::cout << "Mockup server listening on " << server_address << std::endl;
 
     server->Wait();
 }
