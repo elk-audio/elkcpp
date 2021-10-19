@@ -17,8 +17,8 @@ Finally install with:
 $ make install
 ```
 
-A custom proto file can be set with the provided cmake flag. As well as changing
-the install prefix.
+The default path where the proto file is installed is used when not specified `/usr/share/sushi/sushi_rpc.proto`.
+A custom proto file can be set with the provided cmake flag "PROTO_FILE_PATH".
 
 ### Include in CMake-base Projects ###
 

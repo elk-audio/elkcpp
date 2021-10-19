@@ -49,7 +49,7 @@ set(PUBLIC_HEADER_FILES
 #####################
 
 set(PROTO_FILE_PATH
-    ${PROJECT_SOURCE_DIR}/protos/sushi_rpc.proto CACHE STRING "Path to the proto file for the sushi rpc"
+    /usr/share/sushi/sushi_rpc.proto CACHE STRING "Path to the proto file for the sushi rpc"
 )
 
 set(PROTO_SRC_DIR ${CMAKE_CURRENT_BINARY_DIR}/proto-src)
