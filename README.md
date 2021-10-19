@@ -18,7 +18,8 @@ $ make install
 ```
 
 The default path where the proto file is installed is used when not specified `/usr/share/sushi/sushi_rpc.proto`.
-A custom proto file can be set with the provided cmake flag "PROTO_FILE_PATH".
+A custom proto file can be set with the provided cmake flag `PROTO_FILE_PATH`.
+Printing errors to std::cout can be enabled by setting the `PRINT_ERRORS_TO_CONSOLE` option.
 
 ### Include in CMake-base Projects ###
 
