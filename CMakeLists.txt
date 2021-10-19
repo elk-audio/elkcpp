@@ -29,7 +29,8 @@ endif()
 #  Compiler configuration  #
 ############################
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(-Wall -Wextra)
 
 ####################
@@ -48,7 +49,7 @@ set(PUBLIC_HEADER_FILES
 #####################
 
 set(PROTO_FILE_PATH
-    ${PROJECT_SOURCE_DIR}/protos/sushi_rpc.proto CACHE STRING "Path to the proto file for the sushi rpc"
+    /usr/share/sushi/sushi_rpc.proto CACHE STRING "Path to the proto file for the sushi rpc"
 )
 
 set(PROTO_SRC_DIR ${CMAKE_CURRENT_BINARY_DIR}/proto-src)
@@ -59,17 +60,43 @@ grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_SRC_DIR} ${PROTO_FILE_PATH})
 
 # there are plenty of these warnings in auto-generated files
 foreach(ITEM ${PROTO_SRCS} ${GRPC_SRCS})
-    set_source_files_properties(${ITEM} PROPERTIES COMPILE_FLAGS -Wno-unused-parameters)    
+    set_source_files_properties(${ITEM} PROPERTIES COMPILE_FLAGS -Wno-unused-parameters)
 endforeach()
 
 ####################
 #  Library target  #
 ####################
 
-set(COMPILATION_UNITS src/client/sushi_grpc_client.cpp)
+set(COMPILATION_UNITS src/client/sushi_grpc_client.cpp
+                      src/client/async_client_call_data.cpp
+                      src/client/audio_graph_controller.cpp
+                      src/client/audio_routing_controller.cpp
+                      src/client/cv_gate_controller.cpp
+                      src/client/keyboard_controller.cpp
+                      src/client/midi_controller.cpp
+                      src/client/notification_controller.cpp
+                      src/client/osc_controller.cpp
+                      src/client/parameter_controller.cpp
+                      src/client/program_controller.cpp
+                      src/client/system_controller.cpp
+                      src/client/timing_controller.cpp
+                      src/client/transport_controller.cpp)
 
 set(EXTRA_CLION_SOURCES ${PUBLIC_HEADER_FILES}
-                        src/client/sushi_grpc_client.h)
+                        src/client/sushi_grpc_client.h
+                        src/client/async_client_call_data.h
+                        src/client/audio_graph_controller.h
+                        src/client/audio_routing_controller.h
+                        src/client/cv_gate_controller.h
+                        src/client/keyboard_controller.h
+                        src/client/midi_controller.h
+                        src/client/notification_controller.h
+                        src/client/osc_controller.h
+                        src/client/parameter_controller.h
+                        src/client/program_controller.h
+                        src/client/system_controller.h
+                        src/client/timing_controller.h
+                        src/client/transport_controller.h)
 
 set(SOURCE_FILES "${COMPILATION_UNITS}" "${EXTRA_CLION_SOURCES}" "${PROTO_SRCS}" "${GRPC_SRCS}")
 

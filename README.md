@@ -1,21 +1,25 @@
 # Sushi - gRPC controller wrapper #
 
-A simple wrapper for controlling sushi over gRPC via c++. 
+A simple wrapper for controlling sushi over gRPC via c++.
 
 ### Installation ###
 
-Clone the repository and generate the build directory with the generate script using:
+Clone the repository and generate the build directory by using:
 ```console
-$ ./generate --cmake-args="-DPROTO_FILE_PATH=your/path/to/sushi_rpc.proto"
+$ mkdir build && cd build && cmake ..
 ```
-Build the library by moving either into either the debug or the release folder and then using:
+Build the library by using:
 ```console
 $ make
 ```
-Finally install into the prefix specified with cmake with:
+Finally install with:
 ```console
 $ make install
 ```
+
+The default path where the proto file is installed is used when not specified `/usr/share/sushi/sushi_rpc.proto`.
+A custom proto file can be set with the provided cmake flag `PROTO_FILE_PATH`.
+Printing errors to std::cout can be enabled by setting the `PRINT_ERRORS_TO_CONSOLE` option.
 
 ### Include in CMake-base Projects ###
 
