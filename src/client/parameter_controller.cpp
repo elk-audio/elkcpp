@@ -214,7 +214,7 @@ ControlStatus ParameterControllerClient::set_parameter_value(int processor_id, i
 
 std::shared_ptr<ParameterController> CreateParameterController(const std::string& server_address)
 {
-    return std::move(std::make_shared<ParameterControllerClient>(server_address));
+    return std::make_shared<ParameterControllerClient>(server_address);
 }
 
 } // namespace sushi_controller

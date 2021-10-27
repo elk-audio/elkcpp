@@ -462,7 +462,7 @@ ControlStatus CvGateControllerClient::disconnect_all_gate_outputs_from_processor
 
 std::shared_ptr<CvGateController> CreateCvGateController(const std::string& address)
 {
-    return std::move(std::make_shared<CvGateControllerClient>(address));
+    return std::make_shared<CvGateControllerClient>(address);
 }
 
 } // namespace sushi_controller

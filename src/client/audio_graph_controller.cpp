@@ -361,7 +361,7 @@ ControlStatus AudioGraphControllerClient::delete_track(int track_id)
 
 std::shared_ptr<AudioGraphController> CreateAudioGraphController(const std::string& server_address)
 {
-    return std::move(std::make_shared<AudioGraphControllerClient>(server_address));
+    return std::make_shared<AudioGraphControllerClient>(server_address);
 }
 
 } // namespace sushi_controller

@@ -85,7 +85,7 @@ std::pair<ControlStatus, int> SystemControllerClient::get_output_audio_channel_c
 
 std::shared_ptr<SystemController> CreateSystemController(const std::string& address)
 {
-    return std::move(std::make_shared<SystemControllerClient>(address));
+    return std::make_shared<SystemControllerClient>(address);
 }
 
 } // namespace sushi_controller

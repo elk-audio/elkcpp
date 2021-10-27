@@ -146,7 +146,7 @@ ControlStatus TimingControllerClient::reset_processor_timings(int processor_id)
 
 std::shared_ptr<TimingController> CreateTimingController(const std::string& server_address)
 {
-    return std::move(std::make_shared<TimingControllerClient>(server_address));
+    return std::make_shared<TimingControllerClient>(server_address);
 }
 
 } // namespace sushi_controller

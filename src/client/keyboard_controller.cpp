@@ -133,7 +133,7 @@ ControlStatus KeyboardControllerClient::send_modulation(int track_id, int channe
 
 std::shared_ptr<KeyboardController> CreateKeyboardController(const std::string& server_address)
 {
-    return std::move(std::make_shared<KeyboardControllerClient>(server_address));
+    return std::make_shared<KeyboardControllerClient>(server_address);
 }
 
 } // namespace sushi_controller

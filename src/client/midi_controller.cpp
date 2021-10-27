@@ -405,7 +405,7 @@ ControlStatus MidiControllerClient::disconnect_all_pc_from_processor(int process
 
 std::shared_ptr<MidiController> CreateMidiController(const std::string& address)
 {
-    return std::move(std::make_unique<MidiControllerClient>(address));
+    return std::make_unique<MidiControllerClient>(address);
 }
 } // namespace sushi_controller
 

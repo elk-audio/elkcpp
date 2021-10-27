@@ -134,7 +134,7 @@ ControlStatus OscControllerClient::disable_all_output()
 
 std::shared_ptr<OscController> CreateOscController(const std::string& address)
 {
-    return std::move(std::make_shared<OscControllerClient>(address));
+    return std::make_shared<OscControllerClient>(address);
 }
 
 } // namespace sushi_controller

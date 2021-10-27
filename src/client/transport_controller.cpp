@@ -160,7 +160,7 @@ ControlStatus TransportControllerClient::set_time_signature(TimeSignature time_s
 
 std::shared_ptr<TransportController> CreateTransportController(const std::string& server_address)
 {
-    return std::move(std::make_shared<TransportControllerClient>(server_address));
+    return std::make_shared<TransportControllerClient>(server_address);
 }
 
 } // namespace sushi_controller

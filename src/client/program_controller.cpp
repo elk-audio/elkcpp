@@ -108,7 +108,7 @@ ControlStatus ProgramControllerClient::set_processor_program(int processor_id, i
 
 std::shared_ptr<ProgramController> CreateProgramController(const std::string& server_address)
 {
-    return std::move(std::make_shared<ProgramControllerClient>(server_address));
+    return std::make_shared<ProgramControllerClient>(server_address);
 }
 
 } // namespace sushi_controller

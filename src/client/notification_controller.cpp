@@ -95,7 +95,7 @@ void NotificationControllerClient::notification_loop()
 
 std::shared_ptr<NotificationController> CreateNotificationController(const std::string& server_address)
 {
-    return std::move(std::make_shared<NotificationControllerClient>(server_address));
+    return std::make_shared<NotificationControllerClient>(server_address);
 }
 
 } // namespace sushi_controller

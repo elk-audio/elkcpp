@@ -222,7 +222,7 @@ AudioRoutingControllerClient::AudioRoutingControllerClient(const std::string& ad
 
 std::shared_ptr<AudioRoutingController> CreateAudioRoutingController(const std::string& address)
 {
-    return std::move(std::make_shared<AudioRoutingControllerClient>(address));
+    return std::make_shared<AudioRoutingControllerClient>(address);
 }
 
 } // namespace sushi_controller

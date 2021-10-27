@@ -35,7 +35,7 @@ SushiControllerClient::SushiControllerClient(const std::string& address)
 
 std::shared_ptr<SushiController> CreateSushiController(const std::string& server_address)
 {
-    return std::move(std::make_shared<SushiControllerClient>(server_address));
+    return std::make_shared<SushiControllerClient>(server_address);
 }
 
 } //sushi_controller
