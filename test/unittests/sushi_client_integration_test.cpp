@@ -10,118 +10,18 @@
 
 sushi_controller::SushiServerMockup server;
 
-class SushiClientTest : public ::testing::Test
-{
-    protected:
-    SushiClientTest()
-    {
-    }
-    void SetUp()
-    {
-    }
 
-    void TearDown()
-    {
-    }
-    std::shared_ptr<sushi_controller::SushiControl> controller = sushi_controller::CreateSushiController("localhost:51051");
-};
 
-TEST_F(SushiClientTest, GetSampleRate)
-{
-    std::pair<sushi_controller::ControlStatus, float> result = controller->get_samplerate();
-    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
-    ASSERT_FLOAT_EQ(result.second,sushi_controller::expected_results::SAMPLERATE);
-}
-TEST_F(SushiClientTest, GetPlayingMode)
-{
-    std::pair<sushi_controller::ControlStatus, sushi_controller::PlayingMode> result = controller->get_playing_mode();
-    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(result.second, sushi_controller::expected_results::PLAYING_MODE);
-}
 
-TEST_F(SushiClientTest, SetPlayingMode)
-{
-    sushi_controller::ControlStatus status = controller->set_playing_mode(sushi_controller::PlayingMode::STOPPED);
-    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(controller->get_playing_mode().second,sushi_controller::PlayingMode::STOPPED);
-    status = controller->set_playing_mode(sushi_controller::PlayingMode::PLAYING);
-    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(controller->get_playing_mode().second,sushi_controller::PlayingMode::PLAYING);
-    status = controller->set_playing_mode(sushi_controller::PlayingMode::RECORDING);
-    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(controller->get_playing_mode().second,sushi_controller::PlayingMode::RECORDING);
-}
 
-TEST_F(SushiClientTest, GetSyncMode)
-{
-    std::pair<sushi_controller::ControlStatus, sushi_controller::SyncMode> result = controller->get_sync_mode();
-    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(result.second, sushi_controller::expected_results::SYNC_MODE);
-}
 
-TEST_F(SushiClientTest, SetSyncMode)
-{
-    sushi_controller::ControlStatus status = controller->set_sync_mode(sushi_controller::SyncMode::INTERNAL);
-    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(controller->get_sync_mode().second,sushi_controller::SyncMode::INTERNAL);
-    status = controller->set_sync_mode(sushi_controller::SyncMode::MIDI);
-    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(controller->get_sync_mode().second,sushi_controller::SyncMode::MIDI);
-    status = controller->set_sync_mode(sushi_controller::SyncMode::LINK);
-    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(controller->get_sync_mode().second,sushi_controller::SyncMode::LINK);
-}
 
-TEST_F(SushiClientTest, GetTempo)
-{
-    std::pair<sushi_controller::ControlStatus, float> result = controller->get_tempo();
-    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
-    ASSERT_FLOAT_EQ(result.second,sushi_controller::expected_results::TEMPO);
-}
 
-TEST_F(SushiClientTest, SetTempoPositive)
-{
-    sushi_controller::ControlStatus status = controller->set_tempo(200.0f);
-    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(controller->get_tempo().second,200.0f);
-}
 
-TEST_F(SushiClientTest, GetTimeSignature)
-{
-    std::pair<sushi_controller::ControlStatus, sushi_controller::TimeSignature> result = controller->get_time_signature();
-    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
-    ASSERT_EQ(result.second.numerator,sushi_controller::expected_results::TIME_SIGNATURE.numerator);
-    ASSERT_EQ(result.second.denominator,sushi_controller::expected_results::TIME_SIGNATURE.denominator);
-}
 
-TEST_F(SushiClientTest, SetTimeSignature)
-{
-    sushi_controller::TimeSignature modified_time_signature{6,8};
-    sushi_controller::ControlStatus status = controller->set_time_signature(modified_time_signature);
-    ASSERT_EQ(status, sushi_controller::ControlStatus::OK);
-    std::pair<sushi_controller::ControlStatus, sushi_controller::TimeSignature> result = controller->get_time_signature();
-    ASSERT_EQ(result.second.numerator, modified_time_signature.numerator);
-    ASSERT_EQ(result.second.denominator, modified_time_signature.denominator);
-}
 
-TEST_F(SushiClientTest, GetTracks)
-{
-    std::pair<sushi_controller::ControlStatus, std::vector<sushi_controller::TrackInfo>> result = controller->get_tracks();
-    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
-    std::vector<sushi_controller::TrackInfo> track_info_list = result.second;
-    for(uint i = 0; i < track_info_list.size(); ++i)
-    {
-        ASSERT_EQ(track_info_list.at(i).id,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).id);
-        ASSERT_EQ(track_info_list.at(i).label,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).label);
-        ASSERT_EQ(track_info_list.at(i).name,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).name);
-        ASSERT_EQ(track_info_list.at(i).input_channels,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).input_channels);
-        ASSERT_EQ(track_info_list.at(i).input_busses,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).input_busses);
-        ASSERT_EQ(track_info_list.at(i).output_channels,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).output_channels);
-        ASSERT_EQ(track_info_list.at(i).output_busses,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).output_busses);
-        ASSERT_EQ(track_info_list.at(i).processor_count,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).processor_count);
-    }
-}
 
+<<<<<<< HEAD
  
 class SushiClientKeyboardControlTest : public ::testing::Test
 {
@@ -494,4 +394,6 @@ TEST_F(SushiClientParameterControlTest, SetParameterValue)
 }
 
 
+=======
+>>>>>>> develop
 
