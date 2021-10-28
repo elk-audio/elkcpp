@@ -568,6 +568,64 @@ public:
                                               int parameter_id,
                                               float value) = 0;
 
+    /**
+     * @brief Get the properties available to a track
+     *
+     * @param track_id The id of the track to get the parameters from
+     * @return std::pair<ControlStatus, std::vector<PropertyInfo>>
+     */
+    virtual std::pair<ControlStatus, std::vector<PropertyInfo>> get_track_properties(int track_id) const = 0;
+
+    /**
+     * @brief Get the properties available to a processor
+     *
+     * @param processor_id The id of the processor to get the properties from
+     * @return std::pair<ControlStatus, std::vector<PropertyInfo>>
+     */
+    virtual std::pair<ControlStatus, std::vector<PropertyInfo>> get_processor_properties(int processor_id) const = 0;
+
+    /**
+     * @brief Get the id of a property from its name
+     *
+     * @param processor_id The id of the processor containing the property
+     * @param property The name of the property to get the id from
+     * @return std::pair<ControlStatus, int>
+     */
+    virtual std::pair<ControlStatus, int> get_property_id(int processor_id,
+                                                         const std::string& property_name) const = 0;
+
+    /**
+     * @brief Get the info of a property
+     *
+     * @param processor_id The id of the processors containing the property
+     * @param property_id The id of the property to get the info from
+     * @return std::pair<ControlStatus, ParameterInfo>
+     */
+    virtual std::pair<ControlStatus, PropertyInfo> get_property_info(int processor_id,
+                                                                     int property_id) const = 0;
+
+    /**
+     * @brief Get the current value of a property
+     *
+     * @param processor_id The id of the processor containing the property
+     * @param property_id The id of property to get the value from
+     * @return std::pair<ControlStatus, float>
+     */
+    virtual std::pair<ControlStatus, std::string> get_property_value(int processor_id,
+                                                                     int property_id) const = 0;
+
+    /**
+     * @brief Set the value of a property
+     *
+     * @param processor_id The id of the processor containing the property
+     * @param property_id The id of the property to set the value of
+     * @param value The value to set the property to
+     * @return ControlStatus
+     */
+    virtual ControlStatus set_property_value(int processor_id,
+                                             int property_id,
+                                             std::string value) = 0;
+
 protected:
     ParameterController() = default;
 };

@@ -29,6 +29,13 @@ namespace expected_results
     const ParameterInfo PARAMETER_WITH_ID_1 = ParameterInfo{1, PARAMETER_TYPE, "param1", "param1", "Hz", true, 0.0f, 1.0f};
     const ParameterInfo PARAMETER_WITH_ID_2 = ParameterInfo{2, PARAMETER_TYPE, "param2", "param2", "Hz", true, 0.0f, 1.0f};
     const std::vector<ParameterInfo> PARAMETER_INFO_LIST = {PARAMETER_WITH_ID_1, PARAMETER_WITH_ID_2};
+
+    // Property test value
+    constexpr auto PROPERTY_VALUE{"value"};
+    const PropertyInfo PROPERTY_WITH_ID_3 = PropertyInfo{3, "property_1", "Property 1"};
+    const PropertyInfo PROPERTY_WITH_ID_4 = PropertyInfo{4, "property_2", "Property 2"};
+    const std::vector<PropertyInfo> PROPERTY_INFO_LIST = {PROPERTY_WITH_ID_3, PROPERTY_WITH_ID_4};
+
 } // namespace expected_results
 
 
@@ -190,6 +197,117 @@ grpc::Status GetTrackParameters(grpc::ServerContext* /* context */,
         else
         {
             return grpc::Status(grpc::StatusCode::NOT_FOUND, "No procesor and/or parameter with that id");
+        }
+    }
+
+    grpc::Status GetTrackProperties(grpc::ServerContext* /* context */,
+                                    const sushi_rpc::TrackIdentifier* request,
+                                    sushi_rpc::PropertyInfoList* response)
+    {
+        if (request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            for(uint i = 0; i < expected_results::PROPERTY_INFO_LIST.size(); ++i)
+            {
+                auto property = response->add_properties();
+                property->set_id(expected_results::PROPERTY_INFO_LIST.at(i).id);
+                property->set_label(expected_results::PROPERTY_INFO_LIST.at(i).label);
+                property->set_name(expected_results::PROPERTY_INFO_LIST.at(i).name);
+            }
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No track with that id");
+        }
+    }
+
+    grpc::Status GetProcessorProperties(grpc::ServerContext* /* context */,
+                                        const sushi_rpc::ProcessorIdentifier* request,
+                                        sushi_rpc::PropertyInfoList* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            for(uint i = 0; i < expected_results::PROPERTY_INFO_LIST.size(); ++i)
+            {
+                auto property = response->add_properties();
+                property->set_id(expected_results::PROPERTY_INFO_LIST.at(i).id);
+                property->set_label(expected_results::PROPERTY_INFO_LIST.at(i).label);
+                property->set_name(expected_results::PROPERTY_INFO_LIST.at(i).name);
+            }
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
+    grpc::Status GetPropertyId(grpc::ServerContext* /* context */,
+                               const sushi_rpc::PropertyIdRequest* request,
+                               sushi_rpc::PropertyIdentifier* response)
+    {
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id
+           && request->property_name() == expected_results::PROPERTY_WITH_ID_3.name)
+        {
+            response->set_processor_id(expected_results::PROCESSOR_WITH_ID_1.id);
+            response->set_property_id(expected_results::PROPERTY_WITH_ID_3.id);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id and/or property with that name");
+        }
+
+    }
+
+    grpc::Status GetPropertyInfo(grpc::ServerContext* /* context */,
+                                 const sushi_rpc::PropertyIdentifier* request,
+                                 sushi_rpc::PropertyInfo* response)
+    {
+        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
+           && request->property_id() == expected_results::PROPERTY_WITH_ID_3.id)
+        {
+            response->set_id(expected_results::PROPERTY_WITH_ID_3.id);
+            response->set_name(expected_results::PROPERTY_WITH_ID_3.name);
+            response->set_label(expected_results::PROPERTY_WITH_ID_3.label);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor and/or property with that id");
+        }
+
+    }
+
+    grpc::Status GetPropertyValue(grpc::ServerContext* /* context */,
+                                  const sushi_rpc::PropertyIdentifier* request,
+                                  sushi_rpc::GenericStringValue* response)
+    {
+        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
+           && request->property_id() == expected_results::PROPERTY_WITH_ID_4.id)
+        {
+            response->set_value(expected_results::PROPERTY_VALUE);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor and/or property with that id");
+        }
+    }
+
+    grpc::Status SetPropertyValue(grpc::ServerContext* /* context */,
+                                  const sushi_rpc::PropertyValue* request,
+                                  sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if(request->property().processor_id() == expected_results::PROCESSOR_WITH_ID_1.id
+           && request->property().property_id() == expected_results::PROPERTY_WITH_ID_3.id
+           && request->value() == expected_results::PROPERTY_VALUE)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No procesor and/or property with that id");
         }
     }
 
