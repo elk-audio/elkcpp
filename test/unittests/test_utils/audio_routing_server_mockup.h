@@ -173,7 +173,7 @@ class AudioRoutingServiceMockup : public sushi_rpc::AudioRoutingController::Serv
         }
     }
 
-    grpc::Status DisconnectAllOutputFromTrack(grpc::ServerContext* /* context */,
+    grpc::Status DisconnectAllOutputsFromTrack(grpc::ServerContext* /* context */,
                                                const sushi_rpc::TrackIdentifier* request,
                                                sushi_rpc::GenericVoidValue* /* response */)
     {

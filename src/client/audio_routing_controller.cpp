@@ -212,7 +212,7 @@ AudioRoutingControllerClient::AudioRoutingControllerClient(const std::string& ad
 
         request.set_id(track_id);
 
-        grpc::Status status = _stub->DisconnectAllOutputFromTrack(&context, request, &response);
+        grpc::Status status = _stub->DisconnectAllOutputsFromTrack(&context, request, &response);
 
         if(!status.ok())
         {
