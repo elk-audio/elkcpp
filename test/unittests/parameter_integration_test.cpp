@@ -69,7 +69,7 @@ TEST_F(ParameterControllerTest, GetParameterId)
 TEST_F(ParameterControllerTest, GetParameterInfo)
 {
     auto result = controller->get_parameter_info(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
-                                                                                                                       sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
+                                                 sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second.id, sushi_controller::expected_results::PARAMETER_WITH_ID_1.id);
     ASSERT_EQ(result.second.type, sushi_controller::expected_results::PARAMETER_WITH_ID_1.type);
@@ -110,5 +110,63 @@ TEST_F(ParameterControllerTest, SetParameterValue)
     auto result = controller->set_parameter_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                                                             sushi_controller::expected_results::PARAMETER_WITH_ID_1.id,
                                                                             sushi_controller::expected_results::PARAMETER_VALUE);
+    ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
+}
+
+TEST_F(ParameterControllerTest, GetTrackProperties)
+{
+    auto result = controller->get_track_properties(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    for (uint i = 0; i < sushi_controller::expected_results::PARAMETER_INFO_LIST.size(); ++i)
+    {
+        ASSERT_EQ(result.second.at(i).id, sushi_controller::expected_results::PROPERTY_INFO_LIST.at(i).id);
+        ASSERT_EQ(result.second.at(i).label, sushi_controller::expected_results::PROPERTY_INFO_LIST.at(i).label);
+        ASSERT_EQ(result.second.at(i).name, sushi_controller::expected_results::PROPERTY_INFO_LIST.at(i).name);
+    }
+}
+
+TEST_F(ParameterControllerTest, GetProcessorProperties)
+{
+    auto result = controller->get_processor_properties(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    for(uint i = 0; i < result.second.size(); ++i)
+    {
+        ASSERT_EQ(result.second.at(i).id, sushi_controller::expected_results::PROPERTY_INFO_LIST.at(i).id);
+        ASSERT_EQ(result.second.at(i).label, sushi_controller::expected_results::PROPERTY_INFO_LIST.at(i).label);
+        ASSERT_EQ(result.second.at(i).name, sushi_controller::expected_results::PROPERTY_INFO_LIST.at(i).name);
+    }
+}
+
+TEST_F(ParameterControllerTest, GetPropertyId)
+{
+    auto result = controller->get_property_id(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+                                              sushi_controller::expected_results::PROPERTY_WITH_ID_3.name);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PROPERTY_WITH_ID_3.id);
+}
+
+TEST_F(ParameterControllerTest, GetPropertyInfo)
+{
+    auto result = controller->get_property_info(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+                                                sushi_controller::expected_results::PROPERTY_WITH_ID_3.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second.id, sushi_controller::expected_results::PROPERTY_WITH_ID_3.id);
+    ASSERT_EQ(result.second.label, sushi_controller::expected_results::PROPERTY_WITH_ID_3.label);
+    ASSERT_EQ(result.second.name, sushi_controller::expected_results::PROPERTY_WITH_ID_3.name);
+}
+
+TEST_F(ParameterControllerTest, GetPropertyValue)
+{
+    auto result = controller->get_property_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+                                                 sushi_controller::expected_results::PROPERTY_WITH_ID_4.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second, sushi_controller::expected_results::PROPERTY_VALUE);
+}
+
+TEST_F(ParameterControllerTest, SetPropertyValue)
+{
+    auto result = controller->set_property_value(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+                                                 sushi_controller::expected_results::PROPERTY_WITH_ID_3.id,
+                                                 sushi_controller::expected_results::PROPERTY_VALUE);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
 }

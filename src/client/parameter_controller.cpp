@@ -209,7 +209,140 @@ ControlStatus ParameterControllerClient::set_parameter_value(int processor_id, i
         handle_error(status);
     }
     return to_ext(status);
+}
 
+std::pair<ControlStatus, std::vector<PropertyInfo>> ParameterControllerClient::get_track_properties(int track_id) const
+{
+    sushi_rpc::TrackIdentifier request;
+    sushi_rpc::PropertyInfoList response;
+    grpc::ClientContext context;
+
+    request.set_id(track_id);
+
+    grpc::Status status = _stub.get()->GetTrackProperties(&context, request, &response);
+
+    if (!status.ok())
+    {
+        handle_error(status);
+    }
+    std::vector<PropertyInfo> output;
+    for(int i = 0; i < response.properties_size(); ++i)
+    {
+        output.push_back(
+                PropertyInfo{
+                    response.properties(i).id(),
+                    response.properties(i).name(),
+                    response.properties(i).label(),
+                }
+        );
+    }
+    return std::pair<ControlStatus, std::vector<PropertyInfo>>(to_ext(status), output);
+}
+
+std::pair<ControlStatus, std::vector<PropertyInfo>> ParameterControllerClient::get_processor_properties(int processor_id) const
+{
+    sushi_rpc::ProcessorIdentifier request;
+    sushi_rpc::PropertyInfoList response;
+    grpc::ClientContext context;
+
+    request.set_id(processor_id);
+
+    grpc::Status status = _stub.get()->GetProcessorProperties(&context, request, &response);
+
+    if(!status.ok())
+    {
+        handle_error(status);
+    }
+    std::vector<PropertyInfo> output;
+    for(int i = 0; i < response.properties_size(); ++i)
+    {
+        output.push_back(
+                PropertyInfo{
+                        response.properties(i).id(),
+                        response.properties(i).name(),
+                        response.properties(i).label(),
+                }
+        );
+    }
+    return std::pair<ControlStatus, std::vector<PropertyInfo>>(to_ext(status), output);
+}
+
+std::pair<ControlStatus, int> ParameterControllerClient::get_property_id(int processor_id, const std::string& property_name) const
+{
+    sushi_rpc::PropertyIdRequest request;
+    sushi_rpc::PropertyIdentifier response;
+    grpc::ClientContext context;
+
+    request.mutable_processor()->set_id(processor_id);
+    request.set_property_name(property_name);
+
+    grpc::Status status = _stub.get()->GetPropertyId(&context, request, &response);
+
+    if(!status.ok())
+    {
+        handle_error(status);
+    }
+    return std::pair<ControlStatus, int>(to_ext(status), response.property_id());
+}
+
+std::pair<ControlStatus, PropertyInfo> ParameterControllerClient::get_property_info(int processor_id, int property_id) const
+{
+    sushi_rpc::PropertyIdentifier request;
+    sushi_rpc::PropertyInfo response;
+    grpc::ClientContext context;
+
+    request.set_processor_id(processor_id);
+    request.set_property_id(property_id);
+
+    grpc::Status status = _stub.get()->GetPropertyInfo(&context, request, &response);
+
+    if(!status.ok())
+    {
+        handle_error(status);
+    }
+    PropertyInfo output{
+            response.id(),
+            response.name(),
+            response.label(),
+    };
+    return std::pair<ControlStatus, PropertyInfo>(to_ext(status), output);
+}
+
+std::pair<ControlStatus, std::string> ParameterControllerClient::get_property_value(int processor_id, int property_id) const
+{
+    sushi_rpc::PropertyIdentifier request;
+    sushi_rpc::GenericStringValue response;
+    grpc::ClientContext context;
+
+    request.set_processor_id(processor_id);
+    request.set_property_id(property_id);
+
+    grpc::Status status = _stub.get()->GetPropertyValue(&context, request, &response);
+
+    if(!status.ok())
+    {
+        handle_error(status);
+    }
+    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+}
+
+ControlStatus ParameterControllerClient::set_property_value(int processor_id, int property_id, std::string value)
+{
+    sushi_rpc::PropertyValue request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.mutable_property()->set_processor_id(processor_id);
+    request.mutable_property()->set_property_id(property_id);
+    request.set_value(value);
+
+    grpc::Status status = _stub.get()->SetPropertyValue(&context, request, &response);
+
+    if(!status.ok())
+    {
+        handle_error(status);
+    }
+    return to_ext(status);
 }
 
 std::shared_ptr<ParameterController> CreateParameterController(const std::string& server_address)

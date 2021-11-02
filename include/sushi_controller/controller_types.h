@@ -102,6 +102,13 @@ struct ParameterInfo
     float           max_domain_value;
 };
 
+struct PropertyInfo
+{
+    int         id;
+    std::string name;
+    std::string label;
+};
+
 struct ProcessorInfo
 {
     int         id;
