@@ -1,6 +1,20 @@
+/*
+ * Copyright 2018-2019 Modern Ancient Instruments Networked AB, dba Elk
+ * elkcpp is free software: you can redistribute it and/or modify it under the terms
+ * of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * elkcpp is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with elkcpp.
+ * If not, see http://www.gnu.org/licenses/ .
+ */
+
 /**
  * @brief Abstract interface for external control of sushi over rpc, osc or similar
- * @copyright MIND Music Labs AB, Stockholm
+ * @copyright 2018-2019 Modern Ancient Instruments Networked AB, dba Elk, Stockholm
  */
 
 
@@ -561,12 +575,10 @@ public:
      *
      * @param processor_id The id of the processor containing the parameter
      * @param parameter_id The id of the parameter to set the value of
-     * @param value The value to set the parameter to
+     * @param value The value to set the parameter to, normalised between 0 and 1
      * @return ControlStatus
      */
-    virtual ControlStatus set_parameter_value(int processor_id,
-                                              int parameter_id,
-                                              float value) = 0;
+    virtual ControlStatus set_parameter_value(int processor_id, int parameter_id, float value) = 0;
 
     /**
      * @brief Get the properties available to a track
@@ -652,7 +664,6 @@ public:
     /**
      * @brief Get all midi keyboard input connections
      *
-     * @return std::pair<ControlStatus, std::vector<MidiKbdConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_input_connections() = 0;
 

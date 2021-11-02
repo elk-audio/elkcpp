@@ -43,7 +43,7 @@ namespace expected_results
 
     // Parameter test values
     constexpr ParameterType PARAMETER_TYPE{ParameterType::FLOAT};
-    constexpr float PARAMETER_VALUE{5.34f};
+    constexpr float PARAMETER_DOMAIN_VALUE{5.34f};
     constexpr float PARAMETER_NORMALISED_VALUE{0.87f};
     const std::string PARAMETER_STRING_VALUE{"5.34"};
     const ParameterInfo PARAMETER_WITH_ID_1 = ParameterInfo{1, PARAMETER_TYPE, "param1", "param1", "Hz", true, 0.0f, 1.0f};
@@ -80,18 +80,340 @@ class SushiServiceMockup final : public sushi_rpc::SushiController::Service
     //=================//
 
 
+<<<<<<< HEAD
+    grpc::Status GetTrackParameters(grpc::ServerContext* /* context */,
+                                    const sushi_rpc::TrackIdentifier* request,
+                                    sushi_rpc::ParameterInfoList* response)
+    {
+        if (request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            for(uint i = 0; i < expected_results::PARAMETER_INFO_LIST.size(); ++i)
+            {
+                sushi_rpc::ParameterInfo* parameter = response->add_parameters();
+                parameter->set_id(expected_results::PARAMETER_INFO_LIST.at(i).id);
+                parameter->mutable_type()->set_type(sushi_rpc::ParameterType::FLOAT);
+                parameter->set_label(expected_results::PARAMETER_INFO_LIST.at(i).label);
+                parameter->set_name(expected_results::PARAMETER_INFO_LIST.at(i).name);
+                parameter->set_unit(expected_results::PARAMETER_INFO_LIST.at(i).unit);
+                parameter->set_automatable(expected_results::PARAMETER_INFO_LIST.at(i).automatable);
+                parameter->set_min_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).min_domain_value);
+                parameter->set_max_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).max_domain_value);
+            }
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+=======
+>>>>>>> develop
 
     //=====================//
     //  Processor control  //
     //=====================//
 
+<<<<<<< HEAD
+    grpc::Status GetProcessorId(grpc::ServerContext* /* context */,
+                                const sushi_rpc::GenericStringValue* request,
+                                sushi_rpc::ProcessorIdentifier* response)
+    {
+        if(request->value() == expected_results::PROCESSOR_WITH_ID_1.name)
+        {
+            response->set_id(expected_results::PROCESSOR_WITH_ID_1.id);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that name");
+        }
+    }
+
+    grpc::Status GetProcessorInfo(grpc::ServerContext* /* context */,
+                                  const sushi_rpc::ProcessorIdentifier* request,
+                                  sushi_rpc::ProcessorInfo* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            response->set_id(expected_results::PROCESSOR_WITH_ID_1.id);
+            response->set_label(expected_results::PROCESSOR_WITH_ID_1.label);
+            response->set_name(expected_results::PROCESSOR_WITH_ID_1.name);
+            response->set_parameter_count(expected_results::PROCESSOR_WITH_ID_1.parameter_count);
+            response->set_program_count(expected_results::PROCESSOR_WITH_ID_1.program_count);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
+    grpc::Status GetProcessorBypassState(grpc::ServerContext* /* context */,
+                                         const sushi_rpc::ProcessorIdentifier* request,
+                                         sushi_rpc::GenericBoolValue* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            response->set_value(_processor_bypass_state);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
+    grpc::Status SetProcessorBypassState(grpc::ServerContext* /* context */,
+                                         const sushi_rpc::ProcessorBypassStateSetRequest* request,
+                                         sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            _processor_bypass_state = request->value();
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
+    grpc::Status GetProcessorCurrentProgram(grpc::ServerContext* /* context */,
+                                            const sushi_rpc::ProcessorIdentifier* request,
+                                            sushi_rpc::ProgramIdentifier* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            response->set_program(expected_results::PROGRAM_ID);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
+    grpc::Status GetProcessorCurrentProgramName(grpc::ServerContext* /* context */,
+                                                const sushi_rpc::ProcessorIdentifier* request,
+                                                sushi_rpc::GenericStringValue* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            response->set_value(expected_results::PROGRAM_NAME);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
+    grpc::Status GetProcessorProgramName(grpc::ServerContext* /* context */,
+                                         const sushi_rpc::ProcessorProgramIdentifier* request,
+                                         sushi_rpc::GenericStringValue* response)
+    {
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        && request->program() == expected_results::PROGRAM_ID)
+        {
+            response->set_value(expected_results::PROGRAM_NAME);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor and/or program with that id");
+        }
+    }
+
+    grpc::Status GetProcessorPrograms(grpc::ServerContext* /* context */,
+                                      const sushi_rpc::ProcessorIdentifier* request,
+                                      sushi_rpc::ProgramInfoList* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            sushi_rpc::ProgramInfo* program = response->add_programs();
+            program->mutable_id()->set_program(expected_results::PROGRAM_ID);
+            program->set_name(expected_results::PROGRAM_NAME);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
+    grpc::Status SetProcessorProgram(grpc::ServerContext* /* context */,
+                                     const sushi_rpc::ProcessorProgramSetRequest* request,
+                                     sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        && request->program().program() == expected_results::PROGRAM_ID)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor and/or program with that id");
+        }
+    }
+
+    grpc::Status GetProcessorParameters(grpc::ServerContext* /* context */,
+                                        const sushi_rpc::ProcessorIdentifier* request,
+                                        sushi_rpc::ParameterInfoList* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
+        {
+            for(uint i = 0; i < expected_results::PARAMETER_INFO_LIST.size(); ++i)
+            {
+                sushi_rpc::ParameterInfo* parameter = response->add_parameters();
+                parameter->set_id(expected_results::PARAMETER_INFO_LIST.at(i).id);
+                parameter->mutable_type()->set_type(sushi_rpc::ParameterType::FLOAT);
+                parameter->set_label(expected_results::PARAMETER_INFO_LIST.at(i).label);
+                parameter->set_name(expected_results::PARAMETER_INFO_LIST.at(i).name);
+                parameter->set_unit(expected_results::PARAMETER_INFO_LIST.at(i).unit);
+                parameter->set_automatable(expected_results::PARAMETER_INFO_LIST.at(i).automatable);
+                parameter->set_min_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).min_domain_value);
+                parameter->set_max_domain_value(expected_results::PARAMETER_INFO_LIST.at(i).max_domain_value);
+            }
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+=======
+>>>>>>> develop
 
     //=====================//
     //  Parameter control  //
     //=====================//
 
+<<<<<<< HEAD
+    grpc::Status GetParameterId(grpc::ServerContext* /* context */,
+                                const sushi_rpc::ParameterIdRequest* request,
+                                sushi_rpc::ParameterIdentifier* response)
+    {
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        && request->parametername() == expected_results::PARAMETER_WITH_ID_1.name)
+        {
+            response->set_processor_id(expected_results::PROCESSOR_WITH_ID_1.id);
+            response->set_parameter_id(expected_results::PARAMETER_WITH_ID_1.id);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id and/or parameter with that name");
+        }
+        
+    }
+
+    grpc::Status GetParameterInfo(grpc::ServerContext* /* context */,
+                                  const sushi_rpc::ParameterIdentifier* request,
+                                  sushi_rpc::ParameterInfo* response)
+    {
+        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        && request->parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
+        {
+            response->set_id(expected_results::PARAMETER_WITH_ID_1.id);
+            response->mutable_type()->set_type(sushi_rpc::ParameterType::FLOAT);
+            response->set_name(expected_results::PARAMETER_WITH_ID_1.name);
+            response->set_label(expected_results::PARAMETER_WITH_ID_1.label);
+            response->set_unit(expected_results::PARAMETER_WITH_ID_1.unit);
+            response->set_automatable(expected_results::PARAMETER_WITH_ID_1.automatable);
+            response->set_min_domain_value(expected_results::PARAMETER_WITH_ID_1.min_domain_value);
+            response->set_max_domain_value(expected_results::PARAMETER_WITH_ID_1.max_domain_value);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor and/or parameter with that id");
+        }
+        
+    }
+
+    grpc::Status GetParameterValue(grpc::ServerContext* /* context */,
+                                   const sushi_rpc::ParameterIdentifier* request,
+                                   sushi_rpc::GenericFloatValue* response)
+    {
+        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        && request->parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
+        {
+            response->set_value(expected_results::PARAMETER_NORMALISED_VALUE);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No procesor and/or parameter with that id");
+        }
+    }  
+
+    grpc::Status GetParameterValueInDomain(grpc::ServerContext* /* context */,
+                                           const sushi_rpc::ParameterIdentifier* request,
+                                           sushi_rpc::GenericFloatValue* response)
+    {
+        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        && request->parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
+        {
+            response->set_value(expected_results::PARAMETER_DOMAIN_VALUE);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No procesor and/or parameter with that id");
+        }
+    }
+
+    grpc::Status GetParameterValueAsString(grpc::ServerContext* /* context */,
+                                   const sushi_rpc::ParameterIdentifier* request,
+                                   sushi_rpc::GenericStringValue* response)
+    {
+        if(request->processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        && request->parameter_id() == expected_results::PARAMETER_WITH_ID_1.id)
+        {
+            response->set_value(expected_results::PARAMETER_STRING_VALUE);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No procesor and/or parameter with that id");
+        }
+    }
+
+    grpc::Status SetParameterValue(grpc::ServerContext* /* context */,
+                                   const sushi_rpc::ParameterSetRequest* request,
+                                   sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if(request->parameter().processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        && request->parameter().parameter_id() == expected_results::PARAMETER_WITH_ID_1.id 
+        && request->value() == expected_results::PARAMETER_DOMAIN_VALUE)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No procesor and/or parameter with that id");
+        }
+    }
+
+    grpc::Status SetParameterValueNormalised(grpc::ServerContext* /* context */,
+                                   const sushi_rpc::ParameterSetRequest* request,
+                                   sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if(request->parameter().processor_id() == expected_results::PROCESSOR_WITH_ID_1.id 
+        && request->parameter().parameter_id() == expected_results::PARAMETER_WITH_ID_1.id 
+        && request->value() == expected_results::PARAMETER_NORMALISED_VALUE) 
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No procesor and/or parameter with that id");
+        }
+    }
+=======
 
 
+>>>>>>> develop
 
     bool _processor_bypass_state{expected_results::PROCESSOR_BYPASS_STATE};
 
