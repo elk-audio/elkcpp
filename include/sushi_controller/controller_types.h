@@ -136,6 +136,14 @@ struct TrackInfo
     std::vector<int> processors;
 };
 
+struct ProcessorState
+{
+    std::optional<int>  program_id;
+    std::optional<bool> bypassed;
+    std::vector<std::pair<int, float>> parameters;
+    std::vector<std::pair<int, std::string>> properties;
+};
+
 enum class MidiChannel
 {
     MIDI_CH_1 = 1,

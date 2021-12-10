@@ -25,6 +25,8 @@ namespace expected_results
     const ProcessorInfo PROCESSOR_WITH_ID_2 = ProcessorInfo{2, "delay1", "delay1", 2, 2};
     const std::vector<ProcessorInfo> PROCESSOR_INFO_LIST = {PROCESSOR_WITH_ID_1, PROCESSOR_WITH_ID_2};
     constexpr bool PROCESSOR_BYPASS_STATE = true;
+    const int PROCESSOR_PROGRAM_ID = 3;
+    const float PROCESSOR_PARAMETER_VALUE = 0.5f;
 
     // Dynamic track values
     constexpr char DYN_TRACK_NAME[] = "New track";
@@ -196,6 +198,31 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
         }
     }
 
+    grpc::Status GetProcessorState(grpc::ServerContext* /* context */,
+                                   const sushi_rpc::ProcessorIdentifier* request,
+                                   sushi_rpc::ProcessorState* response)
+    {
+        if(request->id() == expected_results::PROCESSOR_WITH_ID_1.id ||
+           request->id() == expected_results::PROCESSOR_WITH_ID_2.id)
+        {
+            response->mutable_program_id()->set_value(expected_results::PROCESSOR_PROGRAM_ID);
+            response->mutable_program_id()->set_has_value(true);
+            response->mutable_bypassed()->set_value(_processor_bypass_state);
+            response->mutable_bypassed()->set_has_value(true);
+            auto parameter = response->mutable_parameters()->Add();
+            parameter->mutable_parameter()->set_parameter_id(0);
+            parameter->set_value(expected_results::PROCESSOR_PARAMETER_VALUE);
+            parameter = response->mutable_parameters()->Add();
+            parameter->mutable_parameter()->set_parameter_id(1);
+            parameter->set_value(expected_results::PROCESSOR_PARAMETER_VALUE);
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
     grpc::Status SetProcessorBypassState(grpc::ServerContext* /* context */,
                                          const sushi_rpc::ProcessorBypassStateSetRequest* request,
                                          sushi_rpc::GenericVoidValue* /* response */)
@@ -203,6 +230,21 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
         if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id)
         {
             _processor_bypass_state = request->value();
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::NOT_FOUND, "No processor with that id");
+        }
+    }
+
+    grpc::Status SetProcessorState(grpc::ServerContext* /* context */,
+                                   const sushi_rpc::ProcessorStateSetRequest* request,
+                                   sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if(request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id ||
+           request->processor().id() == expected_results::PROCESSOR_WITH_ID_2.id)
+        {
             return grpc::Status::OK;
         }
         else
