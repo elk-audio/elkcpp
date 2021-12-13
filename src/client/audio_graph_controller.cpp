@@ -223,7 +223,7 @@ std::pair<ControlStatus, ProcessorState> AudioGraphControllerClient::get_process
 
     grpc::Status status = _stub.get()->GetProcessorState(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -260,7 +260,7 @@ ControlStatus AudioGraphControllerClient::set_processor_bypass_state(int process
 
     grpc::Status status = _stub.get()->SetProcessorBypassState(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -286,23 +286,23 @@ ControlStatus AudioGraphControllerClient::set_processor_state(int processor_id, 
         request.mutable_state()->mutable_bypassed()->set_has_value(true);
     }
     request.mutable_state()->mutable_properties()->Reserve(state.properties.size());
-    for (const auto& p : state.properties)
+    for (const auto& property : state.properties)
     {
         auto target = request.mutable_state()->mutable_properties()->Add();
-        target->mutable_property()->set_property_id(p.first);
-        target->set_value(p.second);
+        target->mutable_property()->set_property_id(property.first);
+        target->set_value(property.second);
     }
     request.mutable_state()->mutable_parameters()->Reserve(state.parameters.size());
-    for (const auto& p: state.parameters)
+    for (const auto& parameter : state.parameters)
     {
         auto target = request.mutable_state()->mutable_parameters()->Add();
-        target->mutable_parameter()->set_parameter_id(p.first);
-        target->set_value(p.second);
+        target->mutable_parameter()->set_parameter_id(parameter.first);
+        target->set_value(parameter.second);
     }
 
     grpc::Status status = _stub.get()->SetProcessorState(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
