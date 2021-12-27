@@ -212,6 +212,43 @@ std::pair<ControlStatus, bool> AudioGraphControllerClient::get_processor_bypass_
     return std::pair<ControlStatus, bool>(to_ext(status), response.value());
 }
 
+std::pair<ControlStatus, ProcessorState> AudioGraphControllerClient::get_processor_state(int processor_id) const
+{
+    sushi_rpc::ProcessorIdentifier request;
+    sushi_rpc::ProcessorState response;
+    grpc::ClientContext context;
+    ProcessorState state;
+
+    request.set_id(processor_id);
+
+    grpc::Status status = _stub.get()->GetProcessorState(&context, request, &response);
+
+    if (!status.ok())
+    {
+        handle_error(status);
+    }
+    if (response.has_bypassed() && response.bypassed().has_value())
+    {
+        state.bypassed = response.bypassed().value();
+    }
+    if (response.has_program_id() && response.program_id().has_value())
+    {
+        state.program_id = response.program_id().value();
+    }
+    state.properties.reserve(response.properties_size());
+    for (const auto& property : response.properties())
+    {
+        state.properties.emplace_back(property.property().property_id(), property.value());
+    }
+    state.parameters.reserve(response.parameters_size());
+    for (const auto& parameter : response.parameters())
+    {
+        state.parameters.emplace_back(parameter.parameter().parameter_id(), parameter.value());
+    }
+
+    return std::pair<ControlStatus, ProcessorState>(to_ext(status), state);
+}
+
 ControlStatus AudioGraphControllerClient::set_processor_bypass_state(int processor_id, bool bypass_enabled)
 {
     sushi_rpc::ProcessorBypassStateSetRequest request;
@@ -223,7 +260,49 @@ ControlStatus AudioGraphControllerClient::set_processor_bypass_state(int process
 
     grpc::Status status = _stub.get()->SetProcessorBypassState(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
+    {
+        handle_error(status);
+    }
+    return to_ext(status);
+}
+
+ControlStatus AudioGraphControllerClient::set_processor_state(int processor_id, const ProcessorState state)
+{
+    sushi_rpc::ProcessorStateSetRequest request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.mutable_processor()->set_id(processor_id);
+
+    if (state.program_id.has_value())
+    {
+        request.mutable_state()->mutable_program_id()->set_value(state.program_id.value());
+        request.mutable_state()->mutable_program_id()->set_has_value(true);
+    }
+    if (state.bypassed.has_value())
+    {
+        request.mutable_state()->mutable_bypassed()->set_value(state.bypassed.value());
+        request.mutable_state()->mutable_bypassed()->set_has_value(true);
+    }
+    request.mutable_state()->mutable_properties()->Reserve(state.properties.size());
+    for (const auto& property : state.properties)
+    {
+        auto target = request.mutable_state()->mutable_properties()->Add();
+        target->mutable_property()->set_property_id(property.first);
+        target->set_value(property.second);
+    }
+    request.mutable_state()->mutable_parameters()->Reserve(state.parameters.size());
+    for (const auto& parameter : state.parameters)
+    {
+        auto target = request.mutable_state()->mutable_parameters()->Add();
+        target->mutable_parameter()->set_parameter_id(parameter.first);
+        target->set_value(parameter.second);
+    }
+
+    grpc::Status status = _stub.get()->SetProcessorState(&context, request, &response);
+
+    if (!status.ok())
     {
         handle_error(status);
     }

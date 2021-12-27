@@ -77,6 +77,14 @@ public:
     virtual std::pair<ControlStatus, bool> get_processor_bypass_state(int processor_id) const override;
 
     /**
+     * @brief Get the full state of a processor
+     *
+     * @param processor_id The id of the processor to get the state from
+     * @return std::pair<ControlStatus, ProcessorState>
+     */
+    virtual std::pair<ControlStatus, ProcessorState> get_processor_state(int processor_id) const override;
+
+    /**
      * @brief Set the bypass state of a processor
      *
      * @param processor_id The id of the processor to set the bypass state of
@@ -84,6 +92,15 @@ public:
      * @return ControlStatus
      */
     virtual ControlStatus set_processor_bypass_state(int processor_id, bool bypass_enabled) override;
+
+    /**
+     * @brief Set the full or partial state of a processor
+     *
+     * @param processor_id The id of the processor to set the state of
+     * @param bypass_enabled A ProcessorState object that will be applied to the chosen processor
+     * @return ControlStatus
+     */
+    virtual ControlStatus set_processor_state(int processor_id, const ProcessorState state) override;
 
     /**
      * @brief Create a new track in sushi

@@ -95,11 +95,23 @@ TEST_F(AudioGraphControllerTest, GetProcessorInfo)
     ASSERT_EQ(result.second.parameter_count, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.parameter_count);
 }
 
-TEST_F(AudioGraphControllerTest, GetProcessorBybassState)
+TEST_F(AudioGraphControllerTest, GetProcessorBypassState)
 {
     auto result = controller->get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::PROCESSOR_BYPASS_STATE);
+}
+
+TEST_F(AudioGraphControllerTest, GetProcessorState)
+{
+    auto result = controller->get_processor_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second.bypassed.value(), sushi_controller::expected_results::PROCESSOR_BYPASS_STATE);
+    ASSERT_EQ(result.second.program_id.value(), sushi_controller::expected_results::PROCESSOR_PROGRAM_ID);
+    ASSERT_EQ(result.second.properties.size(), 0u);
+    ASSERT_EQ(result.second.parameters.size(), 2u);
+    ASSERT_EQ(result.second.parameters.at(1).first, 1);
+    ASSERT_EQ(result.second.parameters.at(1).second, sushi_controller::expected_results::PROCESSOR_PARAMETER_VALUE);
 }
 
 TEST_F(AudioGraphControllerTest, SetProcessorBypassState)
@@ -108,6 +120,13 @@ TEST_F(AudioGraphControllerTest, SetProcessorBypassState)
     ASSERT_EQ(controller->get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id).second,false);
     ASSERT_EQ(controller->set_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,true), sushi_controller::ControlStatus::OK);
     ASSERT_EQ(controller->get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id).second,true);
+}
+
+TEST_F(AudioGraphControllerTest, SetProcessorState)
+{
+    sushi_controller::ProcessorState state;
+    ASSERT_EQ(controller->set_processor_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, state), sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(controller->set_processor_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_2.id, state), sushi_controller::ControlStatus::OK);
 }
 
 TEST_F(AudioGraphControllerTest, CreateTrack)
