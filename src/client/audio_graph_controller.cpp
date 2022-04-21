@@ -245,6 +245,7 @@ std::pair<ControlStatus, ProcessorState> AudioGraphControllerClient::get_process
     {
         state.parameters.emplace_back(parameter.parameter().parameter_id(), parameter.value());
     }
+    state.binary_data = response.binary_data();
 
     return std::pair<ControlStatus, ProcessorState>(to_ext(status), state);
 }
@@ -299,6 +300,7 @@ ControlStatus AudioGraphControllerClient::set_processor_state(int processor_id, 
         target->mutable_parameter()->set_parameter_id(parameter.first);
         target->set_value(parameter.second);
     }
+    request.mutable_state()->set_binary_data(state.binary_data);
 
     grpc::Status status = _stub.get()->SetProcessorState(&context, request, &response);
 
