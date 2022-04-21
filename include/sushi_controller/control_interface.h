@@ -1166,6 +1166,31 @@ protected:
     OscController() = default;
 };
 
+class SessionController
+{
+public:
+    virtual ~SessionController() = default;
+
+    /**
+     * @brief Save the entire sushi session.
+     * @return An std::pair<ControlStatus, std::string> string containing the Sushi session
+     *         in a serialized format if ControlStatus == OK, empty string otherwise.
+     */
+    virtual std::pair<ControlStatus, std::string> save_binary_session() const = 0;
+
+    /**
+     * @brief Restore the sushi session from a previously save session state.
+     *        This will clear all track and loaded plugins
+     * @param binary_session An std::string string containing the serialised Sushi session
+     * @return ControlStatus::OK if operation was successful.
+     */
+    virtual ControlStatus restore_binary_session(const std::string& binary_session) = 0;
+
+
+protected:
+    SessionController() = default;
+};
+
 class NotificationController
 {
 public:
@@ -1249,6 +1274,7 @@ protected:
                     AudioRoutingController* audio_routing_controller,
                     CvGateController* cv_gate_controller,
                     OscController* osc_controller,
+                    SessionController* session_controller,
                     NotificationController* notification_controller) :
                         _system_controller(system_controller),
                         _transport_controller(transport_controller),
@@ -1261,20 +1287,22 @@ protected:
                         _audio_routing_controller(audio_routing_controller),
                         _cv_gate_controller(cv_gate_controller),
                         _osc_controller(osc_controller),
+                        _session_controller(session_controller),
                         _notification_controller(notification_controller) {}
 
 private:
-    SystemController* _system_controller;
-    TransportController* _transport_controller;
-    TimingController* _timing_controller;
-    KeyboardController* _keyboard_controller;
-    AudioGraphController* _audio_graph_controller;
-    ProgramController* _program_controller;
-    ParameterController* _parameter_controller;
-    MidiController* _midi_controller;
+    SystemController*       _system_controller;
+    TransportController*    _transport_controller;
+    TimingController*       _timing_controller;
+    KeyboardController*     _keyboard_controller;
+    AudioGraphController*   _audio_graph_controller;
+    ProgramController*      _program_controller;
+    ParameterController*    _parameter_controller;
+    MidiController*         _midi_controller;
     AudioRoutingController* _audio_routing_controller;
-    CvGateController* _cv_gate_controller;
-    OscController* _osc_controller;
+    CvGateController*       _cv_gate_controller;
+    OscController*          _osc_controller;
+    SessionController*      _session_controller;
     NotificationController* _notification_controller;
 };
 

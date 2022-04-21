@@ -18,6 +18,7 @@ SushiControllerClient::SushiControllerClient(const std::string& address)
         &_audio_routing_controller_client,
         &_cv_gate_controller_client,
         &_osc_controller_client,
+        &_session_controller_client,
         &_notification_controller_client
     ),
     _system_controller_client(address),
@@ -31,6 +32,7 @@ SushiControllerClient::SushiControllerClient(const std::string& address)
     _audio_routing_controller_client(address),
     _cv_gate_controller_client(address),
     _osc_controller_client(address),
+    _session_controller_client(address),
     _notification_controller_client(address) {}
 
 std::shared_ptr<SushiController> CreateSushiController(const std::string& server_address)

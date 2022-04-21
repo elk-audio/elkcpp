@@ -78,6 +78,7 @@ set(COMPILATION_UNITS src/client/sushi_grpc_client.cpp
                       src/client/osc_controller.cpp
                       src/client/parameter_controller.cpp
                       src/client/program_controller.cpp
+                      src/client/session_controller.cpp
                       src/client/system_controller.cpp
                       src/client/timing_controller.cpp
                       src/client/transport_controller.cpp)
@@ -94,6 +95,7 @@ set(EXTRA_CLION_SOURCES ${PUBLIC_HEADER_FILES}
                         src/client/osc_controller.h
                         src/client/parameter_controller.h
                         src/client/program_controller.h
+                        src/client/session_controller.h
                         src/client/system_controller.h
                         src/client/timing_controller.h
                         src/client/transport_controller.h)

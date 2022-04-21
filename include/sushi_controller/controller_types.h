@@ -142,6 +142,7 @@ struct ProcessorState
     std::optional<bool> bypassed;
     std::vector<std::pair<int, float>> parameters;
     std::vector<std::pair<int, std::string>> properties;
+    std::string binary_data;
 };
 
 enum class MidiChannel
