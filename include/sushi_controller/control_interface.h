@@ -711,6 +711,22 @@ public:
     virtual std::pair<ControlStatus, std::vector<MidiPCConnection>> get_pc_input_connections_for_processor(int processor_id) = 0;
 
     /**
+     * @brief Get whether midi clock is enabled for a given midi output port
+     *
+     * @param port Id of the port to query
+     * @return If ControlStatus == Ok, then true if enabled, false if disabled
+     */
+    virtual std::pair<ControlStatus, bool> get_midi_clock_output_enabled(int port) const = 0;
+
+    /**
+     * @brief Enable or disable midi clock output for a given output port
+     * @param enabled true to enable, false to disable
+     * @param port Id of the port to set
+     * @return ControlStatus
+     */
+    virtual ControlStatus set_midi_clock_output_enabled(bool enabled, int port) = 0;
+
+    /**
      * @brief Connect keyboard input to a track
      *
      * @param connection_data

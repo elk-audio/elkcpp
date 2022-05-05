@@ -403,6 +403,41 @@ ControlStatus MidiControllerClient::disconnect_all_pc_from_processor(int process
     return to_ext(status);
 }
 
+std::pair<ControlStatus, bool> MidiControllerClient::get_midi_clock_output_enabled(int port) const
+{
+    sushi_rpc::GenericIntValue request;
+    sushi_rpc::GenericBoolValue response;
+    grpc::ClientContext context;
+
+    request.set_value(port);
+
+    grpc::Status status = _stub->GetMidiClockOutputEnabled(&context, request, &response);
+
+    if(!status.ok())
+    {
+        handle_error(status);
+    }
+    return {to_ext(status), response.value()};
+}
+
+ControlStatus MidiControllerClient::set_midi_clock_output_enabled(bool enabled, int port)
+{
+    sushi_rpc::MidiClockSetRequest request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_port(port);
+    request.set_enabled(enabled);
+
+    grpc::Status status = _stub->SetMidiClockOutputEnabled(&context, request, &response);
+
+    if(!status.ok())
+    {
+        handle_error(status);
+    }
+    return to_ext(status);
+}
+
 std::shared_ptr<MidiController> CreateMidiController(const std::string& address)
 {
     return std::make_unique<MidiControllerClient>(address);
