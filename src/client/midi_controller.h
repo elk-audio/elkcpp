@@ -14,42 +14,42 @@ public:
     MidiControllerClient(const std::string& address);
 
     /**
-     * @brief Get number of available midi input ports
+     * @brief Get number of available MIDI input ports
      *
      * @return std::pair<ControlStatus, int>
      */
     virtual std::pair<ControlStatus, int> get_input_ports() override;
 
     /**
-     * @brief Get number of available midi output ports
+     * @brief Get number of available MIDI output ports
      *
      * @return std::pair<ControlStatus, int>
      */
     virtual std::pair<ControlStatus, int> get_output_ports() override;
 
     /**
-     * @brief Get all midi keyboard input connections
+     * @brief Get all MIDI keyboard input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiKbdConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_input_connections() override;
 
     /**
-     * @brief Get all midi keyboard output connections
+     * @brief Get all MIDI keyboard output connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiKbdConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_output_connections() override;
 
     /**
-     * @brief Get all midi CC input connections
+     * @brief Get all MIDI CC input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiCCConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiCCConnection>> get_all_cc_input_connections() override;
 
     /**
-     * @brief Get all midi PC input input connections
+     * @brief Get all MIDI PC input input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiPCConnection>>
      */
