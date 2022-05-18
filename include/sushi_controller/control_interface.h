@@ -653,62 +653,78 @@ public:
     virtual ~MidiController() = default;
 
     /**
-     * @brief Get number of available midi input ports
+     * @brief Get number of available MIDI input ports
      *
      * @return std::pair<ControlStatus, int>
      */
     virtual std::pair<ControlStatus, int> get_input_ports() = 0;
 
     /**
-     * @brief Get number of available midi output ports
+     * @brief Get number of available MIDI output ports
      *
      * @return std::pair<ControlStatus, int>
      */
     virtual std::pair<ControlStatus, int> get_output_ports() = 0;
 
     /**
-     * @brief Get all midi keyboard input connections
+     * @brief Get all MIDI keyboard input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiKbdConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_input_connections() = 0;
 
     /**
-     * @brief Get all midi keyboard output connections
+     * @brief Get all MIDI keyboard output connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiKbdConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_output_connections() = 0;
 
     /**
-     * @brief Get all midi CC input connections
+     * @brief Get all MIDI Control Change input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiCCConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiCCConnection>> get_all_cc_input_connections() = 0;
 
     /**
-     * @brief Get all midi PC input input connections
+     * @brief Get all MIDI Program Change input input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiPCConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiPCConnection>> get_all_pc_input_connections() = 0;
 
     /**
-     * @brief Get the CC input connections for a processor
+     * @brief Get the Control Change input connections for a processor
      *
-     * @param processor_id The processor to get the CC input connections from
+     * @param processor_id The processor to get the Control Change input connections from
      * @return std::pair<ControlStatus, std::vector<MidiCCConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiCCConnection>> get_cc_input_connections_for_processor(int processor_id) = 0;
 
     /**
-     * @brief Get the PC input connections for a processor
+     * @brief Get the Program Change input connections for a processor
      *
-     * @param processor_id The processor to get the PC input connections from
+     * @param processor_id The processor to get the Program Change input connections from
      * @return std::pair<ControlStatus, std::vector<MidiPCConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiPCConnection>> get_pc_input_connections_for_processor(int processor_id) = 0;
+
+    /**
+     * @brief Get whether MIDI clock is enabled for a given MIDI output port
+     *
+     * @param port Id of the port to query
+     * @return If ControlStatus == Ok, then true if enabled, false if disabled
+     */
+    virtual std::pair<ControlStatus, bool> get_midi_clock_output_enabled(int port) const = 0;
+
+    /**
+     * @brief Enable or disable MIDI clock output for a given output port
+     * @param enabled true to enable, false to disable
+     * @param port Id of the port to set
+     * @return ControlStatus
+     */
+    virtual ControlStatus set_midi_clock_output_enabled(bool enabled, int port) = 0;
 
     /**
      * @brief Connect keyboard input to a track
@@ -727,7 +743,7 @@ public:
     virtual ControlStatus connect_kbd_output_from_track(MidiKbdConnection connection_data) = 0;
 
     /**
-     * @brief Connect CC messages to a parmeter
+     * @brief Connect Control Change messages to a parameter
      *
      * @param connection_data
      * @return ControlStatus
@@ -735,7 +751,7 @@ public:
     virtual ControlStatus connect_cc_to_parameter(MidiCCConnection connection_data) = 0;
 
     /**
-     * @brief Connect PC messages to a processor
+     * @brief Connect Program Change messages to a processor
      *
      * @param connection_data
      * @return ControlStatus
@@ -759,7 +775,7 @@ public:
     virtual ControlStatus disconnect_kbd_output(MidiKbdConnection connection_data) = 0;
 
     /**
-     * @brief Disconnect an existing CC connection
+     * @brief Disconnect an existing Control Change connection
      *
      * @param connection_data
      * @return ControlStatus
@@ -767,7 +783,7 @@ public:
     virtual ControlStatus disconnect_cc(MidiCCConnection connection_data) = 0;
 
     /**
-     * @brief Disconnect an existing PC connection
+     * @brief Disconnect an existing Program Change connection
      *
      * @param connection_data
      * @return ControlStatus
@@ -775,7 +791,7 @@ public:
     virtual ControlStatus disconnect_pc(MidiPCConnection connection_data) = 0;
 
     /**
-     * @brief Disconnect all CC connections from a processor
+     * @brief Disconnect all Control Change connections from a processor
      *
      * @param processor_id
      * @return ControlStatus
@@ -783,7 +799,7 @@ public:
     virtual ControlStatus disconnect_all_cc_from_processor(int processor_id) = 0;
 
     /**
-     * @brief Disconnect all PC connection from a processor
+     * @brief Disconnect all Program Change connection from a processor
      *
      * @param processor_id
      * @return ControlStatus

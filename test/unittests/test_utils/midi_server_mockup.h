@@ -21,6 +21,8 @@ namespace expected_results
     constexpr int MIDI_INPUT_PORTS = 6;
     constexpr int MIDI_OUTPUT_PORTS = 8;
 
+    constexpr int MIDI_CLOCK_ENABLED_PORT = 1;
+
     constexpr MidiKbdConnection KBD_CONNECTION = {1, MidiChannel::MIDI_CH_10, 5, true};
     const std::vector<MidiKbdConnection> KBD_CONNECTIONS = {KBD_CONNECTION, KBD_CONNECTION, KBD_CONNECTION, KBD_CONNECTION};
 
@@ -161,6 +163,28 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
     }
 
+    grpc::Status GetMidiClockOutputEnabled(grpc::ServerContext* /* context */,
+                                           const sushi_rpc::GenericIntValue* request,
+                                           sushi_rpc::GenericBoolValue* response)
+    {
+        response->set_value(request->value() == expected_results::MIDI_CLOCK_ENABLED_PORT);
+        return grpc::Status::OK;
+    }
+
+    grpc::Status SetMidiClockOutputEnabled(grpc::ServerContext* /* context */,
+                                           const sushi_rpc::MidiClockSetRequest* request,
+                                           sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->port() == expected_results::MIDI_CLOCK_ENABLED_PORT && request->enabled())
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
+        }
+    }
+
     grpc::Status ConnectKbdInputToTrack(grpc::ServerContext* /* context */,
                                         const sushi_rpc::MidiKbdConnection* request,
                                         sushi_rpc::GenericVoidValue* /* response */)
@@ -174,7 +198,7 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
         else
         {
-            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arugment doesn't match expected");
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
         }
     }
 
@@ -191,7 +215,7 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
         else
         {
-            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arugment doesn't match expected");
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
         }
     }
 
@@ -212,7 +236,7 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
         else
         {
-            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arugment doesn't match expected");
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
         }
     }
 
@@ -228,7 +252,7 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
         else
         {
-            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arugment doesn't match expected");
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
         }
     }
 
@@ -245,7 +269,7 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
         else
         {
-            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arugment doesn't match expected");
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
         }
     }
 
@@ -262,7 +286,7 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
         else
         {
-            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arugment doesn't match expected");
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
         }
     }
 
@@ -283,7 +307,7 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
         else
         {
-            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arugment doesn't match expected");
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
         }
     }
 
@@ -299,7 +323,7 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
         else
         {
-            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arugment doesn't match expected");
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
         }
     }
 
@@ -313,7 +337,7 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
         else
         {
-            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arugment doesn't match expected");
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
         }
     }
 
@@ -327,7 +351,7 @@ class MidiServiceMockup : public sushi_rpc::MidiController::Service
         }
         else
         {
-            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arugment doesn't match expected");
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Argument doesn't match expected");
         }
     }
 };

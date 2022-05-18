@@ -83,6 +83,19 @@ TEST_F(MidiControllerTest, GetPCInputConnectionsForProcessor)
     ASSERT_EQ(sushi_controller::expected_results::PC_CONNECTIONS, result.second);
 }
 
+TEST_F(MidiControllerTest, GetMidiClockOutputEnabled)
+{
+    auto result = controller->get_midi_clock_output_enabled(sushi_controller::expected_results::MIDI_CLOCK_ENABLED_PORT);
+    ASSERT_EQ(sushi_controller::ControlStatus::OK, result.first);
+    ASSERT_TRUE(result.second);
+}
+
+TEST_F(MidiControllerTest, SetMidiClockOutputEnabled)
+{
+    auto result = controller->set_midi_clock_output_enabled(true, sushi_controller::expected_results::MIDI_CLOCK_ENABLED_PORT);
+    ASSERT_EQ(sushi_controller::ControlStatus::OK, result);
+}
+
 TEST_F(MidiControllerTest, ConnectKbdInputToTrack)
 {
     auto result = controller->connect_kbd_input_to_track(sushi_controller::expected_results::KBD_CONNECTION);
