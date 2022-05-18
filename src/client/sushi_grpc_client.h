@@ -25,6 +25,7 @@
 #include "audio_routing_controller.h"
 #include "cv_gate_controller.h"
 #include "osc_controller.h"
+#include "session_controller.h"
 #include "notification_controller.h"
 
 namespace sushi_controller
@@ -52,6 +53,7 @@ private:
     AudioRoutingControllerClient _audio_routing_controller_client;
     CvGateControllerClient _cv_gate_controller_client;
     OscControllerClient _osc_controller_client;
+    SessionControllerClient _session_controller_client;
     NotificationControllerClient _notification_controller_client;
 };
 
