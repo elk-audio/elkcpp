@@ -378,13 +378,26 @@ public:
      * @brief Create a new multibus track in sushi
      *
      * @param name The name of the the new track
-     * @param output_busses The number of output busses to assign the new track
-     * @param input_busses The number of input busses to assign the new track
+     * @param buses The number of audio buses in the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_multibus_track(const std::string& name,
-                                                int output_busses,
-                                                int input_busses) = 0;
+    virtual ControlStatus create_multibus_track(const std::string& name, int buses) = 0;
+
+    /**
+     * @brief Create a pre master track in sushi
+     *
+     * @param name The name of the the new track
+     * @return ControlStatus
+     */
+    virtual ControlStatus create_master_pre_track(const std::string& name) = 0;
+
+    /**
+     * @brief Create a post master track in sushi to
+     *
+     * @param name The name of the the new track
+     * @return ControlStatus
+     */
+    virtual ControlStatus create_master_post_track(const std::string& name) = 0;
 
     /**
      * @brief Create a new processor on an existing track

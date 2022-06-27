@@ -16,8 +16,8 @@ namespace sushi_controller
 namespace expected_results
 {
     // Track test values
-    const TrackInfo TRACK_WITH_ID_1 = TrackInfo{ 1, "synth", "synth", 2, 2, 2, 2, {10, 11}};
-    const TrackInfo TRACK_WITH_ID_2 = TrackInfo{ 2, "guitar", "guitar", 2, 2, 2, 2, {10, 11}};
+    const TrackInfo TRACK_WITH_ID_1 = TrackInfo{ 1, "synth", "synth", 2, 1, TrackType::REGULAR, {10, 11}};
+    const TrackInfo TRACK_WITH_ID_2 = TrackInfo{ 2, "guitar", "guitar", 2, 1, TrackType::REGULAR, {10, 11}};
     const std::vector<TrackInfo> TRACK_INFO_LIST = {TRACK_WITH_ID_1, TRACK_WITH_ID_2};
 
     // Processor test values
@@ -31,7 +31,7 @@ namespace expected_results
     // Dynamic track values
     constexpr char DYN_TRACK_NAME[] = "New track";
     constexpr int DYN_TRACK_CHANNELS = 2;
-    constexpr int DYN_TRACK_OUTPUT_BUSSES = 10;
+    constexpr int DYN_TRACK_BUSSES = 10;
     constexpr int DYN_TRACK_INPUT_BUSSES = 4;
 
     // Dynamic processor values
@@ -58,10 +58,8 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
         track1->set_id(expected_results::TRACK_WITH_ID_1.id);
         track1->set_label(expected_results::TRACK_WITH_ID_1.label);
         track1->set_name(expected_results::TRACK_WITH_ID_1.name);
-        track1->set_input_channels(expected_results::TRACK_WITH_ID_1.input_channels);
-        track1->set_input_busses(expected_results::TRACK_WITH_ID_1.input_busses);
-        track1->set_output_channels(expected_results::TRACK_WITH_ID_1.output_channels);
-        track1->set_output_busses(expected_results::TRACK_WITH_ID_1.output_busses);
+        track1->set_channels(expected_results::TRACK_WITH_ID_1.channels);
+        track1->set_buses(expected_results::TRACK_WITH_ID_1.buses);
         for (auto& processor_id : expected_results::TRACK_WITH_ID_1.processors)
         {
             auto grpc_processor = track1->add_processors();
@@ -72,10 +70,8 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
         track2->set_id(expected_results::TRACK_WITH_ID_2.id);
         track2->set_label(expected_results::TRACK_WITH_ID_2.label);
         track2->set_name(expected_results::TRACK_WITH_ID_2.name);
-        track2->set_input_channels(expected_results::TRACK_WITH_ID_2.input_channels);
-        track2->set_input_busses(expected_results::TRACK_WITH_ID_2.input_busses);
-        track2->set_output_channels(expected_results::TRACK_WITH_ID_2.output_channels);
-        track2->set_output_busses(expected_results::TRACK_WITH_ID_2.output_busses);
+        track2->set_channels(expected_results::TRACK_WITH_ID_2.channels);
+        track2->set_buses(expected_results::TRACK_WITH_ID_2.buses);
         for (auto& processor_id : expected_results::TRACK_WITH_ID_2.processors)
         {
             auto grpc_processor = track2->add_processors();
@@ -109,10 +105,8 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
             response->set_id(expected_results::TRACK_WITH_ID_1.id);
             response->set_label(expected_results::TRACK_WITH_ID_1.label);
             response->set_name(expected_results::TRACK_WITH_ID_1.name);
-            response->set_input_channels(expected_results::TRACK_WITH_ID_1.input_channels);
-            response->set_input_busses(expected_results::TRACK_WITH_ID_1.input_busses);
-            response->set_output_channels(expected_results::TRACK_WITH_ID_1.output_channels);
-            response->set_output_busses(expected_results::TRACK_WITH_ID_1.output_busses);
+            response->set_channels(expected_results::TRACK_WITH_ID_1.channels);
+            response->set_buses(expected_results::TRACK_WITH_ID_1.buses);
             for (auto& processor_id : expected_results::TRACK_WITH_ID_1.processors)
             {
                 auto grpc_processor = response->add_processors();
@@ -273,8 +267,35 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
                                      sushi_rpc::GenericVoidValue* /* response */)
     {
         if (request->name() == expected_results::DYN_TRACK_NAME &&
-            request->output_busses() == expected_results::DYN_TRACK_OUTPUT_BUSSES &&
-            request->input_busses() == expected_results::DYN_TRACK_INPUT_BUSSES)
+            request->buses() == expected_results::DYN_TRACK_BUSSES)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arguments don't match expected test values");
+        }
+    }
+
+    grpc::Status CreateMasterPreTrack(grpc::ServerContext* /* context */,
+                                      const sushi_rpc::CreateMasterTrackRequest* request,
+                                      sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->name() == expected_results::DYN_TRACK_NAME)
+        {
+            return grpc::Status::OK;
+        }
+        else
+        {
+            return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, "Arguments don't match expected test values");
+        }
+    }
+
+    grpc::Status CreateMasterPostTrack(grpc::ServerContext* /* context */,
+                                       const sushi_rpc::CreateMasterTrackRequest* request,
+                                       sushi_rpc::GenericVoidValue* /* response */)
+    {
+        if (request->name() == expected_results::DYN_TRACK_NAME)
         {
             return grpc::Status::OK;
         }

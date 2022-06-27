@@ -67,10 +67,9 @@ std::pair<ControlStatus, std::vector<TrackInfo>> AudioGraphControllerClient::get
                 track.id(),
                 track.label(),
                 track.name(),
-                track.input_channels(),
-                track.input_busses(),
-                track.output_channels(),
-                track.output_busses(),
+                track.channels(),
+                track.buses(),
+                to_ext(track.type().type()),
                 processor_ids
             }
         );
@@ -118,10 +117,9 @@ std::pair<ControlStatus, TrackInfo> AudioGraphControllerClient::get_track_info(i
         response.id(),
         response.label(),
         response.name(),
-        response.input_channels(),
-        response.input_busses(),
-        response.output_channels(),
-        response.output_busses(),
+        response.channels(),
+        response.buses(),
+        to_ext(response.type().type()),
         processor_ids
     };
     return std::pair<ControlStatus, TrackInfo>(to_ext(status), output);
@@ -330,18 +328,50 @@ ControlStatus AudioGraphControllerClient::create_track(const std::string& name, 
 }
 
 ControlStatus AudioGraphControllerClient::create_multibus_track(const std::string& name,
-                                                                int output_busses,
-                                                                int input_busses)
+                                                                int buses)
 {
     sushi_rpc::CreateMultibusTrackRequest request;
     sushi_rpc::GenericVoidValue response;
     grpc::ClientContext context;
 
     request.set_name(name);
-    request.set_output_busses(output_busses);
-    request.set_input_busses(input_busses);
+    request.set_buses(buses);
 
-    grpc::Status status = _stub.get()->CreateMultibusTrack(&context, request, &response);
+    grpc::Status status = _stub->CreateMultibusTrack(&context, request, &response);
+
+    if(!status.ok())
+    {
+        handle_error(status);
+    }
+    return to_ext(status);
+}
+
+ControlStatus AudioGraphControllerClient::create_master_pre_track(const std::string& name)
+{
+    sushi_rpc::CreateMasterTrackRequest request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_name(name);
+
+    grpc::Status status = _stub->CreateMasterPreTrack(&context, request, &response);
+
+    if(!status.ok())
+    {
+        handle_error(status);
+    }
+    return to_ext(status);
+}
+
+ControlStatus AudioGraphControllerClient::create_master_post_track(const std::string& name)
+{
+    sushi_rpc::CreateMasterTrackRequest request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_name(name);
+
+    grpc::Status status = _stub->CreateMasterPostTrack(&context, request, &response);
 
     if(!status.ok())
     {
