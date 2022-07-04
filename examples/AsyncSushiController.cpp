@@ -9,9 +9,11 @@
  * @return int
  */
 
-void print_notification(int processor_id, int parameter_id, float value)
+void print_notification(int processor_id, int parameter_id, float normalized_value,
+                        float domain_value, const std::string& formatted_value)
 {
-    std::cout << "param_id " << parameter_id << " proc_id " << processor_id << " val " << value << std::endl;
+    std::cout << "param_id " << parameter_id << " proc_id " << processor_id << " val " << normalized_value
+        << ", " << domain_value << ", " << formatted_value << std::endl;
 }
 
 int main()

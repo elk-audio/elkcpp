@@ -57,7 +57,7 @@ public:
      *                  callback will not be called. If empty, the callback will be
      *                  called for all parameter changes.
      */
-    virtual void subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float value)> callback,
+    virtual void subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float normalized_value, float domain_value, const std::string& formatted_value)> callback,
                                                 const std::vector<std::pair<int,int>>& blocklist) override;
 
     /**

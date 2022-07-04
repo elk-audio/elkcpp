@@ -3,6 +3,7 @@
 
 #include <thread>
 #include <array>
+#include <tuple>
 
 #include <grpcpp/grpcpp.h>
 
@@ -38,7 +39,7 @@ namespace expected_results
     constexpr std::array<CpuTimings, 2> TIMING_UPDATES = {CpuTimings{1.0f,2.0f,3.0f}, CpuTimings{4.0f,5.0f,6.0f}};
     constexpr std::array<TrackUpdate, 2> TRACK_UPDATES = {TrackUpdate{TrackUpdate::Action::TRACK_ADDED, 1}, TrackUpdate{TrackUpdate::Action::TRACK_DELETED, 2}};
     constexpr std::array<ProcessorUpdate, 2> PROCESSOR_UPDATES = {ProcessorUpdate{ProcessorUpdate::Action::PROCESSOR_ADDED, 1, 10}, ProcessorUpdate{ProcessorUpdate::Action::PROCESSOR_DELETED, 2, 9}};
-    constexpr std::array<float, 3> PARAMETER_CHANGE_VALUES = {0.0f, 0.5f, 1.0f};
+    constexpr std::array<std::tuple<float,float,const char*>, 3> PARAMETER_CHANGE_VALUES = {{{0.0f, 0.0f, "0.0"}, {0.5f, 5.0f, "5.0"}, {1.0f, 10.0f, "10.0"}}};
     constexpr std::array<const char*, 2> PROPERTY_CHANGE_VALUES = {"value_1", "value_2"};
 
 } // namespace expected_results
@@ -134,7 +135,7 @@ class NotificationServiceMockup : public sushi_rpc::NotificationController::Serv
 
     grpc::Status SubscribeToParameterUpdates(grpc::ServerContext* /* context */,
                                              const sushi_rpc::ParameterNotificationBlocklist* request,
-                                             grpc::ServerWriter<sushi_rpc::ParameterValue>* response)
+                                             grpc::ServerWriter<sushi_rpc::ParameterUpdate>* response)
     {
         grpc::Status status;
         for (auto& parameter : request->parameters())
@@ -145,20 +146,26 @@ class NotificationServiceMockup : public sushi_rpc::NotificationController::Serv
                 status = grpc::Status::OK;
             }
         }
-        sushi_rpc::ParameterValue response_message;
+        sushi_rpc::ParameterUpdate response_message;
         response_message.mutable_parameter()->set_parameter_id(expected_results::PROCESSOR_WITH_ID_2.id);
         response_message.mutable_parameter()->set_processor_id(expected_results::PARAMETER_WITH_ID_2.id);
-        response_message.set_value(expected_results::PARAMETER_CHANGE_VALUES[0]);
+        response_message.set_normalized_value(std::get<0>(expected_results::PARAMETER_CHANGE_VALUES[0]));
+        response_message.set_domain_value(std::get<1>(expected_results::PARAMETER_CHANGE_VALUES[0]));
+        response_message.set_formatted_value(std::get<2>(expected_results::PARAMETER_CHANGE_VALUES[0]));
         if (response->Write(response_message) == false)
         {
             return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
         }
-        response_message.set_value(expected_results::PARAMETER_CHANGE_VALUES[1]);
+        response_message.set_normalized_value(std::get<0>(expected_results::PARAMETER_CHANGE_VALUES[1]));
+        response_message.set_domain_value(std::get<1>(expected_results::PARAMETER_CHANGE_VALUES[1]));
+        response_message.set_formatted_value(std::get<2>(expected_results::PARAMETER_CHANGE_VALUES[1]));
         if (response->Write(response_message) == false)
         {
             return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
         }
-        response_message.set_value(expected_results::PARAMETER_CHANGE_VALUES[2]);
+        response_message.set_normalized_value(std::get<0>(expected_results::PARAMETER_CHANGE_VALUES[2]));
+        response_message.set_domain_value(std::get<1>(expected_results::PARAMETER_CHANGE_VALUES[2]));
+        response_message.set_formatted_value(std::get<2>(expected_results::PARAMETER_CHANGE_VALUES[2]));
         if (response->Write(response_message) == false)
         {
             return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
