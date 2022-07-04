@@ -69,13 +69,24 @@ void NotificationControllerClient::subscribe_to_processor_changes(std::function<
 }
 
 void NotificationControllerClient::subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float value)> callback,
-                                                                  std::vector<std::pair<int, int>> parameter_blocklist)
+                                                                  const std::vector<std::pair<int, int>>& blocklist)
 {
     _active_call_datas.push_back(
         std::make_unique<SubscribeToParameterUpdatesCallData>(_stub.get(),
                                                               &_cq,
                                                               callback,
-                                                              parameter_blocklist)
+                                                              blocklist)
+    );
+}
+
+void NotificationControllerClient::subscribe_to_property_updates(std::function<void(int parameter_id, int processor_id, const std::string& value)> callback,
+                                                                 const std::vector<std::pair<int, int>>& blocklist)
+{
+    _active_call_datas.push_back(
+        std::make_unique<SubscribeToPropertyUpdatesCallData>(_stub.get(),
+                                                             &_cq,
+                                                             callback,
+                                                             blocklist)
     );
 }
 
