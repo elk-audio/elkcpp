@@ -150,19 +150,19 @@ TEST_F(AudioGraphControllerTest, CreateMultibusTrack)
 
 TEST_F(AudioGraphControllerTest, CreateMasterPreTrack)
 {
-    auto result = controller->create_master_pre_track(sushi_controller::expected_results::DYN_TRACK_NAME);
+    auto result = controller->create_pre_track(sushi_controller::expected_results::DYN_TRACK_NAME);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
 
-    result = controller->create_master_pre_track("Invalid name");
+    result = controller->create_pre_track("Invalid name");
     ASSERT_EQ(result, sushi_controller::ControlStatus::INVALID_ARGUMENTS);
 }
 
 TEST_F(AudioGraphControllerTest, CreateMasterPostTrack)
 {
-    auto result = controller->create_master_post_track(sushi_controller::expected_results::DYN_TRACK_NAME);
+    auto result = controller->create_post_track(sushi_controller::expected_results::DYN_TRACK_NAME);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
 
-    result = controller->create_master_post_track("Invalid name");
+    result = controller->create_post_track("Invalid name");
     ASSERT_EQ(result, sushi_controller::ControlStatus::INVALID_ARGUMENTS);
 }
 

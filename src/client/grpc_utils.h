@@ -210,10 +210,10 @@ inline sushi_controller::TrackType to_ext(const sushi_rpc::TrackType::Type& type
 {
     switch(type)
     {
-        case sushi_rpc::TrackType::REGULAR:     return sushi_controller::TrackType::REGULAR;
-        case sushi_rpc::TrackType::MASTER_PRE:  return sushi_controller::TrackType::MASTER_PRE;
-        case sushi_rpc::TrackType::MASTER_POST: return sushi_controller::TrackType::MASTER_POST;
-        default:                           return sushi_controller::TrackType::REGULAR;
+        case sushi_rpc::TrackType::REGULAR: return sushi_controller::TrackType::REGULAR;
+        case sushi_rpc::TrackType::PRE:     return sushi_controller::TrackType::PRE;
+        case sushi_rpc::TrackType::POST:    return sushi_controller::TrackType::POST;
+        default:                            return sushi_controller::TrackType::REGULAR;
     }
 }
 
@@ -221,10 +221,10 @@ inline sushi_rpc::TrackType::Type to_grpc(const sushi_controller::TrackType type
 {
     switch(type)
     {
-        case sushi_controller::TrackType::REGULAR:      return sushi_rpc::TrackType::REGULAR;
-        case sushi_controller::TrackType::MASTER_PRE:   return sushi_rpc::TrackType::MASTER_PRE;
-        case sushi_controller::TrackType::MASTER_POST:  return sushi_rpc::TrackType::MASTER_POST;
-        default:                              return sushi_rpc::TrackType::REGULAR;
+        case sushi_controller::TrackType::REGULAR:  return sushi_rpc::TrackType::REGULAR;
+        case sushi_controller::TrackType::PRE:      return sushi_rpc::TrackType::PRE;
+        case sushi_controller::TrackType::POST:     return sushi_rpc::TrackType::POST;
+        default:                                    return sushi_rpc::TrackType::REGULAR;
     }
 }
 

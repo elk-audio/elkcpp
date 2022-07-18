@@ -126,7 +126,7 @@ public:
      * @param name The name of the the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_master_pre_track(const std::string& name) override;
+    virtual ControlStatus create_pre_track(const std::string& name) override;
 
     /**
      * @brief Create a post master track in sushi to
@@ -134,7 +134,7 @@ public:
      * @param name The name of the the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_master_post_track(const std::string& name) override;
+    virtual ControlStatus create_post_track(const std::string& name) override;
 
     /**
      * @brief Create a new processor on an existing track

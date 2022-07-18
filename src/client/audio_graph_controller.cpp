@@ -346,15 +346,15 @@ ControlStatus AudioGraphControllerClient::create_multibus_track(const std::strin
     return to_ext(status);
 }
 
-ControlStatus AudioGraphControllerClient::create_master_pre_track(const std::string& name)
+ControlStatus AudioGraphControllerClient::create_pre_track(const std::string& name)
 {
-    sushi_rpc::CreateMasterTrackRequest request;
+    sushi_rpc::CreatePreTrackRequest request;
     sushi_rpc::GenericVoidValue response;
     grpc::ClientContext context;
 
     request.set_name(name);
 
-    grpc::Status status = _stub->CreateMasterPreTrack(&context, request, &response);
+    grpc::Status status = _stub->CreatePreTrack(&context, request, &response);
 
     if(!status.ok())
     {
@@ -363,15 +363,15 @@ ControlStatus AudioGraphControllerClient::create_master_pre_track(const std::str
     return to_ext(status);
 }
 
-ControlStatus AudioGraphControllerClient::create_master_post_track(const std::string& name)
+ControlStatus AudioGraphControllerClient::create_post_track(const std::string& name)
 {
-    sushi_rpc::CreateMasterTrackRequest request;
+    sushi_rpc::CreatePostTrackRequest request;
     sushi_rpc::GenericVoidValue response;
     grpc::ClientContext context;
 
     request.set_name(name);
 
-    grpc::Status status = _stub->CreateMasterPostTrack(&context, request, &response);
+    grpc::Status status = _stub->CreatePostTrack(&context, request, &response);
 
     if(!status.ok())
     {

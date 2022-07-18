@@ -277,9 +277,9 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
         }
     }
 
-    grpc::Status CreateMasterPreTrack(grpc::ServerContext* /* context */,
-                                      const sushi_rpc::CreateMasterTrackRequest* request,
-                                      sushi_rpc::GenericVoidValue* /* response */)
+    grpc::Status CreatePreTrack(grpc::ServerContext* /* context */,
+                                const sushi_rpc::CreatePreTrackRequest* request,
+                                sushi_rpc::GenericVoidValue* /* response */)
     {
         if (request->name() == expected_results::DYN_TRACK_NAME)
         {
@@ -291,9 +291,9 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
         }
     }
 
-    grpc::Status CreateMasterPostTrack(grpc::ServerContext* /* context */,
-                                       const sushi_rpc::CreateMasterTrackRequest* request,
-                                       sushi_rpc::GenericVoidValue* /* response */)
+    grpc::Status CreatePostTrack(grpc::ServerContext* /* context */,
+                                 const sushi_rpc::CreatePostTrackRequest* request,
+                                 sushi_rpc::GenericVoidValue* /* response */)
     {
         if (request->name() == expected_results::DYN_TRACK_NAME)
         {

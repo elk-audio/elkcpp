@@ -52,8 +52,8 @@ enum class PluginType
 enum class TrackType
 {
     REGULAR,
-    MASTER_PRE,
-    MASTER_POST
+    PRE,
+    POST
 };
 
 struct BuildInfo

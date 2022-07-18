@@ -389,7 +389,7 @@ public:
      * @param name The name of the the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_master_pre_track(const std::string& name) = 0;
+    virtual ControlStatus create_pre_track(const std::string& name) = 0;
 
     /**
      * @brief Create a post master track in sushi to
@@ -397,7 +397,7 @@ public:
      * @param name The name of the the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_master_post_track(const std::string& name) = 0;
+    virtual ControlStatus create_post_track(const std::string& name) = 0;
 
     /**
      * @brief Create a new processor on an existing track
