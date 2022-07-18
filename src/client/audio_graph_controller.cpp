@@ -266,7 +266,7 @@ ControlStatus AudioGraphControllerClient::set_processor_bypass_state(int process
     return to_ext(status);
 }
 
-ControlStatus AudioGraphControllerClient::set_processor_state(int processor_id, const ProcessorState state)
+ControlStatus AudioGraphControllerClient::set_processor_state(int processor_id, const ProcessorState& state)
 {
     sushi_rpc::ProcessorStateSetRequest request;
     sushi_rpc::GenericVoidValue response;

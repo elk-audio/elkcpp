@@ -19,14 +19,14 @@ public:
      * @return std::pair<ControlStatus, std::vector<ProcessorInfo>>
      * Vector containing the info of each processor
      */
-    virtual std::pair<ControlStatus, std::vector<ProcessorInfo>> get_all_processors() const override;
+    std::pair<ControlStatus, std::vector<ProcessorInfo>> get_all_processors() const override;
 
     /**
      * @brief Get the info for all avilable tracks
      *
      * @return std::vector<TrackInfo> Vector containing the info of each track
      */
-    virtual std::pair<ControlStatus, std::vector<TrackInfo>> get_all_tracks() const override;
+    std::pair<ControlStatus, std::vector<TrackInfo>> get_all_tracks() const override;
 
     /**
      * @brief Get the track id from a name
@@ -34,7 +34,7 @@ public:
      * @param track_name The name of the track to get the id from
      * @return std::pair<ControlStatus, int>
      */
-    virtual std::pair<ControlStatus, int> get_track_id(const std::string& track_name) const override;
+    std::pair<ControlStatus, int> get_track_id(const std::string& track_name) const override;
 
     /**
      * @brief Get the info from a track
@@ -42,7 +42,7 @@ public:
      * @param track_id The id of the track to get the info from
      * @return std::pair<ControlStatus, TrackInfo>
      */
-    virtual std::pair<ControlStatus, TrackInfo> get_track_info(int track_id) const override;
+    std::pair<ControlStatus, TrackInfo> get_track_info(int track_id) const override;
 
     /**
      * @brief Get the info of avilable processors on a track
@@ -50,7 +50,7 @@ public:
      * @param track_id The id of the track to get the available processors from
      * @return std::pair<ControlStatus, std::vector<ProcessorInfo>>
      */
-    virtual std::pair<ControlStatus, std::vector<ProcessorInfo>> get_track_processors(int track_id) const override;
+    std::pair<ControlStatus, std::vector<ProcessorInfo>> get_track_processors(int track_id) const override;
 
      /**
      * @brief Get the id of a processor from its name
@@ -58,7 +58,7 @@ public:
      * @param processor_name The name of the processor to get the id from
      * @return std::pair<ControlStatus, int>
      */
-    virtual std::pair<ControlStatus, int> get_processor_id(const std::string& processor_name) const override;
+    std::pair<ControlStatus, int> get_processor_id(const std::string& processor_name) const override;
 
     /**
      * @brief Get the info about a processor
@@ -66,7 +66,7 @@ public:
      * @param processor_id The id of the processor to get the info from
      * @return std::pair<ControlStatus, ProcessorInfo>
      */
-    virtual std::pair<ControlStatus, ProcessorInfo> get_processor_info(int processor_id) const override;
+    std::pair<ControlStatus, ProcessorInfo> get_processor_info(int processor_id) const override;
 
     /**
      * @brief Get the bypass state of a processor
@@ -74,7 +74,7 @@ public:
      * @param processor_id The id of the processor to get the bypass state from
      * @return std::pair<ControlStatus, bool>
      */
-    virtual std::pair<ControlStatus, bool> get_processor_bypass_state(int processor_id) const override;
+    std::pair<ControlStatus, bool> get_processor_bypass_state(int processor_id) const override;
 
     /**
      * @brief Get the full state of a processor
@@ -82,7 +82,7 @@ public:
      * @param processor_id The id of the processor to get the state from
      * @return std::pair<ControlStatus, ProcessorState>
      */
-    virtual std::pair<ControlStatus, ProcessorState> get_processor_state(int processor_id) const override;
+    std::pair<ControlStatus, ProcessorState> get_processor_state(int processor_id) const override;
 
     /**
      * @brief Set the bypass state of a processor
@@ -91,16 +91,16 @@ public:
      * @param bypass_enabled True to bypass processor, False to enable processor
      * @return ControlStatus
      */
-    virtual ControlStatus set_processor_bypass_state(int processor_id, bool bypass_enabled) override;
+    ControlStatus set_processor_bypass_state(int processor_id, bool bypass_enabled) override;
 
     /**
      * @brief Set the full or partial state of a processor
      *
      * @param processor_id The id of the processor to set the state of
-     * @param bypass_enabled A ProcessorState object that will be applied to the chosen processor
+     * @param state A ProcessorState object that will be applied to the chosen processor
      * @return ControlStatus
      */
-    virtual ControlStatus set_processor_state(int processor_id, const ProcessorState state) override;
+    ControlStatus set_processor_state(int processor_id, const ProcessorState& state) override;
 
     /**
      * @brief Create a new track in sushi
@@ -109,7 +109,7 @@ public:
      * @param channels The number of channels to assign the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_track(const std::string& name, int channels) override;
+    ControlStatus create_track(const std::string& name, int channels) override;
 
     /**
      * @brief Create a new multibus track in sushi
@@ -118,7 +118,7 @@ public:
      * @param buses The number of audio buses in the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_multibus_track(const std::string& name, int buses) override;
+    ControlStatus create_multibus_track(const std::string& name, int buses) override;
 
     /**
      * @brief Create a pre master track in sushi
@@ -126,7 +126,7 @@ public:
      * @param name The name of the the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_pre_track(const std::string& name) override;
+    ControlStatus create_pre_track(const std::string& name) override;
 
     /**
      * @brief Create a post master track in sushi to
@@ -134,7 +134,7 @@ public:
      * @param name The name of the the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_post_track(const std::string& name) override;
+    ControlStatus create_post_track(const std::string& name) override;
 
     /**
      * @brief Create a new processor on an existing track
@@ -151,13 +151,13 @@ public:
      * processing chain on the track. Overrides the `before_processor` parameter
      * @return ControlStatus
      */
-    virtual ControlStatus create_processor_on_track(const std::string& name,
-                                                    const std::string& uid,
-                                                    const std::string& path,
-                                                    PluginType type,
-                                                    int track_id,
-                                                    int before_processor,
-                                                    bool add_to_back) override;
+    ControlStatus create_processor_on_track(const std::string& name,
+                                            const std::string& uid,
+                                            const std::string& path,
+                                            PluginType type,
+                                            int track_id,
+                                            int before_processor,
+                                            bool add_to_back) override;
 
     /**
      * @brief Move an existing processor
@@ -171,11 +171,11 @@ public:
      * chain on the destination track. Overrides the `before_processor` parameter
      * @return ControlStatus
      */
-    virtual ControlStatus move_processor_on_track(int processor,
-                                                  int source_track,
-                                                  int destination_track,
-                                                  int before_processor,
-                                                  bool add_to_back) override;
+    ControlStatus move_processor_on_track(int processor,
+                                          int source_track,
+                                          int destination_track,
+                                          int before_processor,
+                                          bool add_to_back) override;
 
     /**
      * @brief Delete an existing processor from a track
@@ -184,8 +184,7 @@ public:
      * @param track The id of the track that has the processor
      * @return ControlStatus
      */
-    virtual ControlStatus delete_processor_from_track(int processor,
-                                                      int track) override;
+    ControlStatus delete_processor_from_track(int processor, int track) override;
 
     /**
      * @brief Delete a track an all processors on it
@@ -193,7 +192,7 @@ public:
      * @param track_id The id of the track to delete
      * @return ControlStatus
      */
-    virtual ControlStatus delete_track(int track_id) override;
+    ControlStatus delete_track(int track_id) override;
 
 private:
     std::unique_ptr<sushi_rpc::AudioGraphController::Stub> _stub;

@@ -360,10 +360,10 @@ public:
      * @brief Set the full or partial state of a processor
      *
      * @param processor_id The id of the processor to set the state of
-     * @param bypass_enabled A ProcessorState object that will be applied to the chosen processor
+     * @param state A ProcessorState object that will be applied to the chosen processor
      * @return ControlStatus
      */
-    virtual ControlStatus set_processor_state(int processor_id, const ProcessorState state) = 0;
+    virtual ControlStatus set_processor_state(int processor_id, const ProcessorState& state) = 0;
 
     /**
      * @brief Create a new track in sushi

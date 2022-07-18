@@ -19,7 +19,7 @@ public:
      * @param processor_id The id of the processor to get the current program id from
      * @return std::pair<ControlStatus, int>
      */
-    virtual std::pair<ControlStatus, int> get_processor_current_program(int processor_id) const  override;
+    std::pair<ControlStatus, int> get_processor_current_program(int processor_id) const  override;
 
     /**
      * @brief Get the name of the current program of a processor
@@ -27,7 +27,7 @@ public:
      * @param processor_id The id of the processor to get the current program name from
      * @return std::pair<ControlStatus, std::string>
      */
-    virtual std::pair<ControlStatus, std::string> get_processor_current_program_name(int processor_id) const  override;
+    std::pair<ControlStatus, std::string> get_processor_current_program_name(int processor_id) const  override;
 
     /**
      * @brief Get the name of a program from a processor
@@ -36,7 +36,7 @@ public:
      * @param program_id The id of program to get the name from
      * @return std::pair<ControlStatus, std::string>
      */
-    virtual std::pair<ControlStatus, std::string> get_processor_program_name(int processor_id,
+    std::pair<ControlStatus, std::string> get_processor_program_name(int processor_id,
                                                                              int program_id) const  override;
 
     /**
@@ -45,7 +45,7 @@ public:
      * @param processor_id The id of the processor to get the program names from
      * @return std::pair<ControlStatus, std::vector<std::string>>
      */
-    virtual std::pair<ControlStatus, std::vector<std::string>> get_processor_programs(int processor_id) const  override;
+    std::pair<ControlStatus, std::vector<std::string>> get_processor_programs(int processor_id) const  override;
 
     /**
      * @brief Set the current program of a processor
@@ -54,8 +54,7 @@ public:
      * @param program_id The id of the program to set on the processor
      * @return ControlStatus
      */
-    virtual ControlStatus set_processor_program(int processor_id,
-                                                int program_id) override;
+    ControlStatus set_processor_program(int processor_id, int program_id) override;
 
 private:
     std::unique_ptr<sushi_rpc::ProgramController::Stub> _stub;
