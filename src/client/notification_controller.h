@@ -50,14 +50,26 @@ public:
     virtual void subscribe_to_processor_changes(std::function<void(ProcessorUpdate update)> callback) override;
 
     /**
-     * @brief Subscribe callback to parameter change updates
+     * @brief Subscribe to parameter changes
      *
      * @param callback The callback to run when a parameter update is received
-     * @param parameter_blocklist Parameters to blocklist. The first int in the
-     * pair is a processor id. The second int is a processor id
+     * @param blocklist A vector of pairs of <parameter id, processor is> for which the
+     *                  callback will not be called. If empty, the callback will be
+     *                  called for all parameter changes.
      */
-    virtual void subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float value)> callback,
-                                                std::vector<std::pair<int,int>> parameter_blocklist) override;
+    virtual void subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float normalized_value, float domain_value, const std::string& formatted_value)> callback,
+                                                const std::vector<std::pair<int,int>>& blocklist) override;
+
+    /**
+     * @brief Subscribe to property changes
+     *
+     * @param callback The callback to run when a property update is received
+     * @param blocklist A vector of pairs of <property id, processor is> for which the
+     *                  callback will not be called. If empty, the callback will be
+     *                  called for all property changes.
+     */
+    virtual void subscribe_to_property_updates(std::function<void(int property_id, int processor_id, const std::string& value)> callback,
+                                               const std::vector<std::pair<int,int>>& blocklist) override;
 
     void notification_loop();
 
@@ -65,7 +77,6 @@ private:
     std::unique_ptr<sushi_rpc::NotificationController::Stub> _stub;
     grpc::CompletionQueue _cq;
     std::thread _worker;
-    std::atomic<bool> _running;
     std::vector<std::unique_ptr<CallData>> _active_call_datas;
 };
 

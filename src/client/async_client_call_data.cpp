@@ -7,7 +7,7 @@ void SubscribeToTransportChangesCallData::proceed()
 {
     if (_status == CREATE)
     {
-        // Format blacklist
+        // Format blocklist
         auto request = sushi_rpc::GenericVoidValue();
         // Request response from server
         _reader = _stub->AsyncSubscribeToTransportChanges(&_ctx, request, _cq, this);
@@ -65,7 +65,7 @@ void SubscribeToEngineCpuTimingUpdatesCallData::proceed()
 {
     if (_status == CREATE)
     {
-        // Format blacklist
+        // Format blocklist
         auto request = sushi_rpc::GenericVoidValue();
         // Request response from server
         _reader = _stub->AsyncSubscribeToEngineCpuTimingUpdates(&_ctx, request, _cq, this);
@@ -98,7 +98,7 @@ void SubscribeToTrackChangesCallData::proceed()
 {
     if (_status == CREATE)
     {
-        // Format blacklist
+        // Format blocklist
         auto request = sushi_rpc::GenericVoidValue();
         // Request response from server
         _reader = _stub->AsyncSubscribeToTrackChanges(&_ctx, request, _cq, this);
@@ -131,7 +131,7 @@ void SubscribeToProcessorChangesCallData::proceed()
 {
     if (_status == CREATE)
     {
-        // Format blacklist
+        // Format blocklist
         auto request = sushi_rpc::GenericVoidValue();
         // Request response from server
         _reader = _stub->AsyncSubscribeToProcessorChanges(&_ctx, request, _cq, this);
@@ -166,9 +166,9 @@ void SubscribeToParameterUpdatesCallData::proceed()
 {
     if (_status == CREATE)
     {
-        // Format blacklist
+        // Format blocklist
         auto request = sushi_rpc::ParameterNotificationBlocklist();
-        for (auto parameter : _parameter_blocklist)
+        for (const auto& parameter : _parameter_blocklist)
         {
             auto parameter_to_add = request.add_parameters();
             parameter_to_add->set_parameter_id(parameter.first);
@@ -192,8 +192,51 @@ void SubscribeToParameterUpdatesCallData::proceed()
         {
             // Call callback
             _callback(_response.parameter().processor_id(),
-                    _response.parameter().parameter_id(),
-                    _response.value());
+                      _response.parameter().parameter_id(),
+                      _response.normalized_value(),
+                      _response.domain_value(),
+                      _response.formatted_value());
+        }
+    }
+    else
+    {
+        assert(_status == FINISH);
+        _ctx.TryCancel();
+    }
+}
+
+void SubscribeToPropertyUpdatesCallData::proceed()
+{
+    if (_status == CREATE)
+    {
+        // Format blocklist
+        auto request = sushi_rpc::PropertyNotificationBlocklist();
+        for (const auto& property : _blocklist)
+        {
+            auto property_to_add = request.add_properties();
+            property_to_add->set_property_id(property.first);
+            property_to_add->set_processor_id(property.second);
+        }
+        // Request response from server
+        _reader = _stub->AsyncSubscribeToPropertyUpdates(&_ctx, request, _cq, this);
+        _status = PROCESS;
+    }
+    else if (_status == PROCESS)
+    {
+        // Read one notification
+        _reader->Read(&_response, this);
+
+        // first iteration returns an empty message so we discard it.
+        if (_first_iteration)
+        {
+            _first_iteration = false;
+        }
+        else
+        {
+            // Call callback
+            _callback(_response.property().processor_id(),
+                      _response.property().property_id(),
+                      _response.value());
         }
     }
     else

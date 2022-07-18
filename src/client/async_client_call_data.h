@@ -169,11 +169,11 @@ class SubscribeToParameterUpdatesCallData : public CallData
 public:
     SubscribeToParameterUpdatesCallData(sushi_rpc::NotificationController::Stub* stub,
                                         grpc::CompletionQueue* cq,
-                                        std::function<void(int parameter_id, int processor_id, float value)> callback,
-                                        std::vector<std::pair<int,int>> parameter_blacklist)
+                                        std::function<void(int parameter_id, int processor_id, float normalized_value, float domain_value, const std::string& formatted_value)> callback,
+                                        std::vector<std::pair<int,int>> parameter_blocklist)
     : CallData(stub, cq),
       _callback(callback),
-      _parameter_blocklist(parameter_blacklist),
+      _parameter_blocklist(parameter_blocklist),
       _first_iteration(true)
     {
         proceed();
@@ -182,11 +182,38 @@ public:
     void proceed() override;
 
 private:
-    std::unique_ptr<grpc::ClientAsyncReader<sushi_rpc::ParameterValue>> _reader;
-    sushi_rpc::ParameterValue _response;
+    std::unique_ptr<grpc::ClientAsyncReader<sushi_rpc::ParameterUpdate>> _reader;
+    sushi_rpc::ParameterUpdate _response;
 
-    std::function<void(int parameter_id, int processor_id, float value)> _callback;
+    std::function<void(int parameter_id, int processor_id, float normalized_value, float domain_value, const std::string& formatted_value)> _callback;
     std::vector<std::pair<int,int>> _parameter_blocklist;
+
+    bool _first_iteration;
+};
+
+class SubscribeToPropertyUpdatesCallData : public CallData
+{
+public:
+    SubscribeToPropertyUpdatesCallData(sushi_rpc::NotificationController::Stub* stub,
+                                        grpc::CompletionQueue* cq,
+                                        std::function<void(int property_id, int processor_id, const std::string& value)> callback,
+                                        std::vector<std::pair<int,int>> blocklist)
+    : CallData(stub, cq),
+      _callback(callback),
+      _blocklist(blocklist),
+      _first_iteration(true)
+    {
+        proceed();
+    }
+
+    void proceed() override;
+
+private:
+    std::unique_ptr<grpc::ClientAsyncReader<sushi_rpc::PropertyValue>> _reader;
+    sushi_rpc::PropertyValue _response;
+
+    std::function<void(int parameter_id, int processor_id, const std::string& value)> _callback;
+    std::vector<std::pair<int,int>> _blocklist;
 
     bool _first_iteration;
 };
