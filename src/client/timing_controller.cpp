@@ -26,7 +26,7 @@ std::pair<ControlStatus, bool> TimingControllerClient::get_timings_enabled() con
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, bool>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 ControlStatus TimingControllerClient::set_timings_enabled(bool enabled)
@@ -58,7 +58,7 @@ std::pair<ControlStatus, CpuTimings> TimingControllerClient::get_engine_timings(
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
+    return {to_ext(status),CpuTimings{response.average(),response.min(),response.max()}};
 }
 
 std::pair<ControlStatus, CpuTimings> TimingControllerClient::get_track_timings(int track_id) const
@@ -75,7 +75,7 @@ std::pair<ControlStatus, CpuTimings> TimingControllerClient::get_track_timings(i
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
+    return {to_ext(status),CpuTimings{response.average(),response.min(),response.max()}};
 }
 
 std::pair<ControlStatus, CpuTimings> TimingControllerClient::get_processor_timings(int processor_id) const
@@ -92,7 +92,7 @@ std::pair<ControlStatus, CpuTimings> TimingControllerClient::get_processor_timin
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
+    return {to_ext(status),CpuTimings{response.average(),response.min(),response.max()}};
 }
 
 ControlStatus TimingControllerClient::reset_all_timings()

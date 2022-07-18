@@ -39,7 +39,7 @@ std::pair<ControlStatus, std::vector<ProcessorInfo>> AudioGraphControllerClient:
             }
         );
     }
-    return std::pair<ControlStatus, std::vector<ProcessorInfo>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<TrackInfo>> AudioGraphControllerClient::get_all_tracks() const
@@ -74,7 +74,7 @@ std::pair<ControlStatus, std::vector<TrackInfo>> AudioGraphControllerClient::get
             }
         );
     }
-    return std::pair<ControlStatus, std::vector<TrackInfo>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, int> AudioGraphControllerClient::get_track_id(const std::string& track_name) const
@@ -91,7 +91,7 @@ std::pair<ControlStatus, int> AudioGraphControllerClient::get_track_id(const std
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.id());
+    return {to_ext(status), response.id()};
 }
 
 std::pair<ControlStatus, TrackInfo> AudioGraphControllerClient::get_track_info(int track_id) const
@@ -122,7 +122,7 @@ std::pair<ControlStatus, TrackInfo> AudioGraphControllerClient::get_track_info(i
         to_ext(response.type().type()),
         processor_ids
     };
-    return std::pair<ControlStatus, TrackInfo>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<ProcessorInfo>> AudioGraphControllerClient::get_track_processors(int track_id) const
@@ -150,7 +150,7 @@ std::pair<ControlStatus, std::vector<ProcessorInfo>> AudioGraphControllerClient:
             processor.program_count()
         });
     }
-    return std::pair<ControlStatus, std::vector<ProcessorInfo>>(to_ext(status),output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, int> AudioGraphControllerClient::get_processor_id(const std::string& processor_name) const
@@ -167,7 +167,7 @@ std::pair<ControlStatus, int> AudioGraphControllerClient::get_processor_id(const
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.id());
+    return {to_ext(status), response.id()};
 }
 
 std::pair<ControlStatus, ProcessorInfo> AudioGraphControllerClient::get_processor_info(int processor_id) const
@@ -190,7 +190,7 @@ std::pair<ControlStatus, ProcessorInfo> AudioGraphControllerClient::get_processo
     output.name = response.name();
     output.parameter_count = response.parameter_count();
     output.program_count = response.program_count();
-    return std::pair<ControlStatus, ProcessorInfo>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, bool> AudioGraphControllerClient::get_processor_bypass_state(int processor_id) const
@@ -207,7 +207,7 @@ std::pair<ControlStatus, bool> AudioGraphControllerClient::get_processor_bypass_
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, bool>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, ProcessorState> AudioGraphControllerClient::get_processor_state(int processor_id) const
@@ -245,7 +245,7 @@ std::pair<ControlStatus, ProcessorState> AudioGraphControllerClient::get_process
     }
     state.binary_data = response.binary_data();
 
-    return std::pair<ControlStatus, ProcessorState>(to_ext(status), state);
+    return {to_ext(status), state};
 }
 
 ControlStatus AudioGraphControllerClient::set_processor_bypass_state(int processor_id, bool bypass_enabled)

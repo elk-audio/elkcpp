@@ -15,210 +15,211 @@ AudioRoutingControllerClient::AudioRoutingControllerClient(const std::string& ad
         ))) {}
 
 
-    std::pair<ControlStatus, std::vector<AudioConnection>> AudioRoutingControllerClient::get_all_input_connections() const
+std::pair<ControlStatus, std::vector<AudioConnection>> AudioRoutingControllerClient::get_all_input_connections() const
+{
+    sushi_rpc::GenericVoidValue request;
+    sushi_rpc::AudioConnectionList response;
+    grpc::ClientContext context;
+
+    grpc::Status status = _stub->GetAllInputConnections(&context, request, &response);
+
+    std::vector<AudioConnection> output;
+    for (auto& response_connection : response.connections())
     {
-        sushi_rpc::GenericVoidValue request;
-        sushi_rpc::AudioConnectionList response;
-        grpc::ClientContext context;
-
-        grpc::Status status = _stub->GetAllInputConnections(&context, request, &response);
-
-        std::vector<AudioConnection> output;
-        for (auto& response_connection : response.connections())
-        {
-            output.push_back({response_connection.track().id(),
-                              response_connection.track_channel(),
-                              response_connection.engine_channel()});
-        }
-
-        if(!status.ok())
-        {
-            handle_error(status);
-        }
-        return std::pair<ControlStatus, std::vector<AudioConnection>>(to_ext(status), output);
+        output.push_back({response_connection.track().id(),
+                          response_connection.track_channel(),
+                          response_connection.engine_channel()});
     }
 
-    std::pair<ControlStatus, std::vector<AudioConnection>> AudioRoutingControllerClient::get_all_output_connections() const
+    if(!status.ok())
     {
-        sushi_rpc::GenericVoidValue request;
-        sushi_rpc::AudioConnectionList response;
-        grpc::ClientContext context;
+        handle_error(status);
+    }
+    return {to_ext(status), output};
+}
 
-        grpc::Status status = _stub->GetAllOutputConnections(&context, request, &response);
+std::pair<ControlStatus, std::vector<AudioConnection>> AudioRoutingControllerClient::get_all_output_connections() const
+{
+    sushi_rpc::GenericVoidValue request;
+    sushi_rpc::AudioConnectionList response;
+    grpc::ClientContext context;
 
-        std::vector<AudioConnection> output;
-        for (auto& response_connection : response.connections())
-        {
-            output.push_back({response_connection.track().id(),
-                              response_connection.track_channel(),
-                              response_connection.engine_channel()});
-        }
+    grpc::Status status = _stub->GetAllOutputConnections(&context, request, &response);
 
-        if(!status.ok())
-        {
-            handle_error(status);
-        }
-        return std::pair<ControlStatus, std::vector<AudioConnection>>(to_ext(status), output);
+    std::vector<AudioConnection> output;
+    for (auto& response_connection : response.connections())
+    {
+        output.push_back({response_connection.track().id(),
+                          response_connection.track_channel(),
+                          response_connection.engine_channel()});
     }
 
-    std::pair<ControlStatus, std::vector<AudioConnection>> AudioRoutingControllerClient::get_input_connections_for_track(int track_id) const
+    if(!status.ok())
     {
-        sushi_rpc::TrackIdentifier request;
-        sushi_rpc::AudioConnectionList response;
-        grpc::ClientContext context;
+        handle_error(status);
+    }
+    return {to_ext(status), output};
+}
 
-        request.set_id(track_id);
+std::pair<ControlStatus, std::vector<AudioConnection>> AudioRoutingControllerClient::get_input_connections_for_track(int track_id) const
+{
+    sushi_rpc::TrackIdentifier request;
+    sushi_rpc::AudioConnectionList response;
+    grpc::ClientContext context;
 
-        grpc::Status status = _stub->GetInputConnectionsForTrack(&context, request, &response);
+    request.set_id(track_id);
 
-        std::vector<AudioConnection> output;
-        for (auto& response_connection : response.connections())
-        {
-            output.push_back({response_connection.track().id(),
-                              response_connection.track_channel(),
-                              response_connection.engine_channel()});
-        }
+    grpc::Status status = _stub->GetInputConnectionsForTrack(&context, request, &response);
 
-        if(!status.ok())
-        {
-            handle_error(status);
-        }
-        return std::pair<ControlStatus, std::vector<AudioConnection>>(to_ext(status), output);
+    std::vector<AudioConnection> output;
+    for (auto& response_connection : response.connections())
+    {
+        output.push_back({response_connection.track().id(),
+                          response_connection.track_channel(),
+                          response_connection.engine_channel()});
     }
 
-    std::pair<ControlStatus, std::vector<AudioConnection>> AudioRoutingControllerClient::get_output_connections_for_track(int track_id) const
+    if(!status.ok())
     {
-        sushi_rpc::TrackIdentifier request;
-        sushi_rpc::AudioConnectionList response;
-        grpc::ClientContext context;
+        handle_error(status);
+    }
+    return {to_ext(status), output};
+}
 
-        request.set_id(track_id);
+std::pair<ControlStatus, std::vector<AudioConnection>> AudioRoutingControllerClient::get_output_connections_for_track(int track_id) const
+{
+    sushi_rpc::TrackIdentifier request;
+    sushi_rpc::AudioConnectionList response;
+    grpc::ClientContext context;
 
-        grpc::Status status = _stub->GetOutputConnectionsForTrack(&context, request, &response);
+    request.set_id(track_id);
 
-        std::vector<AudioConnection> output;
-        for (auto& response_connection : response.connections())
-        {
-            output.push_back({response_connection.track().id(),
-                              response_connection.track_channel(),
-                              response_connection.engine_channel()});
-        }
+    grpc::Status status = _stub->GetOutputConnectionsForTrack(&context, request, &response);
 
-        if(!status.ok())
-        {
-            handle_error(status);
-        }
-        return std::pair<ControlStatus, std::vector<AudioConnection>>(to_ext(status), output);
+    std::vector<AudioConnection> output;
+    for (auto& response_connection : response.connections())
+    {
+        output.push_back({response_connection.track().id(),
+                          response_connection.track_channel(),
+                          response_connection.engine_channel()});
     }
 
-    ControlStatus AudioRoutingControllerClient::connect_input_channel_to_track(int track_id, int track_channel, int input_channel)
+    if(!status.ok())
     {
-        sushi_rpc::AudioConnection request;
-        sushi_rpc::GenericVoidValue response;
-        grpc::ClientContext context;
-
-        request.mutable_track()->set_id(track_id);
-        request.set_track_channel(track_channel);
-        request.set_engine_channel(input_channel);
-
-        grpc::Status status = _stub->ConnectInputChannelToTrack(&context, request, &response);
-
-        if(!status.ok())
-        {
-            handle_error(status);
-        }
-        return to_ext(status);
+        handle_error(status);
     }
+    return {to_ext(status), output};
+}
 
-    ControlStatus AudioRoutingControllerClient::connect_output_channel_from_track(int track_id, int track_channel, int output_channel)
+ControlStatus AudioRoutingControllerClient::connect_input_channel_to_track(int track_id, int track_channel, int input_channel)
+{
+    sushi_rpc::AudioConnection request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.mutable_track()->set_id(track_id);
+    request.set_track_channel(track_channel);
+    request.set_engine_channel(input_channel);
+
+    grpc::Status status = _stub->ConnectInputChannelToTrack(&context, request, &response);
+
+    if(!status.ok())
     {
-        sushi_rpc::AudioConnection request;
-        sushi_rpc::GenericVoidValue response;
-        grpc::ClientContext context;
-
-        request.mutable_track()->set_id(track_id);
-        request.set_track_channel(track_channel);
-        request.set_engine_channel(output_channel);
-
-        grpc::Status status = _stub->ConnectOutputChannelFromTrack(&context, request, &response);
-
-        if(!status.ok())
-        {
-            handle_error(status);
-        }
-        return to_ext(status);
+        handle_error(status);
     }
+    return to_ext(status);
+}
 
-    ControlStatus AudioRoutingControllerClient::disconnect_input(int track_id, int track_channel, int input_channel)
+ControlStatus AudioRoutingControllerClient::connect_output_channel_from_track(int track_id, int track_channel, int output_channel)
+{
+    sushi_rpc::AudioConnection request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.mutable_track()->set_id(track_id);
+    request.set_track_channel(track_channel);
+    request.set_engine_channel(output_channel);
+
+    grpc::Status status = _stub->ConnectOutputChannelFromTrack(&context, request, &response);
+
+    if(!status.ok())
     {
-        sushi_rpc::AudioConnection request;
-        sushi_rpc::GenericVoidValue response;
-        grpc::ClientContext context;
-
-        request.mutable_track()->set_id(track_id);
-        request.set_track_channel(track_channel);
-        request.set_engine_channel(input_channel);
-
-        grpc::Status status = _stub->DisconnectInput(&context, request, &response);
-
-        if(!status.ok())
-        {
-            handle_error(status);
-        }
-        return to_ext(status);
+        handle_error(status);
     }
+    return to_ext(status);
+}
 
-    ControlStatus AudioRoutingControllerClient::disconnect_output(int track_id, int track_channel, int output_channel)
+ControlStatus AudioRoutingControllerClient::disconnect_input(int track_id, int track_channel, int input_channel)
+{
+    sushi_rpc::AudioConnection request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.mutable_track()->set_id(track_id);
+    request.set_track_channel(track_channel);
+    request.set_engine_channel(input_channel);
+
+    grpc::Status status = _stub->DisconnectInput(&context, request, &response);
+
+    if(!status.ok())
     {
-        sushi_rpc::AudioConnection request;
-        sushi_rpc::GenericVoidValue response;
-        grpc::ClientContext context;
-
-        request.mutable_track()->set_id(track_id);
-        request.set_track_channel(track_channel);
-        request.set_engine_channel(output_channel);
-
-        grpc::Status status = _stub->DisconnectOutput(&context, request, &response);
-
-        if(!status.ok())
-        {
-            handle_error(status);
-        }
-        return to_ext(status);
+        handle_error(status);
     }
+    return to_ext(status);
+}
 
-    ControlStatus AudioRoutingControllerClient::disconnect_all_inputs_from_track(int track_id)
+ControlStatus AudioRoutingControllerClient::disconnect_output(int track_id, int track_channel, int output_channel)
+{
+    sushi_rpc::AudioConnection request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.mutable_track()->set_id(track_id);
+    request.set_track_channel(track_channel);
+    request.set_engine_channel(output_channel);
+
+    grpc::Status status = _stub->DisconnectOutput(&context, request, &response);
+
+    if(!status.ok())
     {
-        sushi_rpc::TrackIdentifier request;
-        sushi_rpc::GenericVoidValue response;
-        grpc::ClientContext context;
-
-        request.set_id(track_id);
-
-        grpc::Status status = _stub->DisconnectAllInputsFromTrack(&context, request, &response);
-
-        if(!status.ok())
-        {
-            handle_error(status);
-        }
-        return to_ext(status);
+        handle_error(status);
     }
+    return to_ext(status);
+}
 
-    ControlStatus AudioRoutingControllerClient::disconnect_all_outputs_from_track(int track_id)
+ControlStatus AudioRoutingControllerClient::disconnect_all_inputs_from_track(int track_id)
+{
+    sushi_rpc::TrackIdentifier request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_id(track_id);
+
+    grpc::Status status = _stub->DisconnectAllInputsFromTrack(&context, request, &response);
+
+    if(!status.ok())
     {
-        sushi_rpc::TrackIdentifier request;
-        sushi_rpc::GenericVoidValue response;
-        grpc::ClientContext context;
+        handle_error(status);
+    }
+    return to_ext(status);
+}
 
-        request.set_id(track_id);
+ControlStatus AudioRoutingControllerClient::disconnect_all_outputs_from_track(int track_id)
+{
+    sushi_rpc::TrackIdentifier request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
 
-        grpc::Status status = _stub->DisconnectAllOutputsFromTrack(&context, request, &response);
+    request.set_id(track_id);
 
-        if(!status.ok())
-        {
-            handle_error(status);
-        }
-        return to_ext(status);    }
+    grpc::Status status = _stub->DisconnectAllOutputsFromTrack(&context, request, &response);
+
+    if(!status.ok())
+    {
+        handle_error(status);
+    }
+    return to_ext(status);
+}
 
 std::shared_ptr<AudioRoutingController> CreateAudioRoutingController(const std::string& address)
 {

@@ -27,7 +27,7 @@ std::pair<ControlStatus, int> MidiControllerClient::get_input_ports()
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, int> MidiControllerClient::get_output_ports()
@@ -42,7 +42,7 @@ std::pair<ControlStatus, int> MidiControllerClient::get_output_ports()
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, std::vector<MidiKbdConnection>> MidiControllerClient::get_all_kbd_input_connections()
@@ -67,7 +67,7 @@ std::pair<ControlStatus, std::vector<MidiKbdConnection>> MidiControllerClient::g
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiKbdConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<MidiKbdConnection>> MidiControllerClient::get_all_kbd_output_connections()
@@ -92,7 +92,7 @@ std::pair<ControlStatus, std::vector<MidiKbdConnection>> MidiControllerClient::g
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiKbdConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<MidiCCConnection>> MidiControllerClient::get_all_cc_input_connections()
@@ -121,7 +121,7 @@ std::pair<ControlStatus, std::vector<MidiCCConnection>> MidiControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiCCConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<MidiPCConnection>> MidiControllerClient::get_all_pc_input_connections()
@@ -145,7 +145,7 @@ std::pair<ControlStatus, std::vector<MidiPCConnection>> MidiControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiPCConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<MidiCCConnection>> MidiControllerClient::get_cc_input_connections_for_processor(int processor_id)
@@ -175,7 +175,7 @@ std::pair<ControlStatus, std::vector<MidiCCConnection>> MidiControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiCCConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<MidiPCConnection>> MidiControllerClient::get_pc_input_connections_for_processor(int processor_id)
@@ -200,7 +200,7 @@ std::pair<ControlStatus, std::vector<MidiPCConnection>> MidiControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiPCConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 ControlStatus MidiControllerClient::connect_kbd_input_to_track(MidiKbdConnection connection_data)

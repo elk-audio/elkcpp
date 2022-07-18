@@ -28,7 +28,7 @@ std::pair<ControlStatus, int> ProgramControllerClient::get_processor_current_pro
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.program());
+    return {to_ext(status), response.program()};
 }
 
 std::pair<ControlStatus, std::string> ProgramControllerClient::get_processor_current_program_name(int processor_id) const
@@ -45,7 +45,7 @@ std::pair<ControlStatus, std::string> ProgramControllerClient::get_processor_cur
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, std::string> ProgramControllerClient::get_processor_program_name(int processor_id, int program_id) const
@@ -63,7 +63,7 @@ std::pair<ControlStatus, std::string> ProgramControllerClient::get_processor_pro
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, std::vector<std::string>> ProgramControllerClient::get_processor_programs(int processor_id) const
@@ -85,7 +85,7 @@ std::pair<ControlStatus, std::vector<std::string>> ProgramControllerClient::get_
     {
         output.push_back(program.name());
     }
-    return std::pair<ControlStatus, std::vector<std::string>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 ControlStatus ProgramControllerClient::set_processor_program(int processor_id, int program_id)

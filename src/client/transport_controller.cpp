@@ -26,7 +26,7 @@ std::pair<ControlStatus, float> TransportControllerClient::get_samplerate() cons
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, float>(to_ext(status),response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, PlayingMode> TransportControllerClient::get_playing_mode() const
@@ -41,7 +41,7 @@ std::pair<ControlStatus, PlayingMode> TransportControllerClient::get_playing_mod
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, PlayingMode>(to_ext(status), to_ext(response.mode()));
+    return {to_ext(status), to_ext(response.mode())};
 }
 
 ControlStatus TransportControllerClient::set_playing_mode(PlayingMode playing_mode)
@@ -73,7 +73,7 @@ std::pair<ControlStatus, SyncMode> TransportControllerClient::get_sync_mode() co
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, SyncMode>(to_ext(status), to_ext(response.mode()));
+    return {to_ext(status), to_ext(response.mode())};
 }
 
 ControlStatus TransportControllerClient::set_sync_mode(SyncMode mode)
@@ -105,7 +105,7 @@ std::pair<ControlStatus, float> TransportControllerClient::get_tempo() const
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, float>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 ControlStatus TransportControllerClient::set_tempo(float tempo)
@@ -137,7 +137,7 @@ std::pair<ControlStatus, TimeSignature> TransportControllerClient::get_time_sign
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, TimeSignature>(to_ext(status), TimeSignature{response.numerator(), response.denominator()});
+    return {to_ext(status), TimeSignature{response.numerator(), response.denominator()}};
 }
 
 ControlStatus TransportControllerClient::set_time_signature(TimeSignature time_signature)

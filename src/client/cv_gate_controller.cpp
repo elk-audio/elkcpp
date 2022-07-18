@@ -26,7 +26,7 @@ std::pair<ControlStatus, int> CvGateControllerClient::get_cv_input_channel_count
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, int> CvGateControllerClient::get_cv_output_channel_count() const
@@ -41,7 +41,7 @@ std::pair<ControlStatus, int> CvGateControllerClient::get_cv_output_channel_coun
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, std::vector<CvConnection>> CvGateControllerClient::get_all_cv_input_connections() const
@@ -64,7 +64,7 @@ std::pair<ControlStatus, std::vector<CvConnection>> CvGateControllerClient::get_
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<CvConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<CvConnection>> CvGateControllerClient::get_all_cv_output_connections() const
@@ -87,7 +87,7 @@ std::pair<ControlStatus, std::vector<CvConnection>> CvGateControllerClient::get_
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<CvConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<GateConnection>> CvGateControllerClient::get_all_gate_input_connections() const
@@ -111,7 +111,7 @@ std::pair<ControlStatus, std::vector<GateConnection>> CvGateControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<GateConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<GateConnection>> CvGateControllerClient::get_all_gate_output_connections() const
@@ -135,7 +135,7 @@ std::pair<ControlStatus, std::vector<GateConnection>> CvGateControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<GateConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<CvConnection>> CvGateControllerClient::get_cv_input_connections_for_processor(int processor_id) const
@@ -160,7 +160,7 @@ std::pair<ControlStatus, std::vector<CvConnection>> CvGateControllerClient::get_
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<CvConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<CvConnection>> CvGateControllerClient::get_cv_output_connections_for_processor(int processor_id) const
@@ -185,7 +185,7 @@ std::pair<ControlStatus, std::vector<CvConnection>> CvGateControllerClient::get_
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<CvConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<GateConnection>> CvGateControllerClient::get_gate_input_connections_for_processor(int processor_id) const
@@ -211,7 +211,7 @@ std::pair<ControlStatus, std::vector<GateConnection>> CvGateControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<GateConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<GateConnection>> CvGateControllerClient::get_gate_output_connections_for_processor(int processor_id) const
@@ -237,7 +237,7 @@ std::pair<ControlStatus, std::vector<GateConnection>> CvGateControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<GateConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 ControlStatus CvGateControllerClient::connect_cv_input_to_parameter(int processor_id, int parameter_id, int cv_input_id)

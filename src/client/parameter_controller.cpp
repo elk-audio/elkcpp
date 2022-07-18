@@ -56,7 +56,7 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> ParameterControllerClient::
             }
         );
     }
-    return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<ParameterInfo>> ParameterControllerClient::get_processor_parameters(int processor_id) const
@@ -89,7 +89,7 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> ParameterControllerClient::
             }
         );
     }
-    return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, int> ParameterControllerClient::get_parameter_id(int processor_id, const std::string& parameter) const
@@ -107,7 +107,7 @@ std::pair<ControlStatus, int> ParameterControllerClient::get_parameter_id(int pr
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.parameter_id());
+    return {to_ext(status), response.parameter_id()};
 }
 
 std::pair<ControlStatus, ParameterInfo> ParameterControllerClient::get_parameter_info(int processor_id, int parameter_id) const
@@ -135,7 +135,7 @@ std::pair<ControlStatus, ParameterInfo> ParameterControllerClient::get_parameter
         response.min_domain_value(),
         response.max_domain_value()
     };
-    return std::pair<ControlStatus, ParameterInfo>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, float> ParameterControllerClient::get_parameter_value(int processor_id, int parameter_id) const
@@ -153,7 +153,7 @@ std::pair<ControlStatus, float> ParameterControllerClient::get_parameter_value(i
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, float>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, float> ParameterControllerClient::get_parameter_value_in_domain(int processor_id, int parameter_id) const
@@ -171,7 +171,7 @@ std::pair<ControlStatus, float> ParameterControllerClient::get_parameter_value_i
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, float>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, std::string> ParameterControllerClient::get_parameter_value_as_string(int processor_id, int parameter_id) const
@@ -189,7 +189,7 @@ std::pair<ControlStatus, std::string> ParameterControllerClient::get_parameter_v
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 ControlStatus ParameterControllerClient::set_parameter_value(int processor_id, int parameter_id, float value)
@@ -236,7 +236,7 @@ std::pair<ControlStatus, std::vector<PropertyInfo>> ParameterControllerClient::g
                 }
         );
     }
-    return std::pair<ControlStatus, std::vector<PropertyInfo>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<PropertyInfo>> ParameterControllerClient::get_processor_properties(int processor_id) const
@@ -264,7 +264,7 @@ std::pair<ControlStatus, std::vector<PropertyInfo>> ParameterControllerClient::g
                 }
         );
     }
-    return std::pair<ControlStatus, std::vector<PropertyInfo>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, int> ParameterControllerClient::get_property_id(int processor_id, const std::string& property_name) const
@@ -282,7 +282,7 @@ std::pair<ControlStatus, int> ParameterControllerClient::get_property_id(int pro
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.property_id());
+    return {to_ext(status), response.property_id()};
 }
 
 std::pair<ControlStatus, PropertyInfo> ParameterControllerClient::get_property_info(int processor_id, int property_id) const
@@ -305,7 +305,7 @@ std::pair<ControlStatus, PropertyInfo> ParameterControllerClient::get_property_i
             response.name(),
             response.label(),
     };
-    return std::pair<ControlStatus, PropertyInfo>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::string> ParameterControllerClient::get_property_value(int processor_id, int property_id) const
@@ -323,7 +323,7 @@ std::pair<ControlStatus, std::string> ParameterControllerClient::get_property_va
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 ControlStatus ParameterControllerClient::set_property_value(int processor_id, int property_id, std::string value)
