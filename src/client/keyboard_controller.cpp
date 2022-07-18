@@ -25,7 +25,7 @@ ControlStatus KeyboardControllerClient::send_note_on(int track_id, int channel, 
     request.set_note(note);
     request.set_velocity(velocity);
 
-    grpc::Status status = _stub.get()->SendNoteOn(&context, request, &response);
+    grpc::Status status = _stub->SendNoteOn(&context, request, &response);
 
     if(!status.ok())
     {
@@ -45,7 +45,7 @@ ControlStatus KeyboardControllerClient::send_note_off(int track_id, int channel,
     request.set_note(note);
     request.set_velocity(velocity);
 
-    grpc::Status status = _stub.get()->SendNoteOff(&context, request, &response);
+    grpc::Status status = _stub->SendNoteOff(&context, request, &response);
 
     if(!status.ok())
     {
@@ -65,7 +65,7 @@ ControlStatus KeyboardControllerClient::send_note_aftertouch(int track_id, int c
     request.set_note(note);
     request.set_value(value);
 
-    grpc::Status status = _stub.get()->SendNoteAftertouch(&context, request, &response);
+    grpc::Status status = _stub->SendNoteAftertouch(&context, request, &response);
 
     if(!status.ok())
     {
@@ -84,7 +84,7 @@ ControlStatus KeyboardControllerClient::send_aftertouch(int track_id, int channe
     request.set_channel(channel);
     request.set_value(value);
 
-    grpc::Status status = _stub.get()->SendAftertouch(&context, request, &response);
+    grpc::Status status = _stub->SendAftertouch(&context, request, &response);
 
     if(!status.ok())
     {
@@ -103,7 +103,7 @@ ControlStatus KeyboardControllerClient::send_pitch_bend(int track_id, int channe
     request.set_channel(channel);
     request.set_value(value);
 
-    grpc::Status status = _stub.get()->SendPitchBend(&context, request, &response);
+    grpc::Status status = _stub->SendPitchBend(&context, request, &response);
 
     if(!status.ok())
     {
@@ -122,7 +122,7 @@ ControlStatus KeyboardControllerClient::send_modulation(int track_id, int channe
     request.set_channel(channel);
     request.set_value(value);
 
-    grpc::Status status = _stub.get()->SendModulation(&context, request, &response);
+    grpc::Status status = _stub->SendModulation(&context, request, &response);
 
     if(!status.ok())
     {

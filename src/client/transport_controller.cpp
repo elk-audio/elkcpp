@@ -20,7 +20,7 @@ std::pair<ControlStatus, float> TransportControllerClient::get_samplerate() cons
     sushi_rpc::GenericFloatValue response;
     grpc::ClientContext context;
 
-    grpc::Status status = _stub.get()->GetSamplerate(&context, request, &response);
+    grpc::Status status = _stub->GetSamplerate(&context, request, &response);
 
     if (!status.ok())
     {
@@ -35,7 +35,7 @@ std::pair<ControlStatus, PlayingMode> TransportControllerClient::get_playing_mod
     sushi_rpc::PlayingMode response;
     grpc::ClientContext context;
 
-    grpc::Status status = _stub.get()->GetPlayingMode(&context, request, &response);
+    grpc::Status status = _stub->GetPlayingMode(&context, request, &response);
 
     if (!status.ok())
     {
@@ -52,7 +52,7 @@ ControlStatus TransportControllerClient::set_playing_mode(PlayingMode playing_mo
 
     request.set_mode(to_grpc(playing_mode));
 
-    grpc::Status status = _stub.get()->SetPlayingMode(&context, request, &response);
+    grpc::Status status = _stub->SetPlayingMode(&context, request, &response);
 
     if (!status.ok())
     {
@@ -67,7 +67,7 @@ std::pair<ControlStatus, SyncMode> TransportControllerClient::get_sync_mode() co
     sushi_rpc::SyncMode response;
     grpc::ClientContext context;
 
-    grpc::Status status = _stub.get()->GetSyncMode(&context, request, &response);
+    grpc::Status status = _stub->GetSyncMode(&context, request, &response);
 
     if (!status.ok())
     {
@@ -84,7 +84,7 @@ ControlStatus TransportControllerClient::set_sync_mode(SyncMode mode)
 
     request.set_mode(to_grpc(mode));
 
-    grpc::Status status = _stub.get()->SetSyncMode(&context, request, &response);
+    grpc::Status status = _stub->SetSyncMode(&context, request, &response);
 
     if (!status.ok())
     {
@@ -99,7 +99,7 @@ std::pair<ControlStatus, float> TransportControllerClient::get_tempo() const
     sushi_rpc::GenericFloatValue response;
     grpc::ClientContext context;
 
-    grpc::Status status = _stub.get()->GetTempo(&context, request, &response);
+    grpc::Status status = _stub->GetTempo(&context, request, &response);
 
     if (!status.ok())
     {
@@ -116,7 +116,7 @@ ControlStatus TransportControllerClient::set_tempo(float tempo)
 
     request.set_value(tempo);
 
-    grpc::Status status = _stub.get()->SetTempo(&context, request, &response);
+    grpc::Status status = _stub->SetTempo(&context, request, &response);
 
     if (!status.ok())
     {
@@ -131,7 +131,7 @@ std::pair<ControlStatus, TimeSignature> TransportControllerClient::get_time_sign
     sushi_rpc::TimeSignature response;
     grpc::ClientContext context;
 
-    grpc::Status status = _stub.get()->GetTimeSignature(&context, request, &response);
+    grpc::Status status = _stub->GetTimeSignature(&context, request, &response);
 
     if (!status.ok())
     {
@@ -149,7 +149,7 @@ ControlStatus TransportControllerClient::set_time_signature(TimeSignature time_s
     request.set_numerator(time_signature.numerator);
     request.set_denominator(time_signature.denominator);
 
-    grpc::Status status = _stub.get()->SetTimeSignature(&context, request, &response);
+    grpc::Status status = _stub->SetTimeSignature(&context, request, &response);
 
     if (!status.ok())
     {

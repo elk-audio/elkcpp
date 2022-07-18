@@ -20,7 +20,7 @@ std::pair<ControlStatus, std::vector<ProcessorInfo>> AudioGraphControllerClient:
     sushi_rpc::ProcessorInfoList response;
     grpc::ClientContext context;
 
-    grpc::Status status = _stub.get()->GetAllProcessors(&context, request, &response);
+    grpc::Status status = _stub->GetAllProcessors(&context, request, &response);
 
     if(!status.ok())
     {
@@ -48,7 +48,7 @@ std::pair<ControlStatus, std::vector<TrackInfo>> AudioGraphControllerClient::get
     sushi_rpc::TrackInfoList response;
     grpc::ClientContext context;
 
-    grpc::Status status = _stub.get()->GetAllTracks(&context, request, &response);
+    grpc::Status status = _stub->GetAllTracks(&context, request, &response);
 
     if(!status.ok())
     {
@@ -85,7 +85,7 @@ std::pair<ControlStatus, int> AudioGraphControllerClient::get_track_id(const std
 
     request.set_value(track_name);
 
-    grpc::Status status = _stub.get()->GetTrackId(&context, request, &response);
+    grpc::Status status = _stub->GetTrackId(&context, request, &response);
 
     if(!status.ok())
     {
@@ -102,7 +102,7 @@ std::pair<ControlStatus, TrackInfo> AudioGraphControllerClient::get_track_info(i
 
     request.set_id(track_id);
 
-    grpc::Status status = _stub.get()->GetTrackInfo(&context, request, &response);
+    grpc::Status status = _stub->GetTrackInfo(&context, request, &response);
 
     if(!status.ok())
     {
@@ -133,7 +133,7 @@ std::pair<ControlStatus, std::vector<ProcessorInfo>> AudioGraphControllerClient:
 
     request.set_id(track_id);
 
-    grpc::Status status = _stub.get()->GetTrackProcessors(&context, request, &response);
+    grpc::Status status = _stub->GetTrackProcessors(&context, request, &response);
 
     if(!status.ok())
     {
@@ -161,7 +161,7 @@ std::pair<ControlStatus, int> AudioGraphControllerClient::get_processor_id(const
 
     request.set_value(processor_name);
 
-    grpc::Status status = _stub.get()->GetProcessorId(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorId(&context, request, &response);
 
     if (!status.ok())
     {
@@ -178,7 +178,7 @@ std::pair<ControlStatus, ProcessorInfo> AudioGraphControllerClient::get_processo
 
     request.set_id(processor_id);
 
-    grpc::Status status = _stub.get()->GetProcessorInfo(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorInfo(&context, request, &response);
 
     if(!status.ok())
     {
@@ -201,7 +201,7 @@ std::pair<ControlStatus, bool> AudioGraphControllerClient::get_processor_bypass_
 
     request.set_id(processor_id);
 
-    grpc::Status status = _stub.get()->GetProcessorBypassState(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorBypassState(&context, request, &response);
 
     if(!status.ok())
     {
@@ -219,7 +219,7 @@ std::pair<ControlStatus, ProcessorState> AudioGraphControllerClient::get_process
 
     request.set_id(processor_id);
 
-    grpc::Status status = _stub.get()->GetProcessorState(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorState(&context, request, &response);
 
     if (!status.ok())
     {
@@ -257,7 +257,7 @@ ControlStatus AudioGraphControllerClient::set_processor_bypass_state(int process
     request.mutable_processor()->set_id(processor_id);
     request.set_value(bypass_enabled);
 
-    grpc::Status status = _stub.get()->SetProcessorBypassState(&context, request, &response);
+    grpc::Status status = _stub->SetProcessorBypassState(&context, request, &response);
 
     if (!status.ok())
     {
@@ -300,7 +300,7 @@ ControlStatus AudioGraphControllerClient::set_processor_state(int processor_id, 
     }
     request.mutable_state()->set_binary_data(state.binary_data);
 
-    grpc::Status status = _stub.get()->SetProcessorState(&context, request, &response);
+    grpc::Status status = _stub->SetProcessorState(&context, request, &response);
 
     if (!status.ok())
     {
@@ -318,7 +318,7 @@ ControlStatus AudioGraphControllerClient::create_track(const std::string& name, 
     request.set_name(name);
     request.set_channels(channels);
 
-    grpc::Status status = _stub.get()->CreateTrack(&context, request, &response);
+    grpc::Status status = _stub->CreateTrack(&context, request, &response);
 
     if(!status.ok())
     {
@@ -400,7 +400,7 @@ ControlStatus AudioGraphControllerClient::create_processor_on_track(const std::s
     request.mutable_position()->mutable_before_processor()->set_id(before_processor);
     request.mutable_position()->set_add_to_back(add_to_back);
 
-    grpc::Status status = _stub.get()->CreateProcessorOnTrack(&context, request, &response);
+    grpc::Status status = _stub->CreateProcessorOnTrack(&context, request, &response);
 
     if(!status.ok())
     {
@@ -425,7 +425,7 @@ ControlStatus AudioGraphControllerClient::move_processor_on_track(int processor,
     request.mutable_position()->mutable_before_processor()->set_id(before_processor);
     request.mutable_position()->set_add_to_back(add_to_back);
 
-    grpc::Status status = _stub.get()->MoveProcessorOnTrack(&context, request, &response);
+    grpc::Status status = _stub->MoveProcessorOnTrack(&context, request, &response);
 
     if(!status.ok())
     {
@@ -444,7 +444,7 @@ ControlStatus AudioGraphControllerClient::delete_processor_from_track(int proces
     request.mutable_processor()->set_id(processor);
     request.mutable_track()->set_id(track);
 
-    grpc::Status status = _stub.get()->DeleteProcessorFromTrack(&context, request, &response);
+    grpc::Status status = _stub->DeleteProcessorFromTrack(&context, request, &response);
 
     if(!status.ok())
     {
@@ -461,7 +461,7 @@ ControlStatus AudioGraphControllerClient::delete_track(int track_id)
 
     request.set_id(track_id);
 
-    grpc::Status status = _stub.get()->DeleteTrack(&context, request, &response);
+    grpc::Status status = _stub->DeleteTrack(&context, request, &response);
 
     if(!status.ok())
     {
