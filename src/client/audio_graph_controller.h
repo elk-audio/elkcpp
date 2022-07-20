@@ -121,7 +121,7 @@ public:
     virtual ControlStatus create_multibus_track(const std::string& name, int buses) override;
 
     /**
-     * @brief Create a pre master track in sushi
+     * @brief Create a pre track in sushi
      *
      * @param name The name of the the new track
      * @return ControlStatus
@@ -129,7 +129,7 @@ public:
     virtual ControlStatus create_pre_track(const std::string& name) override;
 
     /**
-     * @brief Create a post master track in sushi to
+     * @brief Create a post track in sushi to
      *
      * @param name The name of the the new track
      * @return ControlStatus

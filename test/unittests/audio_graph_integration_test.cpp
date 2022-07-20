@@ -148,7 +148,7 @@ TEST_F(AudioGraphControllerTest, CreateMultibusTrack)
     ASSERT_EQ(result, sushi_controller::ControlStatus::INVALID_ARGUMENTS);
 }
 
-TEST_F(AudioGraphControllerTest, CreateMasterPreTrack)
+TEST_F(AudioGraphControllerTest, CreatePreTrack)
 {
     auto result = controller->create_pre_track(sushi_controller::expected_results::DYN_TRACK_NAME);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
@@ -157,7 +157,7 @@ TEST_F(AudioGraphControllerTest, CreateMasterPreTrack)
     ASSERT_EQ(result, sushi_controller::ControlStatus::INVALID_ARGUMENTS);
 }
 
-TEST_F(AudioGraphControllerTest, CreateMasterPostTrack)
+TEST_F(AudioGraphControllerTest, CreatePostTrack)
 {
     auto result = controller->create_post_track(sushi_controller::expected_results::DYN_TRACK_NAME);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
