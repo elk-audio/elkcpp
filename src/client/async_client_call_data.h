@@ -195,9 +195,9 @@ class SubscribeToPropertyUpdatesCallData : public CallData
 {
 public:
     SubscribeToPropertyUpdatesCallData(sushi_rpc::NotificationController::Stub* stub,
-                                        grpc::CompletionQueue* cq,
-                                        std::function<void(int property_id, int processor_id, const std::string& value)> callback,
-                                        std::vector<std::pair<int,int>> blocklist)
+                                       grpc::CompletionQueue* cq,
+                                       std::function<void(int property_id, int processor_id, const std::string& value)> callback,
+                                       std::vector<std::pair<int,int>> blocklist)
     : CallData(stub, cq),
       _callback(callback),
       _blocklist(blocklist),
