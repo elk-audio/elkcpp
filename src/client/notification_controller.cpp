@@ -68,7 +68,7 @@ void NotificationControllerClient::subscribe_to_processor_changes(std::function<
     );
 }
 
-void NotificationControllerClient::subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float value)> callback,
+void NotificationControllerClient::subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float normalized_value, float domain_value, const std::string& formatted_value)> callback,
                                                                   const std::vector<std::pair<int, int>>& blocklist)
 {
     _active_call_datas.push_back(

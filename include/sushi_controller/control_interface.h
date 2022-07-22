@@ -360,10 +360,10 @@ public:
      * @brief Set the full or partial state of a processor
      *
      * @param processor_id The id of the processor to set the state of
-     * @param bypass_enabled A ProcessorState object that will be applied to the chosen processor
+     * @param state A ProcessorState object that will be applied to the chosen processor
      * @return ControlStatus
      */
-    virtual ControlStatus set_processor_state(int processor_id, const ProcessorState state) = 0;
+    virtual ControlStatus set_processor_state(int processor_id, const ProcessorState& state) = 0;
 
     /**
      * @brief Create a new track in sushi
@@ -378,13 +378,26 @@ public:
      * @brief Create a new multibus track in sushi
      *
      * @param name The name of the the new track
-     * @param output_busses The number of output busses to assign the new track
-     * @param input_busses The number of input busses to assign the new track
+     * @param buses The number of audio buses in the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_multibus_track(const std::string& name,
-                                                int output_busses,
-                                                int input_busses) = 0;
+    virtual ControlStatus create_multibus_track(const std::string& name, int buses) = 0;
+
+    /**
+     * @brief Create a pre master track in sushi
+     *
+     * @param name The name of the the new track
+     * @return ControlStatus
+     */
+    virtual ControlStatus create_pre_track(const std::string& name) = 0;
+
+    /**
+     * @brief Create a post master track in sushi to
+     *
+     * @param name The name of the the new track
+     * @return ControlStatus
+     */
+    virtual ControlStatus create_post_track(const std::string& name) = 0;
 
     /**
      * @brief Create a new processor on an existing track
@@ -1248,7 +1261,7 @@ public:
        *                  callback will not be called. If empty, the callback will be
        *                  called for all parameter changes.
        */
-    virtual void subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float value)> callback,
+    virtual void subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float normalized_value, float domain_value, const std::string& formatted_value)> callback,
                                                 const std::vector<std::pair<int,int>>& blocklist) = 0;
 
     /**

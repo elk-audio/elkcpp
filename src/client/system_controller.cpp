@@ -27,7 +27,7 @@ std::pair<ControlStatus, std::string> SystemControllerClient::get_sushi_version(
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, BuildInfo> SystemControllerClient::get_build_info()
@@ -52,7 +52,7 @@ std::pair<ControlStatus, BuildInfo> SystemControllerClient::get_build_info()
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, BuildInfo>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, int> SystemControllerClient::get_input_audio_channel_count()
@@ -66,7 +66,7 @@ std::pair<ControlStatus, int> SystemControllerClient::get_input_audio_channel_co
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, int> SystemControllerClient::get_output_audio_channel_count()
@@ -80,7 +80,7 @@ std::pair<ControlStatus, int> SystemControllerClient::get_output_audio_channel_c
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::shared_ptr<SystemController> CreateSystemController(const std::string& address)

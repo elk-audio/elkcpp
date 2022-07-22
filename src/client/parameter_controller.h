@@ -19,7 +19,7 @@ public:
      * @param track_id The id of the track to get the parameters from
      * @return std::pair<ControlStatus, std::vector<ParameterInfo>>
      */
-    virtual std::pair<ControlStatus, std::vector<ParameterInfo>> get_track_parameters(int track_id) const override;
+    std::pair<ControlStatus, std::vector<ParameterInfo>> get_track_parameters(int track_id) const override;
 
     /**
      * @brief Get the parameters available to a processor
@@ -27,7 +27,7 @@ public:
      * @param processor_id The id of the processor to get the parameters from
      * @return std::pair<ControlStatus, std::vector<ParameterInfo>>
      */
-    virtual std::pair<ControlStatus, std::vector<ParameterInfo>> get_processor_parameters(int processor_id) const override;
+    std::pair<ControlStatus, std::vector<ParameterInfo>> get_processor_parameters(int processor_id) const override;
 
     /**
      * @brief Get the id of a parameter from its name
@@ -36,8 +36,7 @@ public:
      * @param parameter The name of the parameter to get the id from
      * @return std::pair<ControlStatus, int>
      */
-    virtual std::pair<ControlStatus, int> get_parameter_id(int processor_id,
-                                                           const std::string& parameter) const override;
+    std::pair<ControlStatus, int> get_parameter_id(int processor_id, const std::string& parameter) const override;
 
     /**
      * @brief Get the info of a parameter
@@ -46,8 +45,7 @@ public:
      * @param parameter_id The id of the parameter to get the info from
      * @return std::pair<ControlStatus, ParameterInfo>
      */
-    virtual std::pair<ControlStatus, ParameterInfo> get_parameter_info(int processor_id,
-                                                                       int parameter_id) const override;
+    std::pair<ControlStatus, ParameterInfo> get_parameter_info(int processor_id, int parameter_id) const override;
 
     /**
      * @brief Get the current value of a parameter
@@ -56,8 +54,7 @@ public:
      * @param parameter_id The id of parameter to get the value from
      * @return std::pair<ControlStatus, float>
      */
-    virtual std::pair<ControlStatus, float> get_parameter_value(int processor_id,
-                                                                int parameter_id) const override;
+    std::pair<ControlStatus, float> get_parameter_value(int processor_id, int parameter_id) const override;
 
     /**
      * @brief Get the normalised current value of a parameter
@@ -66,8 +63,7 @@ public:
      * @param parameter_id The id of the parameter to get the normalised value from
      * @return std::pair<ControlStatus, float>
      */
-    virtual std::pair<ControlStatus, float> get_parameter_value_in_domain(int processor_id,
-                                                                          int parameter_id) const override;
+    std::pair<ControlStatus, float> get_parameter_value_in_domain(int processor_id, int parameter_id) const override;
 
     /**
      * @brief Get the current value of a parameter as a string
@@ -76,8 +72,7 @@ public:
      * @param parameter_id The id of the parameter to get value as a string from
      * @return std::pair<ControlStatus, std::string>
      */
-    virtual std::pair<ControlStatus, std::string> get_parameter_value_as_string(int processor_id,
-                                                                                int parameter_id) const override;
+    std::pair<ControlStatus, std::string> get_parameter_value_as_string(int processor_id, int parameter_id) const override;
 
     /**
      * @brief Set the value of a parameter
@@ -87,9 +82,7 @@ public:
      * @param value The value to set the parameter to
      * @return ControlStatus
      */
-    virtual ControlStatus set_parameter_value(int processor_id,
-                                              int parameter_id,
-                                              float value) override;
+    ControlStatus set_parameter_value(int processor_id, int parameter_id, float value) override;
 
     /**
      * @brief Get the properties available to a track
@@ -97,7 +90,7 @@ public:
      * @param track_id The id of the track to get the properties from
      * @return std::pair<ControlStatus, std::vector<ParameterInfo>>
      */
-    virtual std::pair<ControlStatus, std::vector<PropertyInfo>> get_track_properties(int track_id) const override;
+    std::pair<ControlStatus, std::vector<PropertyInfo>> get_track_properties(int track_id) const override;
 
     /**
      * @brief Get the properties available to a processor
@@ -105,7 +98,7 @@ public:
      * @param processor_id The id of the processor to get the properties from
      * @return std::pair<ControlStatus, std::vector<ParameterInfo>>
      */
-    virtual std::pair<ControlStatus, std::vector<PropertyInfo>> get_processor_properties(int processor_id) const override;
+    std::pair<ControlStatus, std::vector<PropertyInfo>> get_processor_properties(int processor_id) const override;
 
     /**
      * @brief Get the id of a property from its name
@@ -114,8 +107,7 @@ public:
      * @param property The name of the property to get the id from
      * @return std::pair<ControlStatus, int>
      */
-    virtual std::pair<ControlStatus, int> get_property_id(int processor_id,
-                                                          const std::string& property) const override;
+    std::pair<ControlStatus, int> get_property_id(int processor_id, const std::string& property) const override;
 
     /**
      * @brief Get the info of a property
@@ -124,8 +116,8 @@ public:
      * @param property_id The id of the property to get the info from
      * @return std::pair<ControlStatus, ParameterInfo>
      */
-    virtual std::pair<ControlStatus, PropertyInfo> get_property_info(int processor_id,
-                                                                     int property_id) const override;
+    std::pair<ControlStatus, PropertyInfo> get_property_info(int processor_id, int property_id) const override;
+
     /**
      * @brief Get the current value of a property
      *
@@ -133,8 +125,7 @@ public:
      * @param property_id The id of the property to get value as a string from
      * @return std::pair<ControlStatus, std::string>
      */
-    virtual std::pair<ControlStatus, std::string> get_property_value(int processor_id,
-                                                                     int property_id) const override;
+    std::pair<ControlStatus, std::string> get_property_value(int processor_id, int property_id) const override;
 
     /**
      * @brief Set the value of a property
@@ -144,9 +135,7 @@ public:
      * @param value The value to set the property to
      * @return ControlStatus
      */
-    virtual ControlStatus set_property_value(int processor_id,
-                                             int property_id,
-                                             std::string value) override;
+    ControlStatus set_property_value(int processor_id, int property_id, std::string value) override;
 
 private:
     std::unique_ptr<sushi_rpc::ParameterController::Stub> _stub;

@@ -18,7 +18,7 @@ public:
      *
      * @return std::pair<ControlStatus, bool> true if enabled. false if not
      */
-    virtual std::pair<ControlStatus, bool> get_timings_enabled() const override;
+    std::pair<ControlStatus, bool> get_timings_enabled() const override;
 
     /**
      * @brief Set if timings should be enabled
@@ -26,14 +26,14 @@ public:
      * @param enabled true if timings should be enabled. false if not
      * @return ControlStatus
      */
-    virtual ControlStatus set_timings_enabled(bool enabled) override;
+    ControlStatus set_timings_enabled(bool enabled) override;
 
     /**
      * @brief Get the engine timings
      *
      * @return std::pair<ControlStatus, CpuTimings>
      */
-    virtual std::pair<ControlStatus, CpuTimings> get_engine_timings() const override;
+    std::pair<ControlStatus, CpuTimings> get_engine_timings() const override;
 
     /**
      * @brief Get the track timings
@@ -41,7 +41,7 @@ public:
      * @param track_id The id of the track to get the timings from
      * @return std::pair<ControlStatus, CpuTimings>
      */
-    virtual std::pair<ControlStatus, CpuTimings> get_track_timings(int track_id) const override;
+    std::pair<ControlStatus, CpuTimings> get_track_timings(int track_id) const override;
 
     /**
      * @brief Get the processor timings
@@ -49,14 +49,14 @@ public:
      * @param processor_id The id of the processor to get the timings from
      * @return std::pair<ControlStatus, CpuTimings>
      */
-    virtual std::pair<ControlStatus, CpuTimings> get_processor_timings(int processor_id) const override;
+    std::pair<ControlStatus, CpuTimings> get_processor_timings(int processor_id) const override;
 
     /**
      * @brief Reset all the timings measurements
      *
      * @return ControlStatus
      */
-    virtual ControlStatus reset_all_timings() override;
+    ControlStatus reset_all_timings() override;
 
     /**
      * @brief Reset the timings measurements of a track
@@ -64,7 +64,7 @@ public:
      * @param track_id The id of the track to reset the timings of
      * @return ControlStatus
      */
-    virtual ControlStatus reset_track_timings(int track_id) override;
+    ControlStatus reset_track_timings(int track_id) override;
 
     /**
      * @brief Reset the timings measurements of a processor
@@ -72,7 +72,7 @@ public:
      * @param processor_id The id of the processor to reset the timings of
      * @return ControlStatus
      */
-    virtual ControlStatus reset_processor_timings(int processor_id) override;
+    ControlStatus reset_processor_timings(int processor_id) override;
 
 private:
     std::unique_ptr<sushi_rpc::TimingController::Stub> _stub;

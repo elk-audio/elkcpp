@@ -193,7 +193,9 @@ void SubscribeToParameterUpdatesCallData::proceed()
             // Call callback
             _callback(_response.parameter().processor_id(),
                       _response.parameter().parameter_id(),
-                      _response.value());
+                      _response.normalized_value(),
+                      _response.domain_value(),
+                      _response.formatted_value());
         }
     }
     else

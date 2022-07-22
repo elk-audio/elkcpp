@@ -22,7 +22,7 @@ public:
      * @param velocity The velocity of the note. Should be in range (0.0-1.0)
      * @return ControlStatus
      */
-    virtual ControlStatus send_note_on(int track_id, int channel, int note, float velocity) override;
+    ControlStatus send_note_on(int track_id, int channel, int note, float velocity) override;
 
     /**
      * @brief Send note off message to a track
@@ -33,7 +33,7 @@ public:
      * @param velocity The velocity of the note. Should be in range (0.0-1.0)
      * @return ControlStatus
      */
-    virtual ControlStatus send_note_off(int track_id, int channel, int note, float velocity) override;
+    ControlStatus send_note_off(int track_id, int channel, int note, float velocity) override;
 
     /**
      * @brief Send note aftertouch message to a track
@@ -44,7 +44,7 @@ public:
      * @param value
      * @return ControlStatus
      */
-    virtual ControlStatus send_note_aftertouch(int track_id, int channel, int note, float value) override;
+    ControlStatus send_note_aftertouch(int track_id, int channel, int note, float value) override;
 
     /**
      * @brief Send aftertouch message to a track
@@ -54,7 +54,7 @@ public:
      * @param value
      * @return ControlStatus
      */
-    virtual ControlStatus send_aftertouch(int track_id, int channel, float value) override;
+    ControlStatus send_aftertouch(int track_id, int channel, float value) override;
 
      /**
      * @brief Send pitch bend message to a track
@@ -64,7 +64,7 @@ public:
      * @param value
      * @return ControlStatus
      */
-    virtual ControlStatus send_pitch_bend(int track_id, int channel, float value) override;
+    ControlStatus send_pitch_bend(int track_id, int channel, float value) override;
 
     /**
      * @brief Send modulation message to a track
@@ -74,7 +74,7 @@ public:
      * @param value
      * @return ControlStatus
      */
-    virtual ControlStatus send_modulation(int track_id, int channel, float value) override;
+    ControlStatus send_modulation(int track_id, int channel, float value) override;
 
 private:
     std::unique_ptr<sushi_rpc::KeyboardController::Stub> _stub;

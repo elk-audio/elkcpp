@@ -22,13 +22,13 @@ std::pair<ControlStatus, int> ProgramControllerClient::get_processor_current_pro
 
     request.set_id(processor_id);
 
-    grpc::Status status = _stub.get()->GetProcessorCurrentProgram(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorCurrentProgram(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.program());
+    return {to_ext(status), response.program()};
 }
 
 std::pair<ControlStatus, std::string> ProgramControllerClient::get_processor_current_program_name(int processor_id) const
@@ -39,13 +39,13 @@ std::pair<ControlStatus, std::string> ProgramControllerClient::get_processor_cur
 
     request.set_id(processor_id);
 
-    grpc::Status status = _stub.get()->GetProcessorCurrentProgramName(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorCurrentProgramName(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, std::string> ProgramControllerClient::get_processor_program_name(int processor_id, int program_id) const
@@ -57,13 +57,13 @@ std::pair<ControlStatus, std::string> ProgramControllerClient::get_processor_pro
     request.mutable_processor()->set_id(processor_id);
     request.set_program(program_id);
 
-    grpc::Status status = _stub.get()->GetProcessorProgramName(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorProgramName(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, std::vector<std::string>> ProgramControllerClient::get_processor_programs(int processor_id) const
@@ -74,7 +74,7 @@ std::pair<ControlStatus, std::vector<std::string>> ProgramControllerClient::get_
 
     request.set_id(processor_id);
 
-    grpc::Status status = _stub.get()->GetProcessorPrograms(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorPrograms(&context, request, &response);
 
     if(!status.ok())
     {
@@ -85,7 +85,7 @@ std::pair<ControlStatus, std::vector<std::string>> ProgramControllerClient::get_
     {
         output.push_back(program.name());
     }
-    return std::pair<ControlStatus, std::vector<std::string>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 ControlStatus ProgramControllerClient::set_processor_program(int processor_id, int program_id)
@@ -97,7 +97,7 @@ ControlStatus ProgramControllerClient::set_processor_program(int processor_id, i
     request.mutable_processor()->set_id(processor_id);
     request.mutable_program()->set_program(program_id);
 
-    grpc::Status status = _stub.get()->SetProcessorProgram(&context, request, &response);
+    grpc::Status status = _stub->SetProcessorProgram(&context, request, &response);
 
     if(!status.ok())
     {
