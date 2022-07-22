@@ -73,6 +73,21 @@ public:
         iteration++;
     }
 
+    void property_update_test_callback(int processor_id, int parameter_id, const std::string& value)
+    {
+        static size_t iteration = 0;
+        _property_update_callback_called = true;
+        ASSERT_EQ(sushi_controller::expected_results::PROCESSOR_WITH_ID_2.id, processor_id);
+        ASSERT_EQ(sushi_controller::expected_results::PARAMETER_WITH_ID_2.id, parameter_id);
+
+        ASSERT_EQ(value , sushi_controller::expected_results::PROPERTY_CHANGE_VALUES[iteration]);
+        if (iteration >= sushi_controller::expected_results::PROPERTY_CHANGE_VALUES.size())
+        {
+            FAIL();
+        }
+        iteration++;
+    }
+
 protected:
     NotificationControllerTest()
     {
@@ -92,6 +107,7 @@ protected:
     bool _track_changes_callback_called{false};
     bool _processor_changes_callback_called{false};
     bool _parameter_update_callback_called{false};
+    bool _property_update_callback_called{false};
 };
 
 
@@ -135,15 +151,30 @@ TEST_F(NotificationControllerTest, SubscribeToEngineCpuTimingUpdates)
 // Should modify the mock server to able to poll if a subscribtion was started
 TEST_F(NotificationControllerTest, SubscribeToParameterUpdates)
 {
-    std::vector<std::pair<int, int>> parameter_blacklist;
-    parameter_blacklist.push_back({sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+    std::vector<std::pair<int, int>> parameter_blocklist;
+    parameter_blocklist.push_back({sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
                                    sushi_controller::expected_results::PARAMETER_WITH_ID_1.id});
     controller->subscribe_to_parameter_updates(std::bind(&NotificationControllerTest::parameter_update_test_callback,
                                                          this,
                                                          std::placeholders::_1,
                                                          std::placeholders::_2,
                                                          std::placeholders::_3),
-                                               parameter_blacklist);
+                                               parameter_blocklist);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
     ASSERT_TRUE(_parameter_update_callback_called);
+}
+
+TEST_F(NotificationControllerTest, SubscribeToPropertyUpdates)
+{
+    std::vector<std::pair<int, int>> property_blocklist;
+    property_blocklist.push_back({sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,
+                                  sushi_controller::expected_results::PARAMETER_WITH_ID_1.id});
+    controller->subscribe_to_property_updates(std::bind(&NotificationControllerTest::property_update_test_callback,
+                                                         this,
+                                                         std::placeholders::_1,
+                                                         std::placeholders::_2,
+                                                         std::placeholders::_3),
+                                              property_blocklist);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    ASSERT_TRUE(_property_update_callback_called);
 }

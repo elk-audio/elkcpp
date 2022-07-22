@@ -39,6 +39,7 @@ namespace expected_results
     constexpr std::array<TrackUpdate, 2> TRACK_UPDATES = {TrackUpdate{TrackUpdate::Action::TRACK_ADDED, 1}, TrackUpdate{TrackUpdate::Action::TRACK_DELETED, 2}};
     constexpr std::array<ProcessorUpdate, 2> PROCESSOR_UPDATES = {ProcessorUpdate{ProcessorUpdate::Action::PROCESSOR_ADDED, 1, 10}, ProcessorUpdate{ProcessorUpdate::Action::PROCESSOR_DELETED, 2, 9}};
     constexpr std::array<float, 3> PARAMETER_CHANGE_VALUES = {0.0f, 0.5f, 1.0f};
+    constexpr std::array<const char*, 2> PROPERTY_CHANGE_VALUES = {"value_1", "value_2"};
 
 } // namespace expected_results
 
@@ -158,6 +159,35 @@ class NotificationServiceMockup : public sushi_rpc::NotificationController::Serv
             return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
         }
         response_message.set_value(expected_results::PARAMETER_CHANGE_VALUES[2]);
+        if (response->Write(response_message) == false)
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
+        }
+        return status;
+    }
+
+    grpc::Status SubscribeToPropertyUpdates(grpc::ServerContext* /* context */,
+                                            const sushi_rpc::PropertyNotificationBlocklist* request,
+                                            grpc::ServerWriter<sushi_rpc::PropertyValue>* response)
+    {
+        grpc::Status status;
+        for (auto& property : request->properties())
+        {
+            if (property.processor_id() == expected_results::PROCESSOR_WITH_ID_1.id &&
+                property.property_id() == expected_results::PARAMETER_WITH_ID_1.id)
+            {
+                status = grpc::Status::OK;
+            }
+        }
+        sushi_rpc::PropertyValue response_message;
+        response_message.mutable_property()->set_property_id(expected_results::PROCESSOR_WITH_ID_2.id);
+        response_message.mutable_property()->set_processor_id(expected_results::PARAMETER_WITH_ID_2.id);
+        response_message.set_value(expected_results::PROPERTY_CHANGE_VALUES[0]);
+        if (response->Write(response_message) == false)
+        {
+            return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
+        }
+        response_message.set_value(expected_results::PROPERTY_CHANGE_VALUES[1]);
         if (response->Write(response_message) == false)
         {
             return grpc::Status(grpc::StatusCode::UNKNOWN, "First write to server failed!");
