@@ -34,7 +34,7 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> ParameterControllerClient::
 
     request.set_id(track_id);
 
-    grpc::Status status = _stub.get()->GetTrackParameters(&context, request, &response);
+    grpc::Status status = _stub->GetTrackParameters(&context, request, &response);
 
     if (!status.ok())
     {
@@ -56,7 +56,7 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> ParameterControllerClient::
             }
         );
     }
-    return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<ParameterInfo>> ParameterControllerClient::get_processor_parameters(int processor_id) const
@@ -67,7 +67,7 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> ParameterControllerClient::
 
     request.set_id(processor_id);
 
-    grpc::Status status = _stub.get()->GetProcessorParameters(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorParameters(&context, request, &response);
 
     if(!status.ok())
     {
@@ -89,7 +89,7 @@ std::pair<ControlStatus, std::vector<ParameterInfo>> ParameterControllerClient::
             }
         );
     }
-    return std::pair<ControlStatus, std::vector<ParameterInfo>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, int> ParameterControllerClient::get_parameter_id(int processor_id, const std::string& parameter) const
@@ -101,13 +101,13 @@ std::pair<ControlStatus, int> ParameterControllerClient::get_parameter_id(int pr
     request.mutable_processor()->set_id(processor_id);
     request.set_parametername(parameter);
 
-    grpc::Status status = _stub.get()->GetParameterId(&context, request, &response);
+    grpc::Status status = _stub->GetParameterId(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.parameter_id());
+    return {to_ext(status), response.parameter_id()};
 }
 
 std::pair<ControlStatus, ParameterInfo> ParameterControllerClient::get_parameter_info(int processor_id, int parameter_id) const
@@ -119,7 +119,7 @@ std::pair<ControlStatus, ParameterInfo> ParameterControllerClient::get_parameter
     request.set_processor_id(processor_id);
     request.set_parameter_id(parameter_id);
 
-    grpc::Status status = _stub.get()->GetParameterInfo(&context, request, &response);
+    grpc::Status status = _stub->GetParameterInfo(&context, request, &response);
 
     if(!status.ok())
     {
@@ -135,7 +135,7 @@ std::pair<ControlStatus, ParameterInfo> ParameterControllerClient::get_parameter
         response.min_domain_value(),
         response.max_domain_value()
     };
-    return std::pair<ControlStatus, ParameterInfo>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, float> ParameterControllerClient::get_parameter_value(int processor_id, int parameter_id) const
@@ -147,13 +147,13 @@ std::pair<ControlStatus, float> ParameterControllerClient::get_parameter_value(i
     request.set_processor_id(processor_id);
     request.set_parameter_id(parameter_id);
 
-    grpc::Status status = _stub.get()->GetParameterValue(&context, request, &response);
+    grpc::Status status = _stub->GetParameterValue(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, float>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, float> ParameterControllerClient::get_parameter_value_in_domain(int processor_id, int parameter_id) const
@@ -165,13 +165,13 @@ std::pair<ControlStatus, float> ParameterControllerClient::get_parameter_value_i
     request.set_processor_id(processor_id);
     request.set_parameter_id(parameter_id);
 
-    grpc::Status status = _stub.get()->GetParameterValueInDomain(&context, request, &response);
+    grpc::Status status = _stub->GetParameterValueInDomain(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, float>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, std::string> ParameterControllerClient::get_parameter_value_as_string(int processor_id, int parameter_id) const
@@ -183,13 +183,13 @@ std::pair<ControlStatus, std::string> ParameterControllerClient::get_parameter_v
     request.set_processor_id(processor_id);
     request.set_parameter_id(parameter_id);
 
-    grpc::Status status = _stub.get()->GetParameterValueAsString(&context, request, &response);
+    grpc::Status status = _stub->GetParameterValueAsString(&context, request, &response);
 
     if (!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 ControlStatus ParameterControllerClient::set_parameter_value(int processor_id, int parameter_id, float value)
@@ -202,7 +202,7 @@ ControlStatus ParameterControllerClient::set_parameter_value(int processor_id, i
     request.mutable_parameter()->set_parameter_id(parameter_id);
     request.set_value(value);
 
-    grpc::Status status = _stub.get()->SetParameterValue(&context, request, &response);
+    grpc::Status status = _stub->SetParameterValue(&context, request, &response);
 
     if(!status.ok())
     {
@@ -219,7 +219,7 @@ std::pair<ControlStatus, std::vector<PropertyInfo>> ParameterControllerClient::g
 
     request.set_id(track_id);
 
-    grpc::Status status = _stub.get()->GetTrackProperties(&context, request, &response);
+    grpc::Status status = _stub->GetTrackProperties(&context, request, &response);
 
     if (!status.ok())
     {
@@ -236,7 +236,7 @@ std::pair<ControlStatus, std::vector<PropertyInfo>> ParameterControllerClient::g
                 }
         );
     }
-    return std::pair<ControlStatus, std::vector<PropertyInfo>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<PropertyInfo>> ParameterControllerClient::get_processor_properties(int processor_id) const
@@ -247,7 +247,7 @@ std::pair<ControlStatus, std::vector<PropertyInfo>> ParameterControllerClient::g
 
     request.set_id(processor_id);
 
-    grpc::Status status = _stub.get()->GetProcessorProperties(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorProperties(&context, request, &response);
 
     if(!status.ok())
     {
@@ -264,7 +264,7 @@ std::pair<ControlStatus, std::vector<PropertyInfo>> ParameterControllerClient::g
                 }
         );
     }
-    return std::pair<ControlStatus, std::vector<PropertyInfo>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, int> ParameterControllerClient::get_property_id(int processor_id, const std::string& property_name) const
@@ -276,13 +276,13 @@ std::pair<ControlStatus, int> ParameterControllerClient::get_property_id(int pro
     request.mutable_processor()->set_id(processor_id);
     request.set_property_name(property_name);
 
-    grpc::Status status = _stub.get()->GetPropertyId(&context, request, &response);
+    grpc::Status status = _stub->GetPropertyId(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.property_id());
+    return {to_ext(status), response.property_id()};
 }
 
 std::pair<ControlStatus, PropertyInfo> ParameterControllerClient::get_property_info(int processor_id, int property_id) const
@@ -294,7 +294,7 @@ std::pair<ControlStatus, PropertyInfo> ParameterControllerClient::get_property_i
     request.set_processor_id(processor_id);
     request.set_property_id(property_id);
 
-    grpc::Status status = _stub.get()->GetPropertyInfo(&context, request, &response);
+    grpc::Status status = _stub->GetPropertyInfo(&context, request, &response);
 
     if(!status.ok())
     {
@@ -305,7 +305,7 @@ std::pair<ControlStatus, PropertyInfo> ParameterControllerClient::get_property_i
             response.name(),
             response.label(),
     };
-    return std::pair<ControlStatus, PropertyInfo>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::string> ParameterControllerClient::get_property_value(int processor_id, int property_id) const
@@ -317,13 +317,13 @@ std::pair<ControlStatus, std::string> ParameterControllerClient::get_property_va
     request.set_processor_id(processor_id);
     request.set_property_id(property_id);
 
-    grpc::Status status = _stub.get()->GetPropertyValue(&context, request, &response);
+    grpc::Status status = _stub->GetPropertyValue(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::string>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 ControlStatus ParameterControllerClient::set_property_value(int processor_id, int property_id, std::string value)
@@ -336,7 +336,7 @@ ControlStatus ParameterControllerClient::set_property_value(int processor_id, in
     request.mutable_property()->set_property_id(property_id);
     request.set_value(value);
 
-    grpc::Status status = _stub.get()->SetPropertyValue(&context, request, &response);
+    grpc::Status status = _stub->SetPropertyValue(&context, request, &response);
 
     if(!status.ok())
     {

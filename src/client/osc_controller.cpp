@@ -27,7 +27,7 @@ std::pair<ControlStatus, int> OscControllerClient::get_send_port() const
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, int> OscControllerClient::get_receive_port() const
@@ -42,7 +42,7 @@ std::pair<ControlStatus, int> OscControllerClient::get_receive_port() const
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, std::vector<std::string>> OscControllerClient::get_enabled_parameter_outputs() const
@@ -63,7 +63,7 @@ std::pair<ControlStatus, std::vector<std::string>> OscControllerClient::get_enab
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<std::string>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 ControlStatus OscControllerClient::enable_output_for_parameter(int processor_id, int parameter_id)

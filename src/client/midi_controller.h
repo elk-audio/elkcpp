@@ -14,46 +14,46 @@ public:
     MidiControllerClient(const std::string& address);
 
     /**
-     * @brief Get number of available midi input ports
+     * @brief Get number of available MIDI input ports
      *
      * @return std::pair<ControlStatus, int>
      */
-    virtual std::pair<ControlStatus, int> get_input_ports() override;
+    std::pair<ControlStatus, int> get_input_ports() override;
 
     /**
-     * @brief Get number of available midi output ports
+     * @brief Get number of available MIDI output ports
      *
      * @return std::pair<ControlStatus, int>
      */
-    virtual std::pair<ControlStatus, int> get_output_ports() override;
+    std::pair<ControlStatus, int> get_output_ports() override;
 
     /**
-     * @brief Get all midi keyboard input connections
+     * @brief Get all MIDI keyboard input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiKbdConnection>>
      */
-    virtual std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_input_connections() override;
+    std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_input_connections() override;
 
     /**
-     * @brief Get all midi keyboard output connections
+     * @brief Get all MIDI keyboard output connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiKbdConnection>>
      */
-    virtual std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_output_connections() override;
+    std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_output_connections() override;
 
     /**
-     * @brief Get all midi CC input connections
+     * @brief Get all MIDI CC input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiCCConnection>>
      */
-    virtual std::pair<ControlStatus, std::vector<MidiCCConnection>> get_all_cc_input_connections() override;
+    std::pair<ControlStatus, std::vector<MidiCCConnection>> get_all_cc_input_connections() override;
 
     /**
-     * @brief Get all midi PC input input connections
+     * @brief Get all MIDI PC input input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiPCConnection>>
      */
-    virtual std::pair<ControlStatus, std::vector<MidiPCConnection>> get_all_pc_input_connections() override;
+    std::pair<ControlStatus, std::vector<MidiPCConnection>> get_all_pc_input_connections() override;
 
     /**
      * @brief Get the CC input connections for a processor
@@ -61,7 +61,7 @@ public:
      * @param processor_id The processor to get the CC input connections from
      * @return std::pair<ControlStatus, std::vector<MidiCCConnection>>
      */
-    virtual std::pair<ControlStatus, std::vector<MidiCCConnection>> get_cc_input_connections_for_processor(int processor_id) override;
+    std::pair<ControlStatus, std::vector<MidiCCConnection>> get_cc_input_connections_for_processor(int processor_id) override;
 
     /**
      * @brief Get the PC input connections for a processor
@@ -69,7 +69,24 @@ public:
      * @param processor_id The processor to get the PC input connections from
      * @return std::pair<ControlStatus, std::vector<MidiPCConnection>>
      */
-    virtual std::pair<ControlStatus, std::vector<MidiPCConnection>> get_pc_input_connections_for_processor(int processor_id) override;
+    std::pair<ControlStatus, std::vector<MidiPCConnection>> get_pc_input_connections_for_processor(int processor_id) override;
+
+    /**
+     * @brief Get whether midi clock is enabled for a given midi output port
+     *
+     * @param port Id of the port to query
+     * @return If ControlStatus == Ok, then true if enabled, false if disabled
+     */
+    std::pair<ControlStatus, bool> get_midi_clock_output_enabled(int port) const override;
+
+    /**
+     * @brief Enable or disable midi clock output for a given output port
+     *
+     * @param enabled true to enable, false to disable
+     * @param port Id of the port to set
+     * @return ControlStatus
+     */
+    ControlStatus set_midi_clock_output_enabled(bool enabled, int port) override;
 
     /**
      * @brief Connect keyboard input to a track
@@ -77,7 +94,7 @@ public:
      * @param connection_data
      * @return ControlStatus
      */
-    virtual ControlStatus connect_kbd_input_to_track(MidiKbdConnection connection_data) override;
+    ControlStatus connect_kbd_input_to_track(MidiKbdConnection connection_data) override;
 
     /**
      * @brief Connection keyboard from a track
@@ -85,7 +102,7 @@ public:
      * @param connection_data
      * @return ControlStatus
      */
-    virtual ControlStatus connect_kbd_output_from_track(MidiKbdConnection connection_data) override;
+    ControlStatus connect_kbd_output_from_track(MidiKbdConnection connection_data) override;
 
     /**
      * @brief Connect CC messages to a parmeter
@@ -93,7 +110,7 @@ public:
      * @param connection_data
      * @return ControlStatus
      */
-    virtual ControlStatus connect_cc_to_parameter(MidiCCConnection connection_data) override;
+    ControlStatus connect_cc_to_parameter(MidiCCConnection connection_data) override;
 
     /**
      * @brief Connect PC messages to a processor
@@ -101,7 +118,7 @@ public:
      * @param connection_data
      * @return ControlStatus
      */
-    virtual ControlStatus connect_pc_to_processor(MidiPCConnection connection_data) override;
+    ControlStatus connect_pc_to_processor(MidiPCConnection connection_data) override;
 
     /**
      * @brief Disconnect an existing keyboard input connection
@@ -109,7 +126,7 @@ public:
      * @param connection_data
      * @return ControlStatus
      */
-    virtual ControlStatus disconnect_kbd_input(MidiKbdConnection connection_data) override;
+    ControlStatus disconnect_kbd_input(MidiKbdConnection connection_data) override;
 
     /**
      * @brief Disconnect an existing keyboard output connection
@@ -117,7 +134,7 @@ public:
      * @param connection_data
      * @return ControlStatus
      */
-    virtual ControlStatus disconnect_kbd_output(MidiKbdConnection connection_data) override;
+    ControlStatus disconnect_kbd_output(MidiKbdConnection connection_data) override;
 
     /**
      * @brief Disconnect an existing CC connection
@@ -125,7 +142,7 @@ public:
      * @param connection_data
      * @return ControlStatus
      */
-    virtual ControlStatus disconnect_cc(MidiCCConnection connection_data) override;
+    ControlStatus disconnect_cc(MidiCCConnection connection_data) override;
 
     /**
      * @brief Disconnect an existing PC connection
@@ -133,7 +150,7 @@ public:
      * @param connection_data
      * @return ControlStatus
      */
-    virtual ControlStatus disconnect_pc(MidiPCConnection connection_data) override;
+    ControlStatus disconnect_pc(MidiPCConnection connection_data) override;
 
     /**
      * @brief Disconnect all CC connections from a processor
@@ -141,7 +158,7 @@ public:
      * @param processor_id
      * @return ControlStatus
      */
-    virtual ControlStatus disconnect_all_cc_from_processor(int processor_id) override;
+    ControlStatus disconnect_all_cc_from_processor(int processor_id) override;
 
     /**
      * @brief Disconnect all PC connection from a processor
@@ -149,7 +166,7 @@ public:
      * @param processor_id
      * @return ControlStatus
      */
-    virtual ControlStatus disconnect_all_pc_from_processor(int processor_id) override;
+    ControlStatus disconnect_all_pc_from_processor(int processor_id) override;
 
 private:
     std::unique_ptr<sushi_rpc::MidiController::Stub> _stub;

@@ -20,13 +20,13 @@ std::pair<ControlStatus, bool> TimingControllerClient::get_timings_enabled() con
     sushi_rpc::GenericBoolValue response;
     grpc::ClientContext context;
 
-    grpc::Status status = _stub.get()->GetTimingsEnabled(&context, request, &response);
+    grpc::Status status = _stub->GetTimingsEnabled(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, bool>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 ControlStatus TimingControllerClient::set_timings_enabled(bool enabled)
@@ -37,7 +37,7 @@ ControlStatus TimingControllerClient::set_timings_enabled(bool enabled)
 
     request.set_value(enabled);
 
-    grpc::Status status = _stub.get()->SetTimingsEnabled(&context, request, &response);
+    grpc::Status status = _stub->SetTimingsEnabled(&context, request, &response);
 
     if(!status.ok())
     {
@@ -52,13 +52,13 @@ std::pair<ControlStatus, CpuTimings> TimingControllerClient::get_engine_timings(
     sushi_rpc::CpuTimings response;
     grpc::ClientContext context;
 
-    grpc::Status status = _stub.get()->GetEngineTimings(&context, request, &response);
+    grpc::Status status = _stub->GetEngineTimings(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
+    return {to_ext(status),CpuTimings{response.average(),response.min(),response.max()}};
 }
 
 std::pair<ControlStatus, CpuTimings> TimingControllerClient::get_track_timings(int track_id) const
@@ -69,13 +69,13 @@ std::pair<ControlStatus, CpuTimings> TimingControllerClient::get_track_timings(i
 
     request.set_id(track_id);
 
-    grpc::Status status = _stub.get()->GetTrackTimings(&context, request, &response);
+    grpc::Status status = _stub->GetTrackTimings(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
+    return {to_ext(status),CpuTimings{response.average(),response.min(),response.max()}};
 }
 
 std::pair<ControlStatus, CpuTimings> TimingControllerClient::get_processor_timings(int processor_id) const
@@ -86,13 +86,13 @@ std::pair<ControlStatus, CpuTimings> TimingControllerClient::get_processor_timin
 
     request.set_id(processor_id);
 
-    grpc::Status status = _stub.get()->GetProcessorTimings(&context, request, &response);
+    grpc::Status status = _stub->GetProcessorTimings(&context, request, &response);
 
     if(!status.ok())
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, CpuTimings>(to_ext(status),CpuTimings{response.average(),response.min(),response.max()});
+    return {to_ext(status),CpuTimings{response.average(),response.min(),response.max()}};
 }
 
 ControlStatus TimingControllerClient::reset_all_timings()
@@ -101,7 +101,7 @@ ControlStatus TimingControllerClient::reset_all_timings()
     sushi_rpc::GenericVoidValue response;
     grpc::ClientContext context;
 
-    grpc::Status status = _stub.get()->ResetAllTimings(&context, request, &response);
+    grpc::Status status = _stub->ResetAllTimings(&context, request, &response);
 
     if(!status.ok())
     {
@@ -118,7 +118,7 @@ ControlStatus TimingControllerClient::reset_track_timings(int track_id)
 
     request.set_id(track_id);
 
-    grpc::Status status = _stub.get()->ResetTrackTimings(&context, request, &response);
+    grpc::Status status = _stub->ResetTrackTimings(&context, request, &response);
 
     if(!status.ok())
     {
@@ -135,7 +135,7 @@ ControlStatus TimingControllerClient::reset_processor_timings(int processor_id)
 
     request.set_id(processor_id);
 
-    grpc::Status status = _stub.get()->ResetProcessorTimings(&context, request, &response);
+    grpc::Status status = _stub->ResetProcessorTimings(&context, request, &response);
 
     if(!status.ok())
     {

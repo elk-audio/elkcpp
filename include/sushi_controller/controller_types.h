@@ -49,6 +49,13 @@ enum class PluginType
    LV2
 };
 
+enum class TrackType
+{
+    REGULAR,
+    PRE,
+    POST
+};
+
 struct BuildInfo
 {
     std::string version;
@@ -129,11 +136,19 @@ struct TrackInfo
     int              id;
     std::string      label;
     std::string      name;
-    int              input_channels;
-    int              input_busses;
-    int              output_channels;
-    int              output_busses;
+    int              channels;
+    int              buses;
+    TrackType        type;
     std::vector<int> processors;
+};
+
+struct ProcessorState
+{
+    std::optional<int>  program_id;
+    std::optional<bool> bypassed;
+    std::vector<std::pair<int, float>> parameters;
+    std::vector<std::pair<int, std::string>> properties;
+    std::string binary_data;
 };
 
 enum class MidiChannel

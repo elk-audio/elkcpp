@@ -34,10 +34,9 @@ TEST_F(AudioGraphControllerTest, GetAllTracks)
         ASSERT_EQ(track_info_list.at(i).id,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).id);
         ASSERT_EQ(track_info_list.at(i).label,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).label);
         ASSERT_EQ(track_info_list.at(i).name,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).name);
-        ASSERT_EQ(track_info_list.at(i).input_channels,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).input_channels);
-        ASSERT_EQ(track_info_list.at(i).input_busses,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).input_busses);
-        ASSERT_EQ(track_info_list.at(i).output_channels,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).output_channels);
-        ASSERT_EQ(track_info_list.at(i).output_busses,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).output_busses);
+        ASSERT_EQ(track_info_list.at(i).channels, sushi_controller::expected_results::TRACK_INFO_LIST.at(i).channels);
+        ASSERT_EQ(track_info_list.at(i).buses, sushi_controller::expected_results::TRACK_INFO_LIST.at(i).buses);
+        ASSERT_EQ(track_info_list.at(i).type, sushi_controller::expected_results::TRACK_INFO_LIST.at(i).type);
         ASSERT_EQ(track_info_list.at(i).processors,sushi_controller::expected_results::TRACK_INFO_LIST.at(i).processors);
     }
 }
@@ -56,10 +55,9 @@ TEST_F(AudioGraphControllerTest, GetTrackInfo)
     ASSERT_EQ(result.second.id, sushi_controller::expected_results::TRACK_WITH_ID_1.id);
     ASSERT_EQ(result.second.label, sushi_controller::expected_results::TRACK_WITH_ID_1.label);
     ASSERT_EQ(result.second.name, sushi_controller::expected_results::TRACK_WITH_ID_1.name);
-    ASSERT_EQ(result.second.input_channels, sushi_controller::expected_results::TRACK_WITH_ID_1.input_channels);
-    ASSERT_EQ(result.second.input_busses, sushi_controller::expected_results::TRACK_WITH_ID_1.input_busses);
-    ASSERT_EQ(result.second.output_channels, sushi_controller::expected_results::TRACK_WITH_ID_1.output_channels);
-    ASSERT_EQ(result.second.output_channels, sushi_controller::expected_results::TRACK_WITH_ID_1.output_channels);
+    ASSERT_EQ(result.second.channels, sushi_controller::expected_results::TRACK_WITH_ID_1.channels);
+    ASSERT_EQ(result.second.buses, sushi_controller::expected_results::TRACK_WITH_ID_1.buses);
+    ASSERT_EQ(result.second.type, sushi_controller::expected_results::TRACK_WITH_ID_1.type);
     ASSERT_EQ(result.second.processors, sushi_controller::expected_results::TRACK_WITH_ID_1.processors);
 }
 
@@ -95,11 +93,23 @@ TEST_F(AudioGraphControllerTest, GetProcessorInfo)
     ASSERT_EQ(result.second.parameter_count, sushi_controller::expected_results::PROCESSOR_WITH_ID_1.parameter_count);
 }
 
-TEST_F(AudioGraphControllerTest, GetProcessorBybassState)
+TEST_F(AudioGraphControllerTest, GetProcessorBypassState)
 {
     auto result = controller->get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
     ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
     ASSERT_EQ(result.second, sushi_controller::expected_results::PROCESSOR_BYPASS_STATE);
+}
+
+TEST_F(AudioGraphControllerTest, GetProcessorState)
+{
+    auto result = controller->get_processor_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id);
+    ASSERT_EQ(result.first, sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(result.second.bypassed.value(), sushi_controller::expected_results::PROCESSOR_BYPASS_STATE);
+    ASSERT_EQ(result.second.program_id.value(), sushi_controller::expected_results::PROCESSOR_PROGRAM_ID);
+    ASSERT_EQ(result.second.properties.size(), 0u);
+    ASSERT_EQ(result.second.parameters.size(), 2u);
+    ASSERT_EQ(result.second.parameters.at(1).first, 1);
+    ASSERT_EQ(result.second.parameters.at(1).second, sushi_controller::expected_results::PROCESSOR_PARAMETER_VALUE);
 }
 
 TEST_F(AudioGraphControllerTest, SetProcessorBypassState)
@@ -108,6 +118,13 @@ TEST_F(AudioGraphControllerTest, SetProcessorBypassState)
     ASSERT_EQ(controller->get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id).second,false);
     ASSERT_EQ(controller->set_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id,true), sushi_controller::ControlStatus::OK);
     ASSERT_EQ(controller->get_processor_bypass_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id).second,true);
+}
+
+TEST_F(AudioGraphControllerTest, SetProcessorState)
+{
+    sushi_controller::ProcessorState state;
+    ASSERT_EQ(controller->set_processor_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_1.id, state), sushi_controller::ControlStatus::OK);
+    ASSERT_EQ(controller->set_processor_state(sushi_controller::expected_results::PROCESSOR_WITH_ID_2.id, state), sushi_controller::ControlStatus::OK);
 }
 
 TEST_F(AudioGraphControllerTest, CreateTrack)
@@ -123,12 +140,29 @@ TEST_F(AudioGraphControllerTest, CreateTrack)
 TEST_F(AudioGraphControllerTest, CreateMultibusTrack)
 {
     auto result = controller->create_multibus_track(sushi_controller::expected_results::DYN_TRACK_NAME,
-                                                                               sushi_controller::expected_results::DYN_TRACK_OUTPUT_BUSSES,
-                                                                               sushi_controller::expected_results::DYN_TRACK_INPUT_BUSSES);
+                                                    sushi_controller::expected_results::DYN_TRACK_BUSSES);
     ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
+
     result = controller->create_multibus_track(sushi_controller::expected_results::DYN_TRACK_NAME,
-                                               sushi_controller::expected_results::DYN_TRACK_OUTPUT_BUSSES+1,
-                                               sushi_controller::expected_results::DYN_TRACK_INPUT_BUSSES-1);
+                                               sushi_controller::expected_results::DYN_TRACK_BUSSES + 1);
+    ASSERT_EQ(result, sushi_controller::ControlStatus::INVALID_ARGUMENTS);
+}
+
+TEST_F(AudioGraphControllerTest, CreatePreTrack)
+{
+    auto result = controller->create_pre_track(sushi_controller::expected_results::DYN_TRACK_NAME);
+    ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
+
+    result = controller->create_pre_track("Invalid name");
+    ASSERT_EQ(result, sushi_controller::ControlStatus::INVALID_ARGUMENTS);
+}
+
+TEST_F(AudioGraphControllerTest, CreatePostTrack)
+{
+    auto result = controller->create_post_track(sushi_controller::expected_results::DYN_TRACK_NAME);
+    ASSERT_EQ(result, sushi_controller::ControlStatus::OK);
+
+    result = controller->create_post_track("Invalid name");
     ASSERT_EQ(result, sushi_controller::ControlStatus::INVALID_ARGUMENTS);
 }
 

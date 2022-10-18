@@ -354,6 +354,14 @@ public:
     virtual std::pair<ControlStatus, bool> get_processor_bypass_state(int processor_id) const = 0;
 
     /**
+     * @brief Get the full state of a processor
+     *
+     * @param processor_id The id of the processor to get the state from
+     * @return std::pair<ControlStatus, ProcessorState>
+     */
+    virtual std::pair<ControlStatus, ProcessorState> get_processor_state(int processor_id) const = 0;
+
+    /**
      * @brief Set the bypass state of a processor
      *
      * @param processor_id The id of the processor to set the bypass state of
@@ -361,6 +369,15 @@ public:
      * @return ControlStatus
      */
     virtual ControlStatus set_processor_bypass_state(int processor_id, bool bypass_enabled) = 0;
+
+    /**
+     * @brief Set the full or partial state of a processor
+     *
+     * @param processor_id The id of the processor to set the state of
+     * @param state A ProcessorState object that will be applied to the chosen processor
+     * @return ControlStatus
+     */
+    virtual ControlStatus set_processor_state(int processor_id, const ProcessorState& state) = 0;
 
     /**
      * @brief Create a new track in sushi
@@ -375,13 +392,26 @@ public:
      * @brief Create a new multibus track in sushi
      *
      * @param name The name of the the new track
-     * @param output_busses The number of output busses to assign the new track
-     * @param input_busses The number of input busses to assign the new track
+     * @param buses The number of audio buses in the new track
      * @return ControlStatus
      */
-    virtual ControlStatus create_multibus_track(const std::string& name,
-                                                int output_busses,
-                                                int input_busses) = 0;
+    virtual ControlStatus create_multibus_track(const std::string& name, int buses) = 0;
+
+    /**
+     * @brief Create a pre master track in sushi
+     *
+     * @param name The name of the the new track
+     * @return ControlStatus
+     */
+    virtual ControlStatus create_pre_track(const std::string& name) = 0;
+
+    /**
+     * @brief Create a post master track in sushi to
+     *
+     * @param name The name of the the new track
+     * @return ControlStatus
+     */
+    virtual ControlStatus create_post_track(const std::string& name) = 0;
 
     /**
      * @brief Create a new processor on an existing track
@@ -648,61 +678,77 @@ public:
     virtual ~MidiController() = default;
 
     /**
-     * @brief Get number of available midi input ports
+     * @brief Get number of available MIDI input ports
      *
      * @return std::pair<ControlStatus, int>
      */
     virtual std::pair<ControlStatus, int> get_input_ports() = 0;
 
     /**
-     * @brief Get number of available midi output ports
+     * @brief Get number of available MIDI output ports
      *
      * @return std::pair<ControlStatus, int>
      */
     virtual std::pair<ControlStatus, int> get_output_ports() = 0;
 
     /**
-     * @brief Get all midi keyboard input connections
+     * @brief Get all MIDI keyboard input connections
      *
      */
     virtual std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_input_connections() = 0;
 
     /**
-     * @brief Get all midi keyboard output connections
+     * @brief Get all MIDI keyboard output connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiKbdConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiKbdConnection>> get_all_kbd_output_connections() = 0;
 
     /**
-     * @brief Get all midi CC input connections
+     * @brief Get all MIDI Control Change input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiCCConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiCCConnection>> get_all_cc_input_connections() = 0;
 
     /**
-     * @brief Get all midi PC input input connections
+     * @brief Get all MIDI Program Change input input connections
      *
      * @return std::pair<ControlStatus, std::vector<MidiPCConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiPCConnection>> get_all_pc_input_connections() = 0;
 
     /**
-     * @brief Get the CC input connections for a processor
+     * @brief Get the Control Change input connections for a processor
      *
-     * @param processor_id The processor to get the CC input connections from
+     * @param processor_id The processor to get the Control Change input connections from
      * @return std::pair<ControlStatus, std::vector<MidiCCConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiCCConnection>> get_cc_input_connections_for_processor(int processor_id) = 0;
 
     /**
-     * @brief Get the PC input connections for a processor
+     * @brief Get the Program Change input connections for a processor
      *
-     * @param processor_id The processor to get the PC input connections from
+     * @param processor_id The processor to get the Program Change input connections from
      * @return std::pair<ControlStatus, std::vector<MidiPCConnection>>
      */
     virtual std::pair<ControlStatus, std::vector<MidiPCConnection>> get_pc_input_connections_for_processor(int processor_id) = 0;
+
+    /**
+     * @brief Get whether MIDI clock is enabled for a given MIDI output port
+     *
+     * @param port Id of the port to query
+     * @return If ControlStatus == Ok, then true if enabled, false if disabled
+     */
+    virtual std::pair<ControlStatus, bool> get_midi_clock_output_enabled(int port) const = 0;
+
+    /**
+     * @brief Enable or disable MIDI clock output for a given output port
+     * @param enabled true to enable, false to disable
+     * @param port Id of the port to set
+     * @return ControlStatus
+     */
+    virtual ControlStatus set_midi_clock_output_enabled(bool enabled, int port) = 0;
 
     /**
      * @brief Connect keyboard input to a track
@@ -721,7 +767,7 @@ public:
     virtual ControlStatus connect_kbd_output_from_track(MidiKbdConnection connection_data) = 0;
 
     /**
-     * @brief Connect CC messages to a parmeter
+     * @brief Connect Control Change messages to a parameter
      *
      * @param connection_data
      * @return ControlStatus
@@ -729,7 +775,7 @@ public:
     virtual ControlStatus connect_cc_to_parameter(MidiCCConnection connection_data) = 0;
 
     /**
-     * @brief Connect PC messages to a processor
+     * @brief Connect Program Change messages to a processor
      *
      * @param connection_data
      * @return ControlStatus
@@ -753,7 +799,7 @@ public:
     virtual ControlStatus disconnect_kbd_output(MidiKbdConnection connection_data) = 0;
 
     /**
-     * @brief Disconnect an existing CC connection
+     * @brief Disconnect an existing Control Change connection
      *
      * @param connection_data
      * @return ControlStatus
@@ -761,7 +807,7 @@ public:
     virtual ControlStatus disconnect_cc(MidiCCConnection connection_data) = 0;
 
     /**
-     * @brief Disconnect an existing PC connection
+     * @brief Disconnect an existing Program Change connection
      *
      * @param connection_data
      * @return ControlStatus
@@ -769,7 +815,7 @@ public:
     virtual ControlStatus disconnect_pc(MidiPCConnection connection_data) = 0;
 
     /**
-     * @brief Disconnect all CC connections from a processor
+     * @brief Disconnect all Control Change connections from a processor
      *
      * @param processor_id
      * @return ControlStatus
@@ -777,7 +823,7 @@ public:
     virtual ControlStatus disconnect_all_cc_from_processor(int processor_id) = 0;
 
     /**
-     * @brief Disconnect all PC connection from a processor
+     * @brief Disconnect all Program Change connection from a processor
      *
      * @param processor_id
      * @return ControlStatus
@@ -1160,6 +1206,31 @@ protected:
     OscController() = default;
 };
 
+class SessionController
+{
+public:
+    virtual ~SessionController() = default;
+
+    /**
+     * @brief Save the entire sushi session.
+     * @return An std::pair<ControlStatus, std::string> string containing the Sushi session
+     *         in a serialized format if ControlStatus == OK, empty string otherwise.
+     */
+    virtual std::pair<ControlStatus, std::string> save_binary_session() const = 0;
+
+    /**
+     * @brief Restore the sushi session from a previously save session state.
+     *        This will clear all track and loaded plugins
+     * @param binary_session An std::string string containing the serialised Sushi session
+     * @return ControlStatus::OK if operation was successful.
+     */
+    virtual ControlStatus restore_binary_session(const std::string& binary_session) = 0;
+
+
+protected:
+    SessionController() = default;
+};
+
 class NotificationController
 {
 public:
@@ -1194,14 +1265,26 @@ public:
     virtual void subscribe_to_processor_changes(std::function<void(ProcessorUpdate update)> callback) = 0;
 
     /**
-     * @brief Subscribe callback to parameter change updates
+       * @brief Subscribe to parameter changes
+       *
+       * @param callback The callback to run when a parameter update is received
+       * @param blocklist A vector of pairs of <parameter id, processor is> for which the
+       *                  callback will not be called. If empty, the callback will be
+       *                  called for all parameter changes.
+       */
+    virtual void subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float normalized_value, float domain_value, const std::string& formatted_value)> callback,
+                                                const std::vector<std::pair<int,int>>& blocklist) = 0;
+
+    /**
+     * @brief Subscribe to property changes
      *
-     * @param callback The callback to run when a parameter update is received
-     * @param parameter_blocklist Parameters to blocklist. The first int in the
-     * pair is a processor id. The second int is a processor id
+     * @param callback The callback to run when a property update is received
+     * @param blocklist A vector of pairs of <property id, processor is> for which the
+     *                  callback will not be called. If empty, the callback will be
+     *                  called for all property changes.
      */
-    virtual void subscribe_to_parameter_updates(std::function<void(int parameter_id, int processor_id, float value)> callback,
-                                                std::vector<std::pair<int,int>> parameter_blocklist) = 0;
+    virtual void subscribe_to_property_updates(std::function<void(int property_id, int processor_id, const std::string& value)> callback,
+                                               const std::vector<std::pair<int,int>>& blocklist) = 0;
 
 
 protected:
@@ -1243,6 +1326,7 @@ protected:
                     AudioRoutingController* audio_routing_controller,
                     CvGateController* cv_gate_controller,
                     OscController* osc_controller,
+                    SessionController* session_controller,
                     NotificationController* notification_controller) :
                         _system_controller(system_controller),
                         _transport_controller(transport_controller),
@@ -1255,20 +1339,22 @@ protected:
                         _audio_routing_controller(audio_routing_controller),
                         _cv_gate_controller(cv_gate_controller),
                         _osc_controller(osc_controller),
+                        _session_controller(session_controller),
                         _notification_controller(notification_controller) {}
 
 private:
-    SystemController* _system_controller;
-    TransportController* _transport_controller;
-    TimingController* _timing_controller;
-    KeyboardController* _keyboard_controller;
-    AudioGraphController* _audio_graph_controller;
-    ProgramController* _program_controller;
-    ParameterController* _parameter_controller;
-    MidiController* _midi_controller;
+    SystemController*       _system_controller;
+    TransportController*    _transport_controller;
+    TimingController*       _timing_controller;
+    KeyboardController*     _keyboard_controller;
+    AudioGraphController*   _audio_graph_controller;
+    ProgramController*      _program_controller;
+    ParameterController*    _parameter_controller;
+    MidiController*         _midi_controller;
     AudioRoutingController* _audio_routing_controller;
-    CvGateController* _cv_gate_controller;
-    OscController* _osc_controller;
+    CvGateController*       _cv_gate_controller;
+    OscController*          _osc_controller;
+    SessionController*      _session_controller;
     NotificationController* _notification_controller;
 };
 

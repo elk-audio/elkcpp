@@ -22,8 +22,8 @@ namespace expected_results
     constexpr CpuTimings PROCESSOR_TIMINGS{0.009f, 0.01f, 0.005f};
 
     // Track test values
-    const TrackInfo TRACK_WITH_ID_1 = TrackInfo{ 1, "synth", "synth", 2, 2, 2, 2, {10, 11}};
-    const TrackInfo TRACK_WITH_ID_2 = TrackInfo{ 2, "guitar", "guitar", 2, 2, 2, 2, {10, 11}};
+    const TrackInfo TRACK_WITH_ID_1 = TrackInfo{ 1, "synth", "synth", 2, 2, TrackType::REGULAR, {10, 11}};
+    const TrackInfo TRACK_WITH_ID_2 = TrackInfo{ 2, "guitar", "guitar", 2, 2, TrackType::REGULAR, {10, 11}};
     const std::vector<TrackInfo> TRACK_INFO_LIST = {TRACK_WITH_ID_1, TRACK_WITH_ID_2};
 
     // Processor test values

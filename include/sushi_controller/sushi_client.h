@@ -44,6 +44,7 @@ std::shared_ptr<MidiController> CreateMidiController(const std::string& server_a
 std::shared_ptr<AudioRoutingController> CreateAudioRoutingController(const std::string& server_address = DEFAULT_ADDRESS);
 std::shared_ptr<CvGateController> CreateCvGateController(const std::string& server_address = DEFAULT_ADDRESS);
 std::shared_ptr<OscController> CreateOscController(const std::string& server_address = DEFAULT_ADDRESS);
+std::shared_ptr<SessionController> CreateSessionController(const std::string& server_address = DEFAULT_ADDRESS);
 std::shared_ptr<NotificationController> CreateNotificationController(const std::string& server_address = DEFAULT_ADDRESS);
 } //sushi_controller
 

@@ -17,7 +17,8 @@ SET(TEST_FILES unittests/audio_graph_integration_test.cpp
                unittests/program_integration_test.cpp
                unittests/system_integration_test.cpp
                unittests/timing_integration_test.cpp
-               unittests/transport_integration_test.cpp)
+               unittests/transport_integration_test.cpp
+               unittests/session_integation_test.cpp)
 
 ##########################################
 #  Include directories relative to test  #

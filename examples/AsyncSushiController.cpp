@@ -9,17 +9,19 @@
  * @return int
  */
 
-void print_notification(int processor_id, int parameter_id, float value)
+void print_notification(int processor_id, int parameter_id, float normalized_value,
+                        float domain_value, const std::string& formatted_value)
 {
-    std::cout << "param_id " << parameter_id << " proc_id " << processor_id << " val " << value << std::endl;
+    std::cout << "param_id " << parameter_id << " proc_id " << processor_id << " val " << normalized_value
+        << ", " << domain_value << ", " << formatted_value << std::endl;
 }
 
 int main()
 {
     // Create a controller object to connect to sushi
     std::shared_ptr<sushi_controller::SushiController> controller = sushi_controller::CreateSushiController();
-    std::vector<std::pair<int, int>> blacklist;
-    controller->notification_controller()->subscribe_to_parameter_updates(print_notification, blacklist);
+    std::vector<std::pair<int, int>> blocklist;
+    controller->notification_controller()->subscribe_to_parameter_updates(print_notification, blocklist);
     for (int i = 0; i < 3; ++i)
     {
         controller->transport_controller()->set_playing_mode(sushi_controller::PlayingMode::PLAYING);

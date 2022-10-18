@@ -18,28 +18,28 @@ public:
      *
      * @return std::pair<ControlStatus, std::string>
      */
-    virtual std::pair<ControlStatus, std::string> get_sushi_version() override;
+    std::pair<ControlStatus, std::string> get_sushi_version() override;
 
     /**
      * @brief Get the info used for building sushi
      *
      * @return std::pair<ControlStatus, BuildInfo>
      */
-    virtual std::pair<ControlStatus, BuildInfo> get_build_info() override;
+    std::pair<ControlStatus, BuildInfo> get_build_info() override;
 
     /**
      * @brief Get the number of input channels available to sushi
      *
      * @return std::pair<ControlStatus, int>
      */
-    virtual std::pair<ControlStatus, int> get_input_audio_channel_count() override;
+    std::pair<ControlStatus, int> get_input_audio_channel_count() override;
 
     /**
      * @brief Get the number of output channels available to sushi
      *
      * @return std::pair<ControlStatus, int>
      */
-    virtual std::pair<ControlStatus, int> get_output_audio_channel_count() override;
+    std::pair<ControlStatus, int> get_output_audio_channel_count() override;
 
 private:
     std::unique_ptr<sushi_rpc::SystemController::Stub> _stub;

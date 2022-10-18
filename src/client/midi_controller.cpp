@@ -27,7 +27,7 @@ std::pair<ControlStatus, int> MidiControllerClient::get_input_ports()
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, int> MidiControllerClient::get_output_ports()
@@ -42,7 +42,7 @@ std::pair<ControlStatus, int> MidiControllerClient::get_output_ports()
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, int>(to_ext(status), response.value());
+    return {to_ext(status), response.value()};
 }
 
 std::pair<ControlStatus, std::vector<MidiKbdConnection>> MidiControllerClient::get_all_kbd_input_connections()
@@ -67,7 +67,7 @@ std::pair<ControlStatus, std::vector<MidiKbdConnection>> MidiControllerClient::g
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiKbdConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<MidiKbdConnection>> MidiControllerClient::get_all_kbd_output_connections()
@@ -92,7 +92,7 @@ std::pair<ControlStatus, std::vector<MidiKbdConnection>> MidiControllerClient::g
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiKbdConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<MidiCCConnection>> MidiControllerClient::get_all_cc_input_connections()
@@ -121,7 +121,7 @@ std::pair<ControlStatus, std::vector<MidiCCConnection>> MidiControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiCCConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<MidiPCConnection>> MidiControllerClient::get_all_pc_input_connections()
@@ -145,7 +145,7 @@ std::pair<ControlStatus, std::vector<MidiPCConnection>> MidiControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiPCConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<MidiCCConnection>> MidiControllerClient::get_cc_input_connections_for_processor(int processor_id)
@@ -175,7 +175,7 @@ std::pair<ControlStatus, std::vector<MidiCCConnection>> MidiControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiCCConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 std::pair<ControlStatus, std::vector<MidiPCConnection>> MidiControllerClient::get_pc_input_connections_for_processor(int processor_id)
@@ -200,7 +200,7 @@ std::pair<ControlStatus, std::vector<MidiPCConnection>> MidiControllerClient::ge
     {
         handle_error(status);
     }
-    return std::pair<ControlStatus, std::vector<MidiPCConnection>>(to_ext(status), output);
+    return {to_ext(status), output};
 }
 
 ControlStatus MidiControllerClient::connect_kbd_input_to_track(MidiKbdConnection connection_data)
@@ -216,7 +216,7 @@ ControlStatus MidiControllerClient::connect_kbd_input_to_track(MidiKbdConnection
 
     grpc::Status status = _stub->ConnectKbdInputToTrack(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -236,7 +236,7 @@ ControlStatus MidiControllerClient::connect_kbd_output_from_track(MidiKbdConnect
 
     grpc::Status status = _stub->ConnectKbdOutputFromTrack(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -260,7 +260,7 @@ ControlStatus MidiControllerClient::connect_cc_to_parameter(MidiCCConnection con
 
     grpc::Status status = _stub->ConnectCCToParameter(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -279,7 +279,7 @@ ControlStatus MidiControllerClient::connect_pc_to_processor(MidiPCConnection con
 
     grpc::Status status = _stub->ConnectPCToProcessor(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -299,7 +299,7 @@ ControlStatus MidiControllerClient::disconnect_kbd_input(MidiKbdConnection conne
 
     grpc::Status status = _stub->DisconnectKbdInput(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -319,7 +319,7 @@ ControlStatus MidiControllerClient::disconnect_kbd_output(MidiKbdConnection conn
 
     grpc::Status status = _stub->DisconnectKbdOutput(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -343,7 +343,7 @@ ControlStatus MidiControllerClient::disconnect_cc(MidiCCConnection connection_da
 
     grpc::Status status = _stub->DisconnectCC(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -362,7 +362,7 @@ ControlStatus MidiControllerClient::disconnect_pc(MidiPCConnection connection_da
 
     grpc::Status status = _stub->DisconnectPC(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -379,7 +379,7 @@ ControlStatus MidiControllerClient::disconnect_all_cc_from_processor(int process
 
     grpc::Status status = _stub->DisconnectAllCCFromProcessor(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
     {
         handle_error(status);
     }
@@ -396,7 +396,42 @@ ControlStatus MidiControllerClient::disconnect_all_pc_from_processor(int process
 
     grpc::Status status = _stub->DisconnectAllPCFromProcessor(&context, request, &response);
 
-    if(!status.ok())
+    if (!status.ok())
+    {
+        handle_error(status);
+    }
+    return to_ext(status);
+}
+
+std::pair<ControlStatus, bool> MidiControllerClient::get_midi_clock_output_enabled(int port) const
+{
+    sushi_rpc::GenericIntValue request;
+    sushi_rpc::GenericBoolValue response;
+    grpc::ClientContext context;
+
+    request.set_value(port);
+
+    grpc::Status status = _stub->GetMidiClockOutputEnabled(&context, request, &response);
+
+    if (!status.ok())
+    {
+        handle_error(status);
+    }
+    return {to_ext(status), response.value()};
+}
+
+ControlStatus MidiControllerClient::set_midi_clock_output_enabled(bool enabled, int port)
+{
+    sushi_rpc::MidiClockSetRequest request;
+    sushi_rpc::GenericVoidValue response;
+    grpc::ClientContext context;
+
+    request.set_port(port);
+    request.set_enabled(enabled);
+
+    grpc::Status status = _stub->SetMidiClockOutputEnabled(&context, request, &response);
+
+    if (!status.ok())
     {
         handle_error(status);
     }
