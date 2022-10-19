@@ -4,6 +4,7 @@
 #include <string>
 #include <variant>
 #include <vector>
+#include <optional>
 
 namespace sushi_controller
 {
