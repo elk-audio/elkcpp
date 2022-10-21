@@ -1,0 +1,14 @@
+{
+  "name": "elkcpp",
+  "version-string": "1.0.0",
+  "homepage" : "https://github.com/elk-audio/elkcpp",
+  "description" : "A simple wrapper for controlling sushi over gRPC via C++",
+  "dependencies": [
+    {
+      "name": "grpc",
+      "features": [
+        "codegen"
+      ]
+    }
+  ]
+}

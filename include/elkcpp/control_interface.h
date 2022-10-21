@@ -1291,6 +1291,11 @@ protected:
     NotificationController() = default;
 };
 
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wunused-private-field"
+#endif
+
 /**
  * @brief A class to control sushi
  *
@@ -1360,5 +1365,8 @@ private:
 
 } // sushi_controller
 
+#if defined(__clang__)
+    #pragma clang diagnostic pop
+#endif
 
 #endif //SUSHI_CONTROL_INTERFACE_H

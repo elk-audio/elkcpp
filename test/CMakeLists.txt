@@ -32,15 +32,22 @@ set(INCLUDE_DIRS ${GRPC_WRAPPER_PUBLIC_HEADER_DIR}
 #  Statically linked libraries  #
 #################################
 
-set(LINK_LIBRARIES elkcpp
-                   gtest
-                   gtest_main)
+set(ELKCPP_TEST_LINK_LIBRARIES
+    elkcpp
+    gtest
+    gtest_main
+)
+
+set(ELKCPP_TEST_INCLUDE_DIRS
+    ${SUSHI_GRPC_INCLUDE_DIRS}
+    ${PROJECT_SOURCE_DIR}/src/client
+    ${PROJECT_SOURCE_DIR}/test/unittests
+    ${PROJECT_SOURCE_DIR}/test/googletest/include
+)
 
 add_executable(unit_tests ${TEST_FILES})
-
-target_link_libraries(unit_tests "${LINK_LIBRARIES}")
-target_include_directories(unit_tests PRIVATE "${INCLUDE_DIRS}")
-target_include_directories(unit_tests PRIVATE ${PROTO_SRC_DIR})
+target_link_libraries(unit_tests "${ELKCPP_TEST_LINK_LIBRARIES}")
+target_include_directories(unit_tests PRIVATE ${ELKCPP_TEST_INCLUDE_DIRS})
 
 add_test(unit_tests unit_tests)
 

@@ -2,3 +2,9 @@
 [submodule "test/googletest"]
 	path = test/googletest
 	url = https://github.com/google/googletest.git
+[submodule "third-party/vcpkg"]
+	path = third-party/vcpkg
+	url = https://github.com/Microsoft/vcpkg.git
+[submodule "sushi-grpc-api"]
+	path = sushi-grpc-api
+	url = ../sushi-grpc-api
