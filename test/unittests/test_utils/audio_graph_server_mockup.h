@@ -83,7 +83,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status GetTrackId(grpc::ServerContext* /* context */,
                             const sushi_rpc::GenericStringValue* request,
-                            sushi_rpc::TrackIdentifier* response)
+                            sushi_rpc::TrackIdentifier* response) override
     {
         if (request->value() == expected_results::TRACK_WITH_ID_1.name)
         {
@@ -98,7 +98,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status GetTrackInfo(grpc::ServerContext* /* context */,
                               const sushi_rpc::TrackIdentifier* request,
-                              sushi_rpc::TrackInfo* response)
+                              sushi_rpc::TrackInfo* response) override
     {
         if (request->id() == expected_results::TRACK_WITH_ID_1.id)
         {
@@ -122,7 +122,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status GetTrackProcessors(grpc::ServerContext* /* context */,
                                     const sushi_rpc::TrackIdentifier* request,
-                                    sushi_rpc::ProcessorInfoList* response)
+                                    sushi_rpc::ProcessorInfoList* response) override
     {
         if (request->id() == expected_results::TRACK_WITH_ID_1.id)
         {
@@ -145,7 +145,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status GetProcessorId(grpc::ServerContext* /* context */,
                                 const sushi_rpc::GenericStringValue* request,
-                                sushi_rpc::ProcessorIdentifier* response)
+                                sushi_rpc::ProcessorIdentifier* response) override
     {
         if (request->value() == expected_results::PROCESSOR_WITH_ID_1.name)
         {
@@ -160,7 +160,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status GetProcessorInfo(grpc::ServerContext* /* context */,
                                   const sushi_rpc::ProcessorIdentifier* request,
-                                  sushi_rpc::ProcessorInfo* response)
+                                  sushi_rpc::ProcessorInfo* response) override
     {
         if (request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
         {
@@ -179,7 +179,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status GetProcessorBypassState(grpc::ServerContext* /* context */,
                                          const sushi_rpc::ProcessorIdentifier* request,
-                                         sushi_rpc::GenericBoolValue* response)
+                                         sushi_rpc::GenericBoolValue* response) override
     {
         if (request->id() == expected_results::PROCESSOR_WITH_ID_1.id)
         {
@@ -194,7 +194,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status GetProcessorState(grpc::ServerContext* /* context */,
                                    const sushi_rpc::ProcessorIdentifier* request,
-                                   sushi_rpc::ProcessorState* response)
+                                   sushi_rpc::ProcessorState* response) override
     {
         if (request->id() == expected_results::PROCESSOR_WITH_ID_1.id ||
             request->id() == expected_results::PROCESSOR_WITH_ID_2.id)
@@ -219,7 +219,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status SetProcessorBypassState(grpc::ServerContext* /* context */,
                                          const sushi_rpc::ProcessorBypassStateSetRequest* request,
-                                         sushi_rpc::GenericVoidValue* /* response */)
+                                         sushi_rpc::GenericVoidValue* /* response */) override
     {
         if (request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id)
         {
@@ -234,7 +234,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status SetProcessorState(grpc::ServerContext* /* context */,
                                    const sushi_rpc::ProcessorStateSetRequest* request,
-                                   sushi_rpc::GenericVoidValue* /* response */)
+                                   sushi_rpc::GenericVoidValue* /* response */) override
     {
         if (request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id ||
             request->processor().id() == expected_results::PROCESSOR_WITH_ID_2.id)
@@ -249,7 +249,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status CreateTrack(grpc::ServerContext* /* context */,
                              const sushi_rpc::CreateTrackRequest* request,
-                             sushi_rpc::GenericVoidValue* /* response */)
+                             sushi_rpc::GenericVoidValue* /* response */) override
     {
         if (request->name() == expected_results::DYN_TRACK_NAME &&
             request->channels() == expected_results::DYN_TRACK_CHANNELS)
@@ -264,7 +264,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status CreateMultibusTrack(grpc::ServerContext* /* context */,
                                      const sushi_rpc::CreateMultibusTrackRequest* request,
-                                     sushi_rpc::GenericVoidValue* /* response */)
+                                     sushi_rpc::GenericVoidValue* /* response */) override
     {
         if (request->name() == expected_results::DYN_TRACK_NAME &&
             request->buses() == expected_results::DYN_TRACK_BUSSES)
@@ -279,7 +279,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status CreatePreTrack(grpc::ServerContext* /* context */,
                                 const sushi_rpc::CreatePreTrackRequest* request,
-                                sushi_rpc::GenericVoidValue* /* response */)
+                                sushi_rpc::GenericVoidValue* /* response */) override
     {
         if (request->name() == expected_results::DYN_TRACK_NAME)
         {
@@ -293,7 +293,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status CreatePostTrack(grpc::ServerContext* /* context */,
                                  const sushi_rpc::CreatePostTrackRequest* request,
-                                 sushi_rpc::GenericVoidValue* /* response */)
+                                 sushi_rpc::GenericVoidValue* /* response */) override
     {
         if (request->name() == expected_results::DYN_TRACK_NAME)
         {
@@ -307,7 +307,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status CreateProcessorOnTrack(grpc::ServerContext* /* context */,
                                         const sushi_rpc::CreateProcessorRequest* request,
-                                        sushi_rpc::GenericVoidValue* /* response */)
+                                        sushi_rpc::GenericVoidValue* /* response */) override
     {
         if (request->name() == expected_results::DYN_PROC_NAME &&
             request->uid() == expected_results::DYN_PROC_UID &&
@@ -326,7 +326,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status MoveProcessorOnTrack(grpc::ServerContext* /* context */,
                                       const sushi_rpc::MoveProcessorRequest* request,
-                                      sushi_rpc::GenericVoidValue* /* response */)
+                                      sushi_rpc::GenericVoidValue* /* response */) override
     {
         if (request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id &&
             request->dest_track().id() == expected_results::DYN_PROC_DST_TRACK &&
@@ -342,7 +342,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status DeleteProcessorFromTrack(grpc::ServerContext* /* context */,
                                          const sushi_rpc::DeleteProcessorRequest* request,
-                                         sushi_rpc::GenericVoidValue* /* response */)
+                                         sushi_rpc::GenericVoidValue* /* response */) override
     {
         if (request->processor().id() == expected_results::PROCESSOR_WITH_ID_1.id &&
             request->track().id() == expected_results::TRACK_WITH_ID_1.id)
@@ -357,7 +357,7 @@ class AudioGraphServiceMockup : public sushi_rpc::AudioGraphController::Service
 
     grpc::Status DeleteTrack(grpc::ServerContext* /* context */,
                              const sushi_rpc::TrackIdentifier* request,
-                             sushi_rpc::GenericVoidValue* /* response */)
+                             sushi_rpc::GenericVoidValue* /* response */) override
     {
         if (request->id() == expected_results::TRACK_WITH_ID_1.id)
         {
