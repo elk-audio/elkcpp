@@ -1,5 +1,6 @@
 #include <iostream>
 #include <array>
+#include <unistd.h>
 
 #include "sushi_client.h"
 
@@ -32,30 +33,14 @@ constexpr auto PITCH_5_NAME = "pitch_5";
 constexpr auto PITCH_6_NAME = "pitch_6";
 constexpr auto PITCH_7_NAME = "pitch_7";
 
-//// TODO: Can this be constexpr?
-//std::array<const char *const, 4> SUSHI_PROCESSORS {TRACK_NAME,
-//                                                   SYNTH_NAME,
-//                                                   SEQUENCER_NAME,
-//                                                   EFFECT_NAME};
-//
-//std::array<const char *const, 5> MDA_JX10_PARAMETERS {OSC_MIX_NAME,
-//                                                      ENV_REL_NAME,
-//                                                      VFC_VEL_NAME,
-//                                                      VFC_FREQ_NAME,
-//                                                      VFC_RESO_NAME};
-//
-// std::array<int, 5> MDA_JX10_PARAMETER_IDS;
-//
-//std::array<const char *const, 8> SEQ_PARAMETERS {PITCH_0_NAME,
-//                                                 PITCH_1_NAME,
-//                                                 PITCH_2_NAME,
-//                                                 PITCH_3_NAME,
-//                                                 PITCH_4_NAME,
-//                                                 PITCH_5_NAME,
-//                                                 PITCH_6_NAME,
-//                                                 PITCH_7_NAME};
-//
-// std::array<int, 8> SEQ_PARAMETER_IDS;
+void signal_callback_handler(int signum)
+{
+    if (signum == SIGINT)
+    {
+        std::cout << "Caught signal: " << signum << " Exiting." << std::endl;
+        exit(signum);
+    }
+}
 
 struct plugin
 {
@@ -101,20 +86,22 @@ sushi_controller::ControlStatus set_parameter(const char* const parameter_name, 
 
 void set_parameters_for_theme_tune()
 {
+    std::cout << "All processors have been created - setting parameters" << std::endl;
+
     set_parameter(OSC_MIX_NAME, SYNTH_NAME, 0.2f);
     set_parameter(ENV_REL_NAME, SYNTH_NAME, 0.3f);
     set_parameter(VFC_VEL_NAME, SYNTH_NAME, 0.6f);
     set_parameter(VFC_FREQ_NAME, SYNTH_NAME, 0.5f);
     set_parameter(VFC_RESO_NAME, SYNTH_NAME, 0.1f);
 
-    set_parameter(PITCH_0_NAME, SYNTH_NAME, 0.4166666666666667);
-    set_parameter(PITCH_1_NAME, SYNTH_NAME, 0.5);
-    set_parameter(PITCH_2_NAME, SYNTH_NAME, 0.5625);
-    set_parameter(PITCH_3_NAME, SYNTH_NAME, 0.6458333333333334);
-    set_parameter(PITCH_4_NAME, SYNTH_NAME, 0.6666666666666666);
-    set_parameter(PITCH_5_NAME, SYNTH_NAME, 0.6458333333333334);
-    set_parameter(PITCH_6_NAME, SYNTH_NAME, 0.5625);
-    set_parameter(PITCH_7_NAME, SYNTH_NAME, 0.5);
+    set_parameter(PITCH_0_NAME, SEQUENCER_NAME, 0.4166666666666667);
+    set_parameter(PITCH_1_NAME, SEQUENCER_NAME, 0.5);
+    set_parameter(PITCH_2_NAME, SEQUENCER_NAME, 0.5625);
+    set_parameter(PITCH_3_NAME, SEQUENCER_NAME, 0.6458333333333334);
+    set_parameter(PITCH_4_NAME, SEQUENCER_NAME, 0.6666666666666666);
+    set_parameter(PITCH_5_NAME, SEQUENCER_NAME, 0.6458333333333334);
+    set_parameter(PITCH_6_NAME, SEQUENCER_NAME, 0.5625);
+    set_parameter(PITCH_7_NAME, SEQUENCER_NAME, 0.5);
 }
 
 void set_parameters_when_processors_are_ready(sushi_controller::ProcessorUpdate update)
@@ -129,6 +116,13 @@ void set_parameters_when_processors_are_ready(sushi_controller::ProcessorUpdate 
     {
         set_parameters_for_theme_tune();
     }
+}
+
+void print_parameter_notification(int processor_id, int parameter_id, float normalized_value,
+                                  float domain_value, const std::string& formatted_value)
+{
+    std::cout << "param_id " << parameter_id << " proc_id " << processor_id << " val " << normalized_value
+              << ", " << domain_value << ", " << formatted_value << std::endl;
 }
 
 void load_plugin_on_track(sushi_controller::SushiController* controller, const plugin& p, int track_id)
@@ -156,6 +150,9 @@ int main()
     sushi_controller::ControlStatus status;
 
     controller->notification_controller()->subscribe_to_processor_changes(set_parameters_when_processors_are_ready);
+
+    std::vector<std::pair<int, int>> blocklist;
+    controller->notification_controller()->subscribe_to_parameter_updates(print_parameter_notification, blocklist);
 
     int track_id;
 
@@ -190,6 +187,14 @@ int main()
     for (auto p : plugins)
     {
         load_plugin_on_track(controller.get(), p, track_id);
+    }
+
+    std::cout << "The program needs to wait to receive the creation notifications. Exit with ctrl-C" << std::endl;
+
+    signal(SIGINT, signal_callback_handler);
+    while (true)
+    {
+        sleep(1);
     }
 
     return 0;
