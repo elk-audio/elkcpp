@@ -33,15 +33,6 @@ constexpr auto PITCH_5_NAME = "pitch_5";
 constexpr auto PITCH_6_NAME = "pitch_6";
 constexpr auto PITCH_7_NAME = "pitch_7";
 
-void signal_callback_handler(int signum)
-{
-    if (signum == SIGINT)
-    {
-        std::cout << "Caught signal: " << signum << " Exiting." << std::endl;
-        exit(signum);
-    }
-}
-
 struct plugin
 {
     std::string path;
@@ -55,6 +46,15 @@ std::array<plugin, 3> plugins;
 int processor_notification_count = 0;
 
 std::shared_ptr<sushi_controller::SushiController> controller;
+
+void signal_callback_handler(int signum)
+{
+    if (signum == SIGINT)
+    {
+        std::cout << "Caught signal: " << signum << " Exiting." << std::endl;
+        exit(signum);
+    }
+}
 
 sushi_controller::ControlStatus set_parameter(const char* const parameter_name, const char* const processor_name, float value)
 {
@@ -146,14 +146,12 @@ int main()
     // Create a controller object to connect to sushi
     controller = sushi_controller::CreateSushiController();
 
-    // Initialize status variable
-    sushi_controller::ControlStatus status;
-
     controller->notification_controller()->subscribe_to_processor_changes(set_parameters_when_processors_are_ready);
 
     std::vector<std::pair<int, int>> blocklist;
     controller->notification_controller()->subscribe_to_parameter_updates(print_parameter_notification, blocklist);
 
+    sushi_controller::ControlStatus status;
     int track_id;
 
     // Get the id of the processor matching the processor name
