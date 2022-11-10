@@ -102,6 +102,8 @@ void set_parameters_for_theme_tune()
     set_parameter(PITCH_5_NAME, SEQUENCER_NAME, 0.6458333333333334);
     set_parameter(PITCH_6_NAME, SEQUENCER_NAME, 0.5625);
     set_parameter(PITCH_7_NAME, SEQUENCER_NAME, 0.5);
+
+    controller->transport_controller()->set_tempo(200);
 }
 
 void set_parameters_when_processors_are_ready(sushi_controller::ProcessorUpdate update)
