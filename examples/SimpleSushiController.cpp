@@ -4,7 +4,9 @@
 #include "sushi_client.h"
 
 /**
- * @brief Simple example program. Controls an instance of sushi with obxd and plays some notes and does parameter changes
+ * @brief Simple example program.
+ *        Controls an instance of sushi with MDA JX10.
+ *        Plays some notes, and does parameter changes.
  *
  * @return int
  */
@@ -18,7 +20,7 @@ int main()
     std::cout << "Listen to the music!" << std::endl;
 
     // Set the name of the processor to control
-    std::string processor_name = "obxd";
+    std::string processor_name = "mda JX10";
 
     // Initialize status variable
     sushi_controller::ControlStatus status;
@@ -29,7 +31,7 @@ int main()
     // Get the id of the processor matching the processor name
     std::tie(status, processor_id) = controller->audio_graph_controller()->get_processor_id(processor_name);
 
-    // Check if the call was succesful and print an error if not
+    // Check if the call was successful and print an error if not
     if (status != sushi_controller::ControlStatus::OK)
     {
         std::cerr << processor_name << " not found" << std::endl;
@@ -37,7 +39,7 @@ int main()
     }
 
     // Set the name of a parameter to control
-    std::string parameter_name = "Cutoff";
+    std::string parameter_name = "VCF Freq";
 
     // Initialize variable to hold the id of the parameter
     int parameter_id;
@@ -45,7 +47,7 @@ int main()
     // Get the id of the parameter matching the parameter name
     std::tie(status, parameter_id) = controller->parameter_controller()->get_parameter_id(processor_id, parameter_name);
 
-    // Check if the call was succesful and print an error if not
+    // Check if the call was successful and print an error if not
     if (status != sushi_controller::ControlStatus::OK)
     {
         std::cerr << parameter_name << " not found" << std::endl;
@@ -64,18 +66,22 @@ int main()
     float duration = 3.0f;
     int number_of_steps = 1000;
 
-    for(int i = 0; i < number_of_steps; ++i)
+    for (int i = 0; i < number_of_steps; ++i)
     {
         // Set the cutoff parameter
         controller->parameter_controller()->set_parameter_value(processor_id, parameter_id, cutoff);
+
         // Set the pitch bend
         controller->keyboard_controller()->send_pitch_bend(0, 0, pitch_bend);
+
         // Increment the cutoff
         cutoff += duration/(float)number_of_steps;
+
         // Increment the pitch bend value
         pitch_bend += duration/(float)number_of_steps;
+
         // Pause
-        usleep((int)(duration*1000000/number_of_steps));
+        usleep((int)(duration * 1000000 / number_of_steps));
     }
 
     // Stop the notes that were started
@@ -83,5 +89,6 @@ int main()
     controller->keyboard_controller()->send_note_off(0, 0, 64, 1.0f);
     controller->keyboard_controller()->send_note_off(0, 0, 67, 1.0f);
     controller->keyboard_controller()->send_note_off(0, 0, 71, 1.0f);
+
     return 0;
 }
